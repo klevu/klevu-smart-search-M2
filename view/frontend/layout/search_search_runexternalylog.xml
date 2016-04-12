@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd" label="Klevu Log">
+  <body>
+    <remove name="right"/>
+    <remove name="left"/>
+    <referenceBlock name="root">
+      <action method="setTemplate">
+        <arguments>
+          <argument xsi:type="string" name="template">Klevu_Search::page/1column.phtml</argument>
+        </arguments>
+      </action>
+    </referenceBlock>
+    <referenceBlock name="content">
+      <block class="Magento\Framework\View\Element\Template" template="Klevu_Search::klevu/search/klevulog.phtml" name="klevulog"/>
+    </referenceBlock>
+  </body>
+</config>

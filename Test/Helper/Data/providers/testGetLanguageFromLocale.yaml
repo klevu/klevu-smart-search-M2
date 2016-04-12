@@ -1,0 +1,12 @@
+-
+  input: en_GB
+  output: en
+-
+  input: fr_FR
+  output: fr
+-
+  input: test
+  output: test
+-
+  input: en
+  output: en

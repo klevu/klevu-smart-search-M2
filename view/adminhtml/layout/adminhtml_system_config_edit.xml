@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+  <update handle="editor"/>
+   <head>
+        <css src="Klevu_Search::klevu/search/wizard.css"/>
+        <script src="Klevu_Search::klevu/search/lib/Wizard.js"/>
+
+   </head>
+</config>

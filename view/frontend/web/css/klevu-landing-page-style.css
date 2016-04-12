@@ -1,0 +1,758 @@
+/* CSS of Klevu Search Result Landing Page */
+
+/* klevu container for fix width layout*/
+
+.kuContainer{
+	width:100%;
+	margin:0 auto;
+	font-family: inherit;
+	font-size:12px;
+}
+
+/* klevu container for fluid layout*/
+.kuProListing{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+/* klevu filters */
+.kuFilters{
+	float:left;
+	width: 20%;
+	border:1px solid #ccc;
+	border-top: none;
+}
+
+/* set the height of each filter*/
+.kuFilterBox{
+	height:150px;
+	overflow:hidden;
+	margin-bottom: 20px;
+}
+
+/* heading of filters i.e brand, color */
+.kuFilterHead{
+	padding: 8px;
+	/* font-weight: bold; */
+	font-size: 14px;
+	text-align: left;
+	line-height: 1.4;
+	background-color: #f4f4f4;
+	border-bottom: 1px solid #cccccc;
+	border-top: 1px solid #cccccc;
+}
+		
+/* down arrow div in filters */
+.kuShowOpt{		
+	text-align:center;
+	padding:3px;	
+	position:relative;
+}
+
+/* up arrow div in filters */
+.kuHideOpt{
+	text-align:center;
+	padding:3px;	
+}
+
+.kuShowOpt img, .kuHideOpt img{
+	width:auto !important;
+    display:inline-block !important;
+}
+
+/* down & up arrow link color in filters */
+.kuShowOpt a,.kuHideOpt a{		
+	color:#4d7abf;
+	text-decoration:none;	
+}
+
+/* set list for filters */
+.kuFilterNames ul{
+	margin:0px;
+	padding:0px;
+	margin-top:10px;
+	margin-left:0px !important;
+}
+
+/* style for each values in filter */
+.kuFilterNames ul li{
+	list-style:none;	
+	text-align:left;
+	width:99%;
+	display:inline-table;
+	margin:0px;
+	padding-left:0px;
+	margin-left:0px !important;
+}
+
+.kuFilterNames ul li a{
+	display: block;
+	position: relative;
+	overflow: hidden;
+	margin: 0 5px;
+	line-height: 22px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 14px;
+	text-decoration: none;
+	cursor: pointer;
+	font-style:normal;
+	font-family: inherit;
+}
+
+/* set background color on hover of filter */
+.kuFilterNames ul li a:hover{
+	background-color: #888888;
+	cursor: pointer;
+	color:#fff;
+}
+
+
+/* set background color for selected filter */
+.kuFilterNames ul li.kuSelected a{
+	background-color: #888888;
+	color: #fff;
+}
+
+/* label for the filter */
+.kuFilterNames ul li a span.kuFilterLabel{		
+	float:left;
+	width:86%;
+	margin:0px;
+	padding:0px;
+	font-weight:normal;
+}
+
+/* total nos of results available for filter  */
+.kuFilterNames ul li a span.kuFilterTotal{
+	float:right;
+	width:13%;
+	text-align:right;
+	color: #a0a0a0;
+}
+
+/* shows cancel button if filter is selected */
+.kuFilterNames ul li a span.kuFilterCancel{
+	float:right;
+	width:13%;
+	text-align:right;
+	font-size:10px;
+}
+
+.kuFilterNames ul li a:hover span.kuFilterTotal{
+    color:#fff;
+}
+
+/* klevu results box */
+.kuResultList{
+	float:right;
+	width: 78%;
+}
+
+/* div for Sorting, pagination, change result view icons*/
+.kuSortHeader{
+	/* margin:5px; */
+	padding-top: 0px;
+	margin-top: 0px;
+}
+
+/* div to display total no of results */
+.kuTotResults{
+	text-align:left;
+	margin-bottom:10px;
+	line-height:24px;
+	font-weight:bold;
+	font-size:14px;
+}
+
+.kuTotalResultsTab .kuTabs{
+	line-height:30px;	
+}
+
+.kuTotalResultsTab{
+	margin-bottom:10px;
+	padding-left:5px;
+}	
+
+.kuTotalResultsTab a{
+	padding:8px;
+	cursor:pointer;
+	font-size: 14px;
+	border-radius:3px;
+	margin-right: 10px;
+}
+
+.kuTotalResultsTab a:hover{
+	background-color:#eee;
+	text-decoration:none;	
+}
+
+.kuTotalResultsTab a.kuTabSelected{
+	background-color: #888888;
+	color:#fff;
+}
+
+.kuSortingOpt{
+	background-color: #f4f4f4;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 8px;
+	padding-left: 12px;
+	width: 98%;
+}
+
+/* div to display sorting dropdown */
+.kuSortby{
+	float:left;
+	width:25%;
+}
+
+/* label of sorting dropdown */
+.kuSortby label{
+	display:inline;
+}
+
+/* sorting dropdown */
+.kuSortby select{
+	display:inline;
+	height:auto;
+	min-height:25px;
+	width:120px;
+}
+
+/* div to display icons to change the view of result (grid/view) */
+.kuView{
+	float:left;
+	width:15%;
+	text-align:center;
+}
+
+/* display GRID view icon */
+.kuView .kuGridviewBtn{
+	background: #ededed url(../../Klevu_Search/images/klevu/btn-gridview.png) no-repeat 0 0;
+	cursor:pointer;
+}	
+
+/* display LIST view icon */
+.kuView .kuListviewBtn{
+	background: #ededed url(../../Klevu_Search/images/klevu/btn-listview.png) no-repeat 0 0;
+	cursor:pointer;
+}	
+
+/* set width and height of view icons box*/
+.kuView a{
+	display: inline-block;
+	border: 1px solid #D9D9D9;
+	width: 44px;
+	height: 27px;
+	margin-right: -4px;
+	text-align: center;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+/* changing background position on hover of GRID/LIST view icons */
+.kuView a:hover{
+	border-color: #BBB;
+	background-position:0 -30px;
+    text-decoration: none;
+}
+
+/* change background position to set current view */
+.kuView a.kuCurrent{
+	background-position:0 -60px;
+	border-color: #BBB;
+}
+
+/* dropdown to select no of results per page*/
+.kuPerPage{
+	float:left;	
+	width:23%;
+	margin-left:10px;
+	text-align:right;
+}
+
+.kuPerPage label{
+	display:inline;	
+}
+
+.kuPerPage select{
+	width:auto !important;
+	height:auto;
+	min-height:25px;
+}
+
+/* div for pagination */
+.kuPagination{
+	width:33%;
+	float:left;	
+	margin-left:10px;
+	text-align:right;
+}
+
+/* style to display page nos in line */
+.kuPagination a{
+	border: 1px solid #ddd;
+	margin:0px;
+	position: relative;
+	display: inline-block;
+	background:#eee;
+	padding:4px;
+	padding-left:8px;
+	padding-right:8px;
+	color: #444;
+	cursor: pointer;
+	text-decoration:none;
+}
+
+/* style on hover of page links */
+.kuPagination a:hover{
+	background: #dadada;	
+}
+
+/* style to show current page */
+.kuPagination a.kuCurrent{
+	background: #fff;	
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+	border:1px solid #ddd;
+	font-weight:bold;
+}
+
+.kuOtherContent .kuPagination{
+	float:right;
+}
+
+.kuOtherContent .kuPerPage{
+	margin-left:0px;
+	text-align:left;
+}
+
+.kuClearLeft{
+	clear:left;
+	line-height:0px;
+}
+
+.klevu-clearboth-listview{
+	clear:left;	
+	
+}
+
+
+/* klevu results div */
+.kuResults{
+	margin-top:10px;
+}
+
+.kuOtherContentView{
+	margin-top:10px;
+}
+
+/* styles for list view results */
+.kuListView{
+	margin-top:10px;
+}
+
+.kuListView ul{
+	margin:0px;
+	padding:0px;	
+}
+
+/* In LISTVIEW: list style for each result */
+.kuListView ul li{
+	position:relative;
+	display:block;
+	width: 98%;
+	height: auto;
+	padding: 10px;
+	border: 1px solid #eee;
+	text-align:left;
+	margin-bottom: 32px;
+}
+
+.kuListView ul li:hover{
+	border: 1px solid #cccccc;	
+}
+
+/* In LISTVIEW:  for wrapping the image in fixed size div */
+.kuListView .klevuImgWrap{ 
+		float:left;
+        overflow:hidden;        
+        width:15% !important;
+        height:120px !important;
+        text-align:center;
+}
+
+/* In GRIDVIEW: thumbnail of the product */
+.kuListView img{
+        max-width:100% !important;
+        max-height:120px !important;
+        width:auto;
+        height:auto;
+        border:none;
+        outline:none;
+}
+
+.kuListView ul li .kuDiscountBadge{
+	background: #ffcc01;
+	padding:5px 10px;
+	color: #000000;
+	font-weight: bold;
+	position: absolute;
+	top: 6px;
+	left: 4px;
+}
+
+.kuListView ul li .kuDiscountBadge strong{
+	color:#000;	
+}
+
+.kuListView .kuStarsSmall {
+	height: 13px;
+	display: inline-block;
+	vertical-align: bottom;
+	background: transparent url(https://js.klevu.com/klevu-js-v1/img-1-1/star-gray.png) top left repeat-x;
+	width: 66px;
+	margin-left:5px;
+}
+
+.kuListView .kuStarsSmall .kuRating {
+	background: transparent url(https://js.klevu.com/klevu-js-v1/img-1-1/star-yellow.png) top left repeat-x;
+	height: 13px;
+}
+
+/* In LISTVIEW: display product name and description */
+.kuListView ul li .kuNameDesc{
+	float:left;
+	width: 52%;
+	margin-left:5px;
+}
+
+.kuListView ul li .kuName{
+	padding:5px;	
+}
+
+.kuListView ul li .kuDesc{
+	line-height:20px;
+	padding:5px;	
+	font-style:normal;
+}
+
+/* In LISTVIEW: set product name color and font size */
+.kuListView ul li .kuName a{
+	font-size: 14px;
+	text-decoration:none;
+	color:inherit;
+	font-weight: 500;
+	font-style:normal;
+	text-transform: uppercase;
+}
+
+.kuListView ul li .kuName a:hover{
+	text-decoration:underline;
+}
+
+/* In LISTVIEW: div to display saleprice and original price */
+.kuListView ul li .kuPrice{
+	float:left;
+	width:15%;
+	margin-top:5px;	
+	margin-bottom:5px;	
+	padding:5px;
+	text-align:center;
+}
+
+/* In LISTVIEW: div to display saleprice */
+.kuListView ul li .kuSalePrice{
+	font-weight:bold;
+	font-size: 16px;
+	margin-bottom:5px;
+	font-family: inherit;
+}
+
+/* In LISTVIEW: div to display original price with line-through style */
+.kuListView ul li .kuOrigPrice{
+	font-size:13px;
+	text-decoration:line-through;
+}
+
+/* In LISTVIEW: set color to highlight search keyowrd in name and description */
+.kuListView ul li strong{
+	color:#2980B9;
+}
+
+/* styles for grid view results */
+.kuGridView{
+	margin-top:10px;
+}
+
+.kuGridView ul{
+	margin:0px;
+	padding:0px;	
+	margin-left:0px;
+}
+
+/* In GRIDVIEW: list style for each result */
+.kuGridView ul li{
+	display: inline-block;
+	width: 23.5%;
+	min-height: 335px;
+	padding: 0;
+	vertical-align: top;
+	border: 1px solid #eeeeee;
+	text-align:center;
+	margin: 8px;
+	padding-top:15px;
+	margin-left:0px !important;
+	margin-bottom: 40px;
+	font-style:normal;
+	position:relative;
+}
+
+.kuGridView ul li:hover{
+	border: 1px solid #cccccc;	
+}
+
+/* In GRIDVIEW:  for wrapping the image in fixed size div */
+.kuGridView .klevuImgWrap{
+		float:none;
+		overflow:hidden;
+		width: 100% !important;
+		height: 160px !important;
+		text-align:center;
+		margin:0 auto;
+}
+
+/* In GRIDVIEW: thumbnail of the product */
+.kuGridView img{
+        max-width:100% !important;
+        max-height: 140px !important;
+        height:auto;
+        width:auto;
+        border:none;
+        outline:none;
+        display:inline-block !important;
+}
+
+.kuGridView ul li .kuDiscountBadge{
+	background: #ffcc01;
+	padding:5px 10px;
+	color: #000000;
+	font-weight: bold;
+	position: absolute;
+	top: 6px;
+	left: 4px;
+}
+
+.kuGridView ul li .kuDiscountBadge strong{
+	color:#000;	
+}
+
+/* In GRIDVIEW: remove float value for name and description div */
+.kuGridView .kuNameDesc{
+	float:none;	
+}
+
+/* In GRIDVIEW: discription is not displayed in grid layout*/
+.kuGridView .kuDesc{
+	display:none;
+}
+
+.kuGridView ul li .kuName{
+	padding:5px;
+	min-height:45px;
+}
+
+.kuGridView .kuStarsSmall {
+  height: 13px;
+  display: inline-block;
+  vertical-align: bottom;
+  background: transparent url(https://js.klevu.com/klevu-js-v1/img-1-1/star-gray.png) top left repeat-x;
+  width: 66px;
+}
+
+.kuGridView .kuStarsSmall .kuRating {
+  background: transparent url(https://js.klevu.com/klevu-js-v1/img-1-1/star-yellow.png) top left repeat-x;
+  height: 13px;
+}
+
+
+/* CSS for add to cart button */
+.kuGridView ul li .kuAddtocart{
+	display:block;
+	margin-top:20px;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+.kuGridView ul li input[type="text"]{
+	display: none;
+	width:25%;
+	border:1px solid #ddd;
+	outline:none;
+	text-align:right;
+}
+
+.kuGridView ul li a.kuAddtocartBtn{
+	display: block;
+	background: #3399cc;
+	color: #fff;
+	width: 60%;
+	padding: 7px 15px;
+	margin-bottom: 0;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	text-decoration:none;
+	font-size: 13px;
+	line-height: 19px;
+	margin: 0 auto;
+}
+
+.kuListView ul li .kuAddtocart{
+	width: 15%;
+	float:left;
+	margin-top: 20px;
+}
+
+.kuListView ul li input[type="text"]{
+	width:5%;
+	float:none;
+	border:1px solid #ddd;
+	outline:none;
+	text-align:right;
+	display: none;
+}
+
+.kuListView ul li a.kuAddtocartBtn{
+	background: #3399cc;
+	float:none;
+	color: #fff;
+	width: 92%;
+	padding-top:6px;
+	padding-bottom:6px;
+	padding:6px;
+	margin-bottom: 0;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	text-decoration:none;
+	display: block;
+}
+
+
+/* In GRIDVIEW: set product name color and font size */
+.kuGridView ul li .kuName a{
+	font-size: 14px;
+	text-decoration:none;
+	color:inherit;
+	font-style:normal;
+}
+
+.kuGridView ul li .kuName a:hover{
+	text-decoration:underline;
+}
+
+/* In GRIDVIEW: div to display saleprice and original price */
+.kuGridView ul li .kuPrice{
+	float:none;
+	margin-top:5px;	
+	margin-bottom:5px;	
+	padding:5px;
+}
+
+/* In GRIDVIEW: div to display saleprice */
+.kuGridView ul li .kuSalePrice{
+	font-size: 16px;
+	font-weight:bold;
+	font-family: inherit;
+}
+
+.priceGreyText{
+	font-size:11px;
+	color: #636363;
+}
+
+/* In GRIDVIEW: div to display original price with line-through style */
+.kuGridView ul li .kuOrigPrice{
+	font-size:13px;
+	text-decoration:line-through;
+}
+
+/* In GRIDVIEW: set color to highlight search keyowrd in name and description */
+.kuGridView ul li strong{
+	color:#2980B9;
+}
+
+	
+/* pagination links at bottom of results */
+.kuBottomPagi{
+	padding: 8px;
+	background-color: #f4f4f4;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+.kuBottomPagi .kuPerPage{
+	margin-left:0px;
+	text-align: left;
+}
+
+.kuBottomPagi .kuPagination{
+	width: 50%;
+	float: right;
+	margin-left: 10px;
+}
+
+.kuPagination a{
+	font-style:normal;	
+}
+
+.kuClearBoth{
+	clear:both;	
+}
+
+/* div to display No records found message */
+.kuNoRecordFound{
+	text-align:center;
+	margin-top:10%;
+	margin-bottom:10%;
+}
+
+/* show variants */
+.kuVariants{
+	font-size: 9px;
+	text-align: center;
+	margin-top:2px;
+}
+
+/* height for loader div */
+#loader{
+	height:400px;	
+}
+
+#loader img{
+	margin-top:10%;	
+    display: inline-block;
+	width:auto !important;
+}
+
+.kuOtherContent{
+	display:none;	
+}
+
+.disableKuFilter{
+	opacity:0.3;
+	pointer-events: none;	
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+  <system>
+    <tab id="klevu" translate="label" sortOrder="200">
+      <label>Klevu</label>
+    </tab>
+    <section id="klevu_search" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+      <label>Search Configuration</label>
+      <tab>klevu</tab>
+        <!-- resource tag name which we have to defined in the acl.xml -->
+        <resource>Klevu_Search::config_search</resource>
+      <group id="information" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Information</label>
+      </group>
+            <group id="general" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label" type="select" sortOrder="121" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable on Frontend</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="js_api_key" translate="label comment" sortOrder="121" type="text" showInStore="1">
+                  <label>JS API Key</label>
+                  <comment><![CDATA[This API key is used for searches in the frontend.]]></comment>
+                </field>
+                <field id="rest_api_key" translate="label comment" sortOrder="122" showInStore="1">
+                  <label>REST API Key</label>
+                  <comment><![CDATA[This API key is used for syncing product information in the backend.]]></comment>
+                </field>
+                <field id="wizard" type="button" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+                <frontend_model>Klevu\Search\Block\Adminhtml\Wizard\Config\Button</frontend_model>
+                </field>
+                <field id="hostname" translate="label comment" sortOrder="123" showInStore="1">
+                  <label>Hostname</label>
+                  <comment><![CDATA[The Hostname is used for sending store configuration parameters to Klevu.]]></comment>
+                </field>
+                <field id="rest_hostname" translate="label comment" sortOrder="124" showInStore="1">
+                  <label>Product Synchronization URL</label>
+                  <comment><![CDATA[This Hostname is used for sending product synchronization API requests to Klevu.]]></comment>
+                </field>
+                <field id="cloud_search_url" translate="label comment" sortOrder="125" showInStore="1">
+                  <label>Cloud Search URL</label>
+                  <comment><![CDATA[The Cloud Search URL is used for sending search API requests to Klevu.]]></comment>
+                </field>
+                <field id="analytics_url" translate="label comment" sortOrder="126" showInStore="1">
+                  <label>Analytics URL</label>
+                  <comment><![CDATA[The Analytics URL is used for reporting search terms and clicks to Klevu.]]></comment>
+                </field>
+                <field id="js_url" translate="label comment" sortOrder="127" showInStore="1">
+                  <label>JS URL</label>
+                  <comment><![CDATA[The JS URL is used for getting Klevu's Javascript file.]]></comment>
+                </field>
+            </group>
+            <group id="searchlanding" translate="label" sortOrder="103" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Search Result Page Settings</label>
+                <field id="landenabled" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                  <label>Search Result Page</label>
+                  <source_model>Klevu\Search\Model\System\Config\Source\Landingoptions</source_model>
+                </field>
+            </group>
+            <group id="product_sync" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Sync Settings</label>
+                <field id="enabled" translate="label comment" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                  <label>Enable Product Sync</label>
+                  <source_model>Klevu\Search\Model\System\Config\Source\Yesnoforced</source_model>
+                  <comment><![CDATA[Enable Product Sync.]]></comment>
+                </field>
+                <field id="last_run" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+                  <label>Last Run</label>
+                  <frontend_model>Klevu\Search\Block\Adminhtml\Form\Field\Store\Level\Label</frontend_model>
+                </field>
+                <field id="sync_options" translate="label comment" sortOrder="398" type="select" showInDefault="1">
+                  <label>Sync</label>
+                  <source_model>Klevu\Search\Model\System\Config\Source\Syncoptions</source_model>
+                </field>
+                <field id="sync_options_info" translate="label comment" sortOrder="399" showInStore="1">
+                  <label>Sync</label>
+                  <frontend_model>Klevu\Search\Block\Adminhtml\Form\Syncoptionsinfo</frontend_model>
+                  <comment><![CDATA[To change the mode of sync (i.e. All data vs updates only), Please change the mode from the "Default config".]]></comment>
+                </field>
+                <field id="sync_button" type="button" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+                <frontend_model>Klevu\Search\Block\Adminhtml\Form\Field\Sync\Button</frontend_model>
+                </field>
+            </group>
+            <group id="attributes" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Attribute Settings</label>
+                <field id="info_attribute" translate="label comment" sortOrder="100" type="label" showInDefault="1">
+                  <label>Attribute Settings</label>
+                  <comment><![CDATA[Switch to store view scope to set.]]></comment>
+                </field>
+                <field id="boosting" translate="label comment" sortOrder="800" type="select" showInStore="1">
+                  <label>Boosting Attribute</label>
+                  <source_model>Klevu\Search\Model\System\Config\Source\Boosting\Attribute</source_model>
+                  <comment><![CDATA[Select the attribute you wish to use as the Boosting attribute in Klevu. The Boosting attribute is a decimal or integer product attribute. To promote a product simply give the product a score higher than 1 and to demote give a score lower than 1 (i.e. 0.1)..]]></comment>
+                </field>
+                <field id="other" translate="label comment" sortOrder="600" type="multiselect" showInStore="1">
+                  <label>Other Attributes To Use In Search</label>
+                  <source_model>Klevu\Search\Model\System\Config\Source\Product\Attributes</source_model>
+                  <comment><![CDATA[By default, Klevu uses the following attributes in search: name, sku, description, short_description, price and rating. To add more attributes to search, please select one or more attributes from the list above. Once you have selected the respective attributes, please make sure to resynchronize all the products.]]></comment>
+                </field>
+          </group>
+        <group id="tax_setting" translate="label comment" sortOrder="105" showInDefault="1" showInStore="1">
+            <label>Tax Settings</label>
+            <field id="info_enabled" translate="label comment" sortOrder="100" type="label" showInDefault="1">
+              <label>Include Tax in Price</label>
+              <comment><![CDATA[Switch to store view scope to set]]></comment>
+            </field>
+            <field id="enabled" translate="label comment" sortOrder="100" type="select" showInStore="1">
+              <label>Include Tax in Price</label>
+                <source_model>Klevu\Search\Model\System\Config\Source\Taxoptions</source_model>
+              <comment><![CDATA[Please make sure to resynchronize products by choosing the "All data" option and clicking on the "Sync Data for This Store" button under the "Data Sync Settings".]]></comment>
+            </field>
+      </group>
+      <group id="secureurl_setting" translate="label comment" sortOrder="106" showInDefault="1" showInStore="1">
+            <label>Secure Url Settings</label>
+            <field id="info_enabled" translate="label comment" sortOrder="100" type="label" showInDefault="1">
+              <label>Use Secure Base Url for Products and Images</label>
+              <comment><![CDATA[Switch to store view scope to set]]></comment>
+            </field>
+            <field id="enabled" translate="label comment" sortOrder="100" type="select" showInStore="1">
+              <label>Use Secure Base Url for Products and Images</label>
+              <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+              <comment><![CDATA[Choose Yes to use secure base url from Store &gt; Cofiguration &gt; Store view &gt; General &gt; Secure &gt; Base URL.&lt;/br&gt;Please make sure to resynchronize products by clicking on the "Sync Data for This Store" under the "Data Sync Settings".]]></comment>
+            </field>
+      </group>
+      <group id="developer" translate="label comment" sortOrder="900" showInDefault="1">
+        <label>Developer Settings</label>
+        <field id="force_log" translate="label comment" sortOrder="300" type="select" showInDefault="1">
+          <label>Force Logging</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment><![CDATA[Use this setting to override default Magento log settings and enable logging. Log messages are saved in Klevu_Search.log]]></comment>
+        </field>
+        <field id="log_level" translate="label" sortOrder="310" type="select" showInDefault="1">
+          <label>Log level</label>
+          <source_model>Klevu\Search\Model\System\Config\Source\Log\Level</source_model>
+        </field>
+      </group>
+    </section>
+  </system>
+</config>

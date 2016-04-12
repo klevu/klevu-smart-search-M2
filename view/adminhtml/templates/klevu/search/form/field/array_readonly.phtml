@@ -1,0 +1,25 @@
+<?php /** Template copied from: app/design/adminhtml/default/default/template/system/config/form/field/array.phtml */ ?>
+
+<?php
+$_htmlId = $this->getHtmlId() ? $this->getHtmlId() : '_' . uniqid();
+?>
+
+<div class="grid" id="grid<?php echo $_htmlId ?>">
+    <table cellpadding="0" cellspacing="0" class="border">
+        <tbody>
+
+        <tr class="headings" id="headings<?php echo $_htmlId ?>">
+            <?php foreach ($this->_columns as $columnName => $column):?>
+                <th><?php echo $column['label'] ?></th>
+            <?php endforeach;?>
+        </tr>
+        <?php foreach ($this->getArrayRows() as $_row): ?>
+            <tr>
+                <?php foreach ($this->_columns as $columnName => $column): ?>
+                    <td><?php echo $_row->getData($columnName) ?></td>
+                <?php endforeach ?>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+</div>

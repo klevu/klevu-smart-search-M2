@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+  <body>
+    <referenceBlock name="products_list">
+      <action method="addButton">
+        <arguments>
+          <argument xsi:type="string" name="name">klevu_search_sync_all</argument>
+          <argument xsi:type="array" name="data"/>
+        </arguments>
+      </action>
+    </referenceBlock>
+  </body>
+</config>

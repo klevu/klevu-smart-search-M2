@@ -1,0 +1,92 @@
+<?php
+/** @var \Klevu\Search\Block\Adminhtml\Wizard\Configure\Store $this */ ?>
+<?php //$store = $this->getStore() ?>
+<?php echo $block->getLayout()->getMessagesBlock()->getGroupedHtml(); ?>
+<div class="kuWizardSteps">
+<ol class="wizard-progress clearfix">
+	<li class="active-step">
+		<span class="step-name"><?php echo __("Register/Login");?></span>
+		<span class="visuallyhidden"><?php echo __("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+	<li class="active-step">
+		<span class="step-name"><?php echo __("Select Plan");?></span>
+		<span class="visuallyhidden"><?php echo __("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+	<li class="active-step">
+		<span class="step-name"><?php echo __("Configure Store");?></span>
+		<span class="visuallyhidden"><?php echo __("Step");?></span><span class="step-num">&nbsp;</span>
+	</li>
+	<li>
+		<span class="step-name"><?php echo __("Finish & Sync");?></span>
+		<span class="visuallyhidden"><?php echo __("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+</ol>
+</div>
+
+<form id="klevu_search_wizard_configure_store_form" action="<?php echo $this->getFormActionUrl() ?>" method="POST">
+    
+	
+	<div class="klevu_conf_store">
+		<fieldset class="fieldset admin__fieldset">
+		
+			<input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+			
+   
+			<div class="admin__field field">
+			<label for="store" class="label admin__field-label"><?php echo __("Select a Magento store you want to configure Klevu search for.") ?></label>
+			
+				<div class="admin__field-control control">
+					<select name="store" class="select admin__control-select">
+                            <option value=""></option>
+                            <?php $data = $this->getStoreSelectData() ?>
+                            <?php foreach ($data as $website => $groups): ?>
+                                <optgroup label="<?php echo $this->escapeHtml($website) ?>"></optgroup>
+                                <?php foreach ($groups as $group => $stores): ?>
+                                    <optgroup label="&nbsp;&nbsp;<?php echo $this->escapeHtml($group) ?>">
+                                        <?php foreach ($stores as $store): ?>
+                                            <?php /** @var \Magento\Framework\Model\Store $store */ ?>
+                                            <option value="<?php echo $store->getCode() ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->escapeHtml($store->getName()) ?></option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+					</select>
+				</div>
+                        
+			</div>
+
+			
+			<div class="admin__field field">
+					<label for="tax_enable" class="label admin__field-label"><?php echo __("How do you want to display product prices in search?") ?></label>
+					
+					<div class="admin__field-control control">
+					<select name="tax_enable" id="tax_enable" class="select admin__control-select">
+                            <option value="2" selected="selected"><?php echo __("Do not add tax in price as catalog prices entered by admin already include tax") ?></option>
+                            <option value="0"><?php echo __("Do not add tax in price as product prices are displayed without tax"); ?></option>
+                            <option value="1"><?php echo __("Add relevant tax in price as product prices need to be displayed with tax"); ?></option>
+                        </select>
+					</div>
+              </div>     
+					
+			
+			<div class="admin__field field">
+					<label for="secure_baseurl_enable" class="label admin__field-label"><?php echo __("Which 'base URL' would you like to use for products in search results?"); ?><br/>
+					<span class="note">(from System > Configuration > Web > Secure OR Unsecure > Base URL)") </span></label>
+                    
+						<div class="admin__field-control control">
+                        <select name="secure_baseurl_enable" id="secure_base_enable" class="select admin__control-select">
+                            <option value="0" selected="selected"><?php echo __("Unsecure") ?></option>
+                            <option value="1"><?php echo __("Secure") ?></option>
+                        </select>
+						</div>
+			</div>
+			<div class="admin__field field">
+				<div class="button-set">
+					<button type="submit" class="action-default primary"><span><?php echo __("Continue") ?></span></button>
+				</div>
+			</div>
+			
+		</fieldset>
+		</div>
+			
+</form>

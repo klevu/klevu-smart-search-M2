@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Event/etc/events.xsd">
+  <event name="catalog_product_save_commit_after">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+    <observer name="catalog_product_media_save_before_event" instance="Klevu\Search\Model\Observer\CreateThumb" />
+  </event>
+ <!-- <event name="admin_system_config_changed_section_klevu_search">
+    <observer name="klevu_search_removetest" instance="Klevu\Search\Model\KlevuObserver" method="removeTest"/>
+  </event>-->
+ <!--  <event name="controller_action_predispatch_catalogsearch_result_index">
+    <observer name="klevu_search_landing_page" instance="Klevu\Search\Model\KlevuObserver" method="applyLandingPageModelRewrites"/>
+  </event>-->
+  <event name="after_reindex_process_catalog_category_product">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="after_reindex_process_catalog_product_price">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="after_reindex_process_catalog_url">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="catalog_inventory_stock_item_save_commit_after">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="catalog_product_delete_commit_after">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="category_move">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="sales_order_place_after">
+    <!--<observer name="klevu_search_order_sync" instance="Klevu\Search\Model\KlevuObserver" method="scheduleOrderSync"/>-->
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
+  </event>
+  <event name="catalog_entity_attribute_save_after">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\SyncAllProducts" />
+  </event>
+  <event name="catalog_product_attribute_update_before">
+    <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\SetProductsToSync"/>
+  </event>
+  <event name="catalog_category_change_products">
+    <observer name="klevu_search_categroy_product_sync" instance="Klevu\Search\Model\Observer\SetCategoryProductsToSync" />
+  </event>
+  <event name="review_save_after">
+    <observer name="ratingsUpdate" instance="Klevu\Search\Model\Observer\RatingsUpdate" />
+  </event>
+  <event name="catalogrule_rule_save_commit_after">
+      <observer name="RuleUpdate" instance="Klevu\Search\Model\Observer\RuleUpdate" />
+  </event>
+   <event name="catalogrule_rule_delete_before">
+      <observer name="RuleUpdate" instance="Klevu\Search\Model\Observer\RuleUpdate" />
+  </event>
+  
+</config>

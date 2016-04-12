@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <update handle="adminhtml_locks_block"/>
+    <container name="root">
+        <block class="Klevu\Search\Block\Adminhtml\Wizard\Configure\Store" template="klevu/search/wizard/complete.phtml"/>
+    </container>
+</layout>

@@ -1,0 +1,424 @@
+config:
+  default/klevu_search/general/enabled: 1
+  default/klevu_search/general/rest_api_key: a2xldnUtMTQyNTU1MTA4OTU2NDEwNjk6S2xldnUtZmo4NzQ3cHUxMg==
+  default/klevu_search/product_sync/enabled: 1
+eav:
+  catalog_product:
+    -
+      entity_id: 132
+      attribute_set_id: 4
+      type_id: simple
+      sku: ac674
+      name: SLR Camera Tripod
+      short_description: Sturdy, lightweight tripods are designed to meet the needs of amateur and professional photographers and videographers.
+      description: Sturdy, lightweight tripods are designed to meet the needs of amateur and professional photographers and videographers.
+      url_key: slr-camera-tripod
+      image: /s/l/slr-camera-tripod.jpg
+      weight: 42
+      stock:
+        qty: 100.00
+        is_in_stock: 1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 99
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2007-08-29 19:53:55
+      updated_at: 2008-08-08 15:05:45
+    -
+      entity_id: 133
+      attribute_set_id: 4
+      type_id: simple
+      sku: ac9003
+      name: Universal Camera Case
+      short_description: A stylish digital camera demands stylish protection. This leather carrying case will defend your camera from the dings and scratches of travel and everyday use while looking smart all the time.
+      description: A stylish digital camera demands stylish protection. This leather carrying case will defend your camera from the dings and scratches of travel and everyday use while looking smart all the time.
+      url_key: universal-camera-case
+      image: /u/n/universal-camera-case.jpg
+      weight: null
+      stock:
+        qty: 100.00
+        is_in_stock: 1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 34
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2007-08-29 19:56:27
+      updated_at: 2008-06-28 01:57:22
+    -
+      entity_id: 134
+      attribute_set_id: 4
+      type_id: simple
+      sku: ac-66332
+      name: Universal Camera Charger
+      short_description: Features foldable Flat Pin for Easy Storage/ Slim/ Lightweight Design and Smart Charging LED Indicator.
+      description: Features foldable Flat Pin for Easy Storage/ Slim/ Lightweight Design and Smart Charging LED Indicator.
+      url_key: universal-camera-charger
+      image: /u/n/universal-camera-charger.jpg
+      weight: 5
+      stock:
+        qty: 100.00
+        is_in_stock: 1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2007-08-29 19:59:29
+      updated_at: 2008-06-28 01:57:16
+    -
+      entity_id: 138
+      attribute_set_id: 4
+      type_id: simple
+      sku: apevia-black
+      name: Apevia Black X-Cruiser Case ATX Mid-Tower Case (Default)
+      short_description: This magnificent new case features 2 x 80mm built-in fans with space for 2 optional fans. The Aspire X-Cruiser features front temperature gauge, front fan speed controller and gauge, and front volume controller and gauge. It also features USB2.0, Firewire and audio ports. The superior cooling solution that X-Cruiser delivers can only be found in very few of the expensive chassis in the market.
+      description: This superb, multi-functional Aspire X-Cruiser mid tower case is designed to follow Intel's recommendations to achieve the highest level of thermal performance. This gorgeous case outperforms most of the expensive chassis in the market, boasts an abundance of innovative features, yet carries a very affordable price tag. The Aspire X-Cruiser is fully loaded with everything you could possibly imagine that a great gaming case could have. With a built-in air duct on the side panel to funnel cool air towards the CPU, the fan-less X-Cruiser is specially designed to bring out the best performance in systems based on high-end processors.
+      url_key: apevia-black-x-cruiser-case-atx-mid-tower-case
+      image: /a/p/apevia-black-x-cruiser-case-atx-mid-tower-case-default.jpg
+      weight: 10
+      stock:
+        qty: 100.00
+        is_in_stock: 1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 150
+      tax_class_id: 1
+      status: 1
+      visibility: 4
+      created_at: 2008-07-25 00:52:03
+      updated_at: 2008-08-08 13:36:29
+    -
+      entity_id: 139
+      attribute_set_id: 4
+      type_id: simple
+      sku: nzxtlexa
+      name: NZXT Lexa Silver Aluminum ATX Mid-Tower Case (Default)
+      short_description: The Lexa boasts a ridgid, but light weight aluminum chassis. The Lexa's high-air-flow design, while quiet, ensures cooling options for the more ambitious computing enthusiasts. Three thermal probes provide temperature readings to the illuminated LCD display for monitoring your systems core components. The Lexa ships with a rugged carrying strap with protective window cover for easy single-handed transportation.
+      description: Introducing the next advancement in case design and technology, the Lexa. Designed from ground up to be symmetrical, the Lexa is representative of the modern lifestyle design cues of today. The Lexa's minimalist and classy design fits perfectly under the NZXT Classic Series line.
+      url_key: nzxt-lexa-silver-aluminum-atx-mid-tower-case
+      image: /n/z/nzxt-lexa-silver-aluminum-atx-mid-tower-case-default.jpg
+      weight: 10
+      stock:
+        qty: 100.00
+        is_in_stock: 1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 199.99
+      tax_class_id: 1
+      status: 1
+      visibility: 4
+      created_at: 2008-07-25 00:54:41
+      updated_at: 2008-07-25 00:54:41
+    -
+      entity_id: 201
+      attribute_set_id: 4
+      type_id: simple
+      sku: delete-simple
+      name: Delete Simple Product
+      short_description: Delete Simple Product
+      description: delete Simple Product
+      url_key: delete-simple
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 4
+      created_at: 2014-05-21 12:00:00
+      updated_at: 2014-05-21 12:00:00
+    -
+      entity_id: 202
+      attribute_set_id: 4
+      type_id: configurable
+      sku: delete
+      name: Delete Configurable Product
+      short_description: Delete Configurable Product
+      description: Delete Configurable Product
+      url_key: delete
+      super_attributes:
+        - color
+      configurable_children:
+        - 201
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      created_at: 2014-05-21 12:00:00
+      updated_at: 2014-05-21 12:00:00
+    -
+      entity_id: 203
+      attribute_set_id: 4
+      type_id: simple
+      sku: update-parent-simple
+      name: Update Parent Simple Product
+      short_description: Update Parent Simple Product
+      description: Update Parent Simple Product
+      url_key: update-parent-simple
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-20 09:00:00
+    -
+      entity_id: 204
+      attribute_set_id: 4
+      type_id: configurable
+      sku: update-parent
+      name: Update Parent Configurable Product
+      short_description: Update Parent Configurable Product
+      description: Update Parent Configurable Product
+      url_key: update-parent
+      super_attributes:
+        - color
+      configurable_children:
+        - 203
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-21 09:00:00
+    -
+      entity_id: 205
+      attribute_set_id: 4
+      type_id: simple
+      sku: update-child-simple
+      name: Update Child Simple Product
+      short_description: Update Child Simple Product
+      description: Update Child Simple Product
+      url_key: update-child-simple
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-21 09:00:00
+    -
+      entity_id: 206
+      attribute_set_id: 4
+      type_id: configurable
+      sku: update-child
+      name: Update Child Configurable Product
+      short_description: Update Child Configurable Product
+      description: Update Child Configurable Product
+      url_key: update-child
+      super_attributes:
+        - color
+      configurable_children:
+        - 205
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-20 09:00:00
+    -
+      entity_id: 207
+      attribute_set_id: 4
+      type_id: simple
+      sku: add-simple-1
+      name: Add Simple Product 1
+      short_description: Add Simple Product 1
+      description: Add Simple Product 1
+      url_key: add-simple-1
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-21 09:00:00
+    -
+      entity_id: 208
+      attribute_set_id: 4
+      type_id: simple
+      sku: add-simple-2
+      name: Add Simple Product 2
+      short_description: Add Simple Product 2
+      description: Add Simple Product 2
+      url_key: add-simple-2
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 29.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 3
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-21 09:00:00
+    -
+      entity_id: 209
+      attribute_set_id: 4
+      type_id: configurable
+      sku: add
+      name: Add Configurable Product
+      short_description: Add Configurable Product
+      description: Add Configurable Product
+      url_key: add
+      super_attributes:
+        - color
+      configurable_children:
+        - 207
+        - 208
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2014-05-20 09:00:00
+      updated_at: 2014-05-20 09:00:00
+    -
+      entity_id: 210
+      attribute_set_id: 4
+      type_id: simple
+      sku: delete-deleted-child-simple
+      name: Delete Deleted Child Simple Product
+      short_description: Delete Deleted Child Simple Product
+      description: Delete Deleted Child Simple Product
+      url_key: delete-deleted-child-simple
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 1
+      color: 4
+      created_at: 2014-05-21 12:00:00
+      updated_at: 2014-05-21 12:00:00
+    -
+      entity_id: 212
+      attribute_set_id: 4
+      type_id: configurable
+      sku: delete-deleted-child
+      name: Delete Deleted Child Configurable Product
+      short_description: Delete Deleted Child Configurable Product
+      description: Delete Deleted Child Configurable Product
+      url_key: delete-deleted-child
+      super_attributes:
+        - color
+      configurable_children:
+        - 210
+      website_ids:
+        - 1 # Default website
+      category_ids:
+        - 2 # Default category
+      price: 19.99
+      tax_class_id: 2
+      status: 1
+      visibility: 4
+      created_at: 2014-05-21 12:00:00
+      updated_at: 2014-05-21 12:00:00
+tables:
+  klevu_search/product_sync:
+    -
+      product_id: 130
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2008-08-10 13:36:29
+    -
+      product_id: 133
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2008-06-27 01:57:22
+    -
+      product_id: 134
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2008-06-27 01:57:16
+    -
+      product_id: 138
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2008-08-10 13:36:29
+    -
+      product_id: 139
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2008-08-10 13:36:29
+    -
+      product_id: 201
+      parent_id: 202
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2014-05-21 12:00:00
+    -
+      product_id: 203
+      parent_id: 204
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2014-05-20 12:00:00
+    -
+      product_id: 205
+      parent_id: 206
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2014-05-20 12:00:00
+    -
+      product_id: 210
+      parent_id: 212
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2014-05-21 12:00:00
+    -
+      product_id: 211
+      parent_id: 212
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 2014-05-21 12:00:00

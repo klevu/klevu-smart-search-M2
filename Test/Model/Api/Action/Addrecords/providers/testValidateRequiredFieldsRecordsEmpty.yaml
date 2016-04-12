@@ -1,0 +1,10 @@
+-
+  field: id
+-
+  field: name
+-
+  field: url
+-
+  field: salePrice
+-
+  field: currency

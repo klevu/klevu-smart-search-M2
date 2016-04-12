@@ -1,0 +1,51 @@
+<?php /** @var \Magento\Framework\View\Element\Template $this */ ?>
+<?php $config = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Helper\Config'); ?>
+<?php $moduleInfo =  \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\Module\ModuleList')->getOne('Klevu_Search');?>
+<?php if ($config->isExtensionConfigured()): 
+$url = $block->getUrl('search', ['_secure' => $block->getRequest()->isSecure()]);?>
+<script type="text/javascript">
+// add in cms template
+var klevu_current_version = '<?php echo $moduleInfo['setup_version']; ?>';
+require(["prototype"], function(){
+    var allInputs = document.getElementsByTagName( 'input' );
+	
+	
+    (function () {
+        // Remove Magento event observers from the search box
+        // Redirect to klevu js page
+        for( i = 0, len = allInputs.length; i < len; i++ ){
+            if( allInputs[i].type === "text" || allInputs[i].type === "search" ){
+                if( allInputs[i].name === "q" ||  allInputs[i].id === "search" ){
+                    var search_input = allInputs[i];
+                    search_input.stopObserving('click');
+                    search_input.stopObserving('keydown');
+                    search_input.onclick = function() {
+                        //do something
+                        return false;
+                    }
+                    search_input.form.action='<?php echo $url; ?>' ;//?q="+search_input.value;
+                    
+                }
+            }
+        }
+        
+    })();
+});
+     var klevu_storeLandingPageUrl = '<?php echo $url; ?>';
+     var klevu_showQuickSearchOnEnter=false;
+    // call store js
+    var klevu_apiKey = '<?php echo $config->getJsApiKey() ?>',
+        searchTextBoxName = 'search',
+        klevu_lang = 'en',
+        klevu_result_top_margin = '',
+        klevu_result_left_margin = '';
+    (function () { var ws = document.createElement('script'),kl_protocol =("https:"===document.location.protocol?"https://":"http://"); ws.type = 'text/javascript'; ws.async = true; ws.src = kl_protocol+'<?php echo $config->getJsUrl() ?>/klevu-js-v1/js/klevu-webstore.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ws, s); })();
+
+</script>
+<?php endif; ?>
+
+<?php // show group price based on logged in customer group ?>
+
+
+
+

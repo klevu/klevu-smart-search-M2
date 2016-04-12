@@ -1,0 +1,2 @@
+config:
+  default/klevu_search/product_sync/frequency: 0 */5 * * *

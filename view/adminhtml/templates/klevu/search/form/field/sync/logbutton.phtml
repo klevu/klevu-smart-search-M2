@@ -1,0 +1,9 @@
+<?php /** @var \Klevu\Search\Block\Adminhtml\Form\Field\Sync\Button $this */ ?>
+<button id="<?php echo $this->getHtmlId() ?>" class="scalable" type="button">
+    <span><?php echo __($this->getButtonLabel()) ?></span>
+</button>
+<script type="text/javascript">
+    $("<?php echo $this->getHtmlId() ?>").observe("click", function () {
+        window.open('<?php echo $this->getDestinationUrl() ?>','_blank');
+    });
+</script>

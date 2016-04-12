@@ -1,0 +1,7 @@
+-
+  config_flag: 0 # Disabled
+  product_sync_enabled: false
+-
+  config_flag: 1 # Enabled
+  product_sync_enabled: true
+

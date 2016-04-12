@@ -1,0 +1,185 @@
+#klevu_search_wizard{
+	height:100% !important;
+	top:0 !important;
+}
+
+#klevu_search_wizard .magento_content {
+    height: auto !important;
+    min-height: 450px;
+}
+
+#klevu_search_wizard .divider {
+    height: auto;
+    text-align: center;
+    font-weight: bold;
+    background: none;
+}
+
+#klevu_search_wizard .loading {
+    margin: 50px 20px;
+    text-align: center;
+}
+
+#klevu_search_wizard .warning {
+    margin: 30px 0;
+}
+
+#klevu_search_wizard #klevu_search_wizard_select_store_form .form-list {
+    margin: 0 auto;
+}
+
+#klevu_search_wizard p.error-msg {
+    min-height: 23px;
+    padding: 8px 8px 2px 32px;
+}
+
+#klevu_search_wizard .button-set {
+    margin: 10px 5px;
+}
+
+#klevu_search_wizard .button-set:before,
+#klevu_search_wizard .button-set:after {
+    content: ' ';
+    display: table;
+}
+
+#klevu_search_wizard .button-set:after {
+    clear: both;
+}
+
+#klevu_search_wizard .button-set button,
+#klevu_search_wizard .button-set a {
+    float: right;
+    margin-left: 10px;
+}
+
+#klevu_search_wizard_configure_attributes_form .fieldset div.grid {
+    max-height: 250px;
+    overflow: scroll;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes {
+    margin: 10px 40px;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes {
+    margin: 10px 0;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes li div {
+    font-weight: bold;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes li dl {
+    margin-left: 20px;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes li dt,
+#klevu_search_wizard_summary_form .configuration-changes li dd {
+    float: left;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes li dt {
+    clear: left;
+    width: 150px;
+}
+
+#klevu_search_wizard_summary_form .configuration-changes dl:before,
+#klevu_search_wizard_summary_form .configuration-changes dl:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+
+.klevu_registeration{
+	width:100%;
+}
+
+.klevu_registeration .klevu_signup_form{
+	float:left;
+	width:50%;
+	margin-top:25px;
+}
+
+.klevu_registeration .klevu_login_form{
+	float:right;
+	width: 41%;
+	background: #f1f1f1;
+	padding-top: 30px;
+	margin-top:25px;
+	margin-right: 10px;
+}
+
+.klevu_registeration  .klevu_terms{
+	    text-align: center;
+		margin-left:140px;
+}
+
+.klevu_registeration legend{
+	margin-left: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #cac3b4;
+    margin-bottom: 25px;
+    width: 90%;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.klevu_registeration legend p{
+	font-weight: normal;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+	font-style:italic;
+}
+
+.klevu_registeration .note{
+	font-style: italic;
+	font-size: 12px;
+}
+
+.klevu_registeration .button-set{
+	margin-right: 60px !important;
+}
+
+.klevu_registeration .admin__field{
+	margin-bottom: 1.5rem;
+}
+
+.klevu_registeration .admin__field-control{
+	width: 50% !important;
+}
+
+.klevu_signup_form #countyCode{
+    width:23%;
+    text-align:right;
+}
+
+.klevu_signup_form #contactNo{
+    width:75%;
+    text-align:right;
+}
+
+.klevu_conf_store{
+	width:80%;
+	margin: 0 auto;
+	margin-top:25px;
+}
+
+.klevu_conf_store label{
+	line-height: 2.5rem !important;
+}
+
+.klevu_conf_store label span.note{
+	font-style: italic;
+	font-size: 12px;
+	font-weight:normal;
+}
+
+.klevu_conf_store .admin__field-label{
+	white-space: initial !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    text-align: left !important;
+}

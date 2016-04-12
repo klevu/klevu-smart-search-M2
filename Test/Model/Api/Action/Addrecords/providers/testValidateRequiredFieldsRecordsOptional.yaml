@@ -1,0 +1,26 @@
+-
+  field: itemGroupId
+-
+  field: inStock
+-
+  field: startPrice
+-
+  field: toPrice
+-
+  field: brand
+-
+  field: model
+-
+  field: color
+-
+  field: size
+-
+  field: weight
+-
+  field: other
+-
+  field: shortDesc
+-
+  field: desc
+-
+  field: image

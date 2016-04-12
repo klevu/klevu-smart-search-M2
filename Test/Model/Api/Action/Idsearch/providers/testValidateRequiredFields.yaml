@@ -1,0 +1,12 @@
+-
+  field: ticket
+-
+  field: noOfResults
+-
+  field: term
+-
+  field: paginationStartsFrom
+-
+  field: klevuSort
+-
+  field: enableFilters

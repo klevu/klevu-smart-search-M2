@@ -1,0 +1,20 @@
+-
+  response_code: 200
+  response_data_file: ""
+  is_successful: false
+-
+  response_code: 500
+  response_data_file: ""
+  is_successful: false
+-
+  response_code: 200
+  response_data_file: "response_valid.xml"
+  is_successful: true
+-
+  response_code: 200
+  response_data_file: "response_malformed.xml"
+  is_successful: false
+-
+  response_code: 200
+  response_data_file: "response_noxml.xml"
+  is_successful: false

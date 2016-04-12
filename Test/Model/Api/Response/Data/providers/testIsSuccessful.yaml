@@ -1,0 +1,12 @@
+-
+  response_code: 200
+  response_data_file: data_response_success.xml
+  is_successful: true
+-
+  response_code: 200
+  response_data_file: data_response_failure.xml
+  is_successful: false
+-
+  response_code: 200
+  response_data_file: data_response_no_response.xml
+  is_successful: false

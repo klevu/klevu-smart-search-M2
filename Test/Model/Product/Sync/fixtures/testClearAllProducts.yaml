@@ -1,0 +1,19 @@
+config:
+  default/klevu_search/general/enabled: 1
+  default/klevu_search/general/rest_api_key: a2xldnUtMTQyNTU1MTA4OTU2NDEwNjk6S2xldnUtZmo4NzQ3cHUxMg==
+  default/klevu_search/product_sync/enabled: 1
+tables:
+  klevu_search/product_sync:
+    -
+      product_id: 1
+      parent_id: 0
+      store_id: 1
+      test_mode: 0
+      last_synced_at: 0
+    -
+      product_id: 2
+      parent_id: 0
+      store_id: 2
+      test_mode: 0
+      last_synced_at: 0
+

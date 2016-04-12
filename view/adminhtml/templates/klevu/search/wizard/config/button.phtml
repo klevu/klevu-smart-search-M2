@@ -1,0 +1,14 @@
+<?php /** @var \Klevu\Search\Block\Adminhtml\Wizard\Config\Button $this */ ?>
+<button id="<?php echo $this->getHtmlId() ?>" class="scalable" type="button">
+    <span><?php echo __("Start Configuration Wizard") ?></span>
+</button>
+<script type="text/javascript">
+    require(["prototype"], function(){
+        $("<?php echo $this->getHtmlId() ?>").observe("click", function () {
+            new Klevu.Search.Wizard({
+                url: "<?php echo $this->getWizardUrl() ?>"
+            });
+        });
+    });
+
+</script>

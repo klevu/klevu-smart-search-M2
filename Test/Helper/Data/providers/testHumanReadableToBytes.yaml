@@ -1,0 +1,18 @@
+-
+  input: 100
+  output: 100
+-
+  input: 1k
+  output: 1024
+-
+  input: 1M
+  output: 1048576
+-
+  input: 1G
+  output: 1073741824
+-
+  input: 6.5M
+  output: 6815744
+-
+  input: 23.81M
+  output: 24966595

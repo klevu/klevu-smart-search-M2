@@ -1,0 +1,22 @@
+<?php /** @var \Klevu\Search\Block\Adminhtml\Wizard\Configure\Attributes $this */ ?>
+<div class="content-header">
+    <h3>Configure Attributes</h3>
+</div>
+<?php echo $this->getChildHtml('messages') ?>
+<form id="klevu_search_wizard_configure_attributes_form" action="<?php echo $this->getFormActionUrl() ?>" method="POST">
+    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+    <p><?php echo __("Klevu Search uses most of the standard Magento product attributes for search. However, if you have any custom attributes that you want to be used in search or want to use any additional filters, such as color or size, you can map them below  by selecting the Klevu attribute you want to define and the Magento attribute that it should map to.") ?></p>
+    <fieldset class="fieldset">
+        <table cellspacing="0" class="form-list">
+            <tbody>
+                <tr>
+                    <td class="label"></td>
+                    <td class="value"><?php echo $this->getAttributeMappingsHtml() ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+    <div class="button-set">
+        <button type="submit"><span><?php echo __("Continue") ?></span></button>
+    </div>
+</form>
