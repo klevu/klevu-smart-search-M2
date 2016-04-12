@@ -2,10 +2,10 @@
  Intelligent cloud hosted site search with self-learning search technology. Guaranteed to increase search-led conversions.<br /> 
 
 <hr />
-<h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/"> Installation Steps</a></h3> 
+<h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/" target="_blank"> Installation Steps</a></h3> 
 <b>Have questions? Need help?</b>  E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
-<h1>Search that Learns, Generates Sales </h1>
+<h2>Search that Learns, Generates Sales </h2>
 Klevu’s Ajax-based search for Magento 2 goes  beyond fast response and auto-complete, to provide the most advanced search available today. Klevu helps deliver an awesome shopping experience for your customers directly from the search box. <br /><br />
 <img src="http://www.klevu.com/img/img-slider/magento/magento-2-search.jpg" />
 
