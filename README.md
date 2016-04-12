@@ -1,32 +1,29 @@
 # Klevu Smart Search for Magento 2
-<h1>Search that Learns, Generates Sales </h1>
  Intelligent cloud hosted site search with self-learning search technology. Guaranteed to increase search-led conversions.<br /> 
 
 <hr />
 <h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/"> Installation Steps</a></h3> 
 <b>Have questions? Need help?</b>  E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
-<br />
-
+<h1>Search that Learns, Generates Sales </h1>
 Klevu’s Ajax-based search for Magento 2 goes  beyond fast response and auto-complete, to provide the most advanced search available today. Klevu helps deliver an awesome shopping experience for your customers directly from the search box. <br /><br />
 <img src="http://www.klevu.com/img/img-slider/magento/magento-2-search.jpg" />
 
-<br /><br />
 <h3>Klevu Search Features</h3>
 
-<li>●  Self-learning search</li>
-<li>●  Dynamic filters</li>
-<li>●  Search results page</li>
-<li>●  Fully customizable</li>
-<li>●  Product promotions</li>
-<li>●  100% cloud hosted, CDN backed and secure backups</li>
-<li>●  Error tolerance: Automatically take care of spelling mistakes</li>
-<li>●  Identifies stop words, inflections and more</li>
-<li>●  Populates trending and popular searches</li>
-<li>●  Synonym dictionary</li>
-<li>●  URL redirect</li>
-<li>●  Comprehensive data tracking & analysis</li>
-<li>●  Easy integration process</li>
+<li>Self-learning search</li>
+<li>Dynamic filters</li>
+<li>Search results page</li>
+<li>Fully customizable</li>
+<li>Product promotions</li>
+<li>100% cloud hosted, CDN backed and secure backups</li>
+<li>Error tolerance: Automatically take care of spelling mistakes</li>
+<li>Identifies stop words, inflections and more</li>
+<li>Populates trending and popular searches</li>
+<li>Synonym dictionary</li>
+<li>URL redirect</li>
+<li>Comprehensive data tracking & analysis</li>
+<li>Easy integration process</li>
 <br />
 
 
@@ -87,9 +84,6 @@ Klevu analytics help create razor sharp SEO and promotional campaigns. Concrete 
 <br />
 
 <hr />
-<br />
-If you have questions, feel free to write to us.
-<hr />
 
 <h3>Have questions? Need help? Have feedback for us?</h3>
 Check <a href="http://support.klevu.com/faq/faqs/"> FAQs  </a> section <b>OR</b> E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a>
@@ -97,5 +91,3 @@ Check <a href="http://support.klevu.com/faq/faqs/"> FAQs  </a> section <b>OR</b>
 For more information please visit <a href="http://www.klevu.com/">http://www.klevu.com</a> 
 <br />
 Follow us on twitter <a href="https://twitter.com/klevusearch">@klevusearch</a> 
-
-<h3>Give feedback, Send us PM, feature recommendations or any issue you may come across. </h3>
