@@ -1,7 +1,0 @@
-tables:
-  klevu_search/notification:
-    -
-      id: 1
-      date: 2014-05-13 11:08:00
-      type: test
-      message: Testing
