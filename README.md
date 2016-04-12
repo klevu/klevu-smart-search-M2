@@ -2,7 +2,7 @@
  Intelligent cloud hosted site search with self-learning search technology. Guaranteed to increase search-led conversions.<br /> 
 
 <hr />
-<h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/" target="_blank"> Installation Steps</a></h3> 
+<h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/" target="_blank"> Integration Steps</a></h3> 
 <b>Have questions? Need help?</b>  E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
 <h2>Search that Learns, Generates Sales </h2>
