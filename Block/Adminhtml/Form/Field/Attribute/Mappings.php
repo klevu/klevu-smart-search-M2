@@ -2,7 +2,7 @@
 
 namespace Klevu\Search\Block\Adminhtml\Form\Field\Attribute;
 
-class Mappings extends \Magento\Config\Block\System\Config\Form\Field\Array\AbstractArray {
+class Mappings extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray {
     /**
      * @var \Klevu\Search\Model\System\Config\Source\Additional\Attributes
      */

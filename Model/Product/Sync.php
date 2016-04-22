@@ -1861,81 +1861,82 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @return array|string
      */
     protected function getAttributeData($code, $value = null) {
+		if(!empty($value)) {
+			if (!$attribute_data = $this->getData('attribute_data')) {
+				$attribute_data = array();
 
-        if (!$attribute_data = $this->getData('attribute_data')) {
-            $attribute_data = array();
+				$collection = $this->_productAttributeCollection
+					->addFieldToFilter('attribute_code', array('in' => $this->getUsedMagentoAttributes()));
+	  
+				foreach ($collection as $attr) {
+					$attr->setStoreId($this->_storeModelStoreManagerInterface->getStore()->getId());
+					$attribute_data[$attr->getAttributeCode()] = array(
+						'label' => $attr->getStoreLabel($this->_storeModelStoreManagerInterface->getStore()->getId()),
+						'values' => ''
+					);
 
-            $collection = $this->_productAttributeCollection
-                ->addFieldToFilter('attribute_code', array('in' => $this->getUsedMagentoAttributes()));
-  
-            foreach ($collection as $attr) {
-                $attr->setStoreId($this->_storeModelStoreManagerInterface->getStore()->getId());
-                $attribute_data[$attr->getAttributeCode()] = array(
-                    'label' => $attr->getStoreLabel($this->_storeModelStoreManagerInterface->getStore()->getId()),
-                    'values' => ''
-                );
+					if ($attr->usesSource()) {
+									   
+	//                    $attribute_data[$attr->getAttributeCode()] = array();
+						foreach($attr->setStoreId($this->_storeModelStoreManagerInterface->getStore()->getId())->getSource()->getAllOptions(false) as $option) {
+							if (is_array($option['value'])) {
+								foreach ($option['value'] as $sub_option) {
+									if(count($sub_option) > 0) {
+										$attribute_data[$attr->getAttributeCode()]['values'][$sub_option['value']] = $sub_option['label'];
+									}
+								}
+							} else {
+								$attribute_data[$attr->getAttributeCode()]['values'][$option['value']] = $option['label'];
+							}
+						}
+					   
+					}
+				}
 
-                if ($attr->usesSource()) {
-                                   
-//                    $attribute_data[$attr->getAttributeCode()] = array();
-                    foreach($attr->setStoreId($this->_storeModelStoreManagerInterface->getStore()->getId())->getSource()->getAllOptions(false) as $option) {
-                        if (is_array($option['value'])) {
-                            foreach ($option['value'] as $sub_option) {
-                                if(count($sub_option) > 0) {
-                                    $attribute_data[$attr->getAttributeCode()]['values'][$sub_option['value']] = $sub_option['label'];
-                                }
-                            }
-                        } else {
-                            $attribute_data[$attr->getAttributeCode()]['values'][$option['value']] = $option['label'];
-                        }
-                    }
-                   
-                }
-            }
+				$this->setData('attribute_data', $attribute_data);
+			}
+			// make sure the attribute exists
+			if (isset($attribute_data[$code])) {
 
-            $this->setData('attribute_data', $attribute_data);
-        }
-        // make sure the attribute exists
-        if (isset($attribute_data[$code])) {
+				// was $value passed a parameter?
+				if (!is_null($value)) {
 
-            // was $value passed a parameter?
-            if (!is_null($value)) {
+					// If not values are set on attribute_data for the attribute, return just the value passed. (attributes like: name, description etc)
+					if(empty($attribute_data[$code]['values'])) {
+						return $value;
+					}
+					
+					// break up our value into an array by a comma, this is for catching multiple select attributes.
+					$values = explode(",", $value);
+												   
+					// loop over our array of attribute values
+					foreach ($values as $key => $valueOption) {
 
-                // If not values are set on attribute_data for the attribute, return just the value passed. (attributes like: name, description etc)
-                if(empty($attribute_data[$code]['values'])) {
-                    return $value;
-                }
-                
-                // break up our value into an array by a comma, this is for catching multiple select attributes.
-                $values = explode(",", $value);
-                                               
-                // loop over our array of attribute values
-                foreach ($values as $key => $valueOption) {
+						// if there is a value on the attribute_data use that value (it will be the label for a dropdown select attribute)
+						if (isset($attribute_data[$code]['values'][$valueOption])) {
+							$values[$key] = $attribute_data[$code]['values'][$valueOption];
+						} else { // If no label was found, log an error and unset the value.
+							$this->_searchHelperData->log(\Zend\Log\Logger::WARN, sprintf("Attribute: %s option label was not found, option ID provided: %s", $code, $valueOption));
+							unset($values[$key]);
+						}
+					}
 
-                    // if there is a value on the attribute_data use that value (it will be the label for a dropdown select attribute)
-                    if (isset($attribute_data[$code]['values'][$valueOption])) {
-                        $values[$key] = $attribute_data[$code]['values'][$valueOption];
-                    } else { // If no label was found, log an error and unset the value.
-                        $this->_searchHelperData->log(\Zend\Log\Logger::WARN, sprintf("Attribute: %s option label was not found, option ID provided: %s", $code, $valueOption));
-                        unset($values[$key]);
-                    }
-                }
+					// If there was only one value in the array, return the first (select menu, single option), or if there was more, return them all (multi-select).
+					if (count($values) == 1) {
+						$attribute_data[$code]['values'] = $values[0];
+					} else {
+						$attribute_data[$code]['values'] =  $values;
+					}
 
-                // If there was only one value in the array, return the first (select menu, single option), or if there was more, return them all (multi-select).
-                if (count($values) == 1) {
-                    $attribute_data[$code]['values'] = $values[0];
-                } else {
-                    $attribute_data[$code]['values'] =  $values;
-                }
-
-            }
-            return $attribute_data[$code];
-        }
+				}
+				return $attribute_data[$code];
+			}
 
 
-        $result['label'] = $code;
-        $result['values'] = $value;
-        return $result;
+			$result['label'] = $code;
+			$result['values'] = $value;
+			return $result;
+		}
     }
 
     /**

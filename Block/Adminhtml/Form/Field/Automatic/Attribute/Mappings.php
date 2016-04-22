@@ -2,7 +2,7 @@
 
 namespace Klevu\Search\Block\Adminhtml\Form\Field\Automatic\Attribute;
 
-class Mappings extends \Magento\Config\Block\System\Config\Form\Field\Array\AbstractArray {
+class Mappings extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray {
 
     /**
      * Check if columns are defined, set template
