@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Config/etc/system_file.xsd">
+  <system>
+    <section id="klevu_search" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+      <label>Search Configuration</label>
+      <tab>klevu</tab>
+      <group id="product_sync" translate="label" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Data Sync Settings</label>
+        <field id="enabledcms" translate="label" sortOrder="111" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Other Content Sync</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment><![CDATA[Enable CMS Synchronization.]]></comment>
+        </field>
+      </group>
+      <group id="cmscontent" translate="label" sortOrder="105" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>CMS / Other (Non-Product) Content</label>
+        <field id="enabledcmsfront_info" translate="label comment" sortOrder="100" type="label" showInDefault="1" showInWebsite="1">
+          <comment><![CDATA[Switch to store view scope to set.]]></comment>
+        </field>
+        <field id="enabledcmsfront" translate="label" sortOrder="100" type="select" showInStore="1">
+          <label>Enable Other Content in Frontend</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment><![CDATA[By default, when a search query is fired, Klevu searches in the 
+           product catalog. To enable search in the other content (e.g. CMS and Other non-product content), select Yes.]]></comment>
+        </field>
+        <!--<field id="excludecms_pages" translate="label" sortOrder="102" showInStore="1">
+          <label>Exclude CMS Pages from Search</label>
+		  <frontend_model>Klevu\Content\Block\Adminhtml\Form\Cmspages</frontend_model>
+          <backend_model>Magento\Config\Model\Config\Backend\Serialized\Array</backend_model>
+          <comment><![CDATA[Please make sure to resynchronize data by choosing the "All data" option and clicking on the "Sync Data for This Store" button under the "Data Sync Settings".]]></comment>
+        </field>-->
+      </group>
+    </section>
+  </system>
+</config>

@@ -1,0 +1,165 @@
+.kuContainer{
+	width:100% !important;
+}
+
+@media only screen and (max-width: 1024px) {
+	.kuSortby{
+		width:30%;
+	}
+
+	.kuView{
+		width:30%;
+		text-align:right;
+	}
+	
+	.kuPerPage{
+		width:30%;
+		text-align:left;
+		margin-left:10px;
+	}
+	
+	.kuPagination{
+		width:50%;
+		margin-top:10px;
+	}
+	
+	.kuGridView ul li{
+		width:31%;	
+		margin-bottom:50px;
+	}
+	
+	.kuListView .klevuImgWrap{
+		width:20% !important;
+	}
+	
+	.kuListView ul li .kuNameDesc{
+		width:76%;	
+	}
+	
+	.kuListView ul li .kuPrice{
+		float: none !important;
+		width: 58%;
+		display: table-cell;
+		text-align: left;
+		padding-top: 20px;
+		padding-left: 10px;
+	}
+	
+	.kuListView ul li .kuPrice .kuSalePrice{
+		display:inline !important;	
+	}
+
+	.kuListView ul li .kuPrice .kuOrigPrice{
+		display:inline !important;	
+	}
+	
+	.kuListView ul li .kuAddtocart{
+		width: 15%;
+		float: none;
+		margin-top: 30px;
+		visibility: visible !important;
+		opacity: 1;
+		display: table-cell;
+	}
+	
+	.kuGridView ul li .kuAddtocart{
+		visibility: visible;
+		opacity: 1;
+	}
+		
+}
+
+@media only screen and (min-width: 641px) and (max-width: 768px) {
+	.kuResultList{
+		width:74%;	
+	}
+	
+	.kuGridView ul li{
+		width:31%;	
+		margin-bottom:50px;
+	}
+
+}
+
+@media only screen and (max-width: 640px) {
+	.kuFilters{
+		display:none !important;	
+	}
+	
+	.kuTotResults{
+		float:none;
+		width:100%; 
+		text-align: center;
+	}
+	
+	.kuResultList{
+		float:none;
+		width:100%;	
+		margin-left:0px;
+	}
+	
+	.kuTotalResultsTab{
+	  float:none; 
+		width:100%; 
+		text-align: center;
+	}
+	
+	.kuSortby{
+		width:50%;
+		height:50px;
+	}
+	
+	.kuSortHeader{
+		margin:0px;	
+	}
+
+	.kuView{
+		width:50%;
+		text-align:right;
+		height:50px;
+		display: none;
+	}
+	
+	.kuPerPage{
+		width:48%;
+		text-align:right;
+		margin:0 auto;
+		margin-top:0px;
+	}
+	
+	.kuPagination{
+		width:100%;
+		margin:0 auto;
+		margin-top:10px;
+		text-align:center;
+	}
+	
+	.kuGridView ul li{
+		width:31%;	
+	}
+
+	
+	.kuBottomPagi .kuPerPage{
+		margin-left:0px;
+		text-align: left;
+		margin-bottom:5px;
+		float: left;
+		width: 46%;
+	}
+
+	.kuBottomPagi .kuPagination{
+		width: 52%;
+		float: right;
+		margin-top: 5px;
+		text-align: right;
+	}
+	
+}
+
+@media only screen and (max-width: 480px) {
+	.kuGridView ul li{
+		width:46%;	
+		min-height: 390px;
+		margin-bottom: 55px;
+	}
+}

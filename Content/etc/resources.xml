@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/App/etc/resources.xsd">
+  <resource name="klevu_content_setup" extends="core_setup"/>
+  <resource name="content_write" extends="core_write"/>
+  <resource name="content_read" extends="core_read"/>
+</config>

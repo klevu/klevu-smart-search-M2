@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Cron/etc/crontab.xsd">
+  <group id="default">
+    <job name="klevu_search_product_sync" instance="Klevu\Search\Model\Product\Sync" method="run">
+        <schedule>0 */3 * * *</schedule>    
+	</job>
+	<job name="updateruleinfo" instance="Klevu\Search\Model\Product\Sync" method="catalogruleupdateinfo">
+        <schedule>0 2 * * *</schedule>    
+	</job>
+	<job name="sendOrderTrackingToKlevu" instance="Klevu\Search\Model\Order\Sync" method="run">
+        <schedule>0 2 * * *</schedule>    
+	</job>
+  </group>
+</config>

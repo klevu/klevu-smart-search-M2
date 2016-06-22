@@ -1,0 +1,16 @@
+.klevu-search-terms{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.klevu-search-terms h3{
+    text-transform:uppercase;
+    border-bottom:1px solid #ddd;
+}
+
+.klevu-search-terms ul li{
+    display:inline;
+    margin-bottom:3px;
+    margin-right:3px;
+    
+}

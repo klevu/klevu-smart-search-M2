@@ -1,0 +1,16 @@
+.kuClrFilterBoth{
+    clear:both;
+}
+
+.kuFilterLbl{
+    display:inline-block !important;
+    float:left;
+}
+
+.kuFilterClose{
+    display:inline-block !important;
+    float:right;
+}
+.contentSelect{
+font-weight:bold;
+}
