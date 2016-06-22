@@ -1485,6 +1485,15 @@ class Sync extends \Klevu\Search\Model\Sync {
             $product['id'] = $this->_searchHelperData->getKlevuProductId($product['product_id'], $product['parent_id']);
             unset($product['product_id']);
             unset($product['parent_id']);
+            if($item) {
+              $item->clearInstance();
+              $item = null;
+            }
+            if($parent) {
+              $parent->clearInstance();
+              $parent = null;
+            }
+            gc_collect_cycles();
         }
    
         return $this;
