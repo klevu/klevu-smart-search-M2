@@ -31,7 +31,6 @@ class store extends \Magento\Backend\App\Action
         }
 
         $this->_view->loadLayout();
-        //$this->initLayoutMessages('klevu_search/session');
         $this->_view->getLayout()->initMessages();
         $this->_view->renderLayout();
     }

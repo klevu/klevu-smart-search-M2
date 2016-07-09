@@ -160,7 +160,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getExcludedCmsPages($store = null)
     {
-        return $this->_appConfigScopeConfigInterface->getValue(static ::XML_PATH_EXCLUDED_CMS_PAGES, $store);
+        return $this->_appConfigScopeConfigInterface->getValue(static ::XML_PATH_EXCLUDED_CMS_PAGES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
     }
     
     /**
@@ -172,7 +172,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getExcludedPages($store = null)
     {
-        $values = unserialize($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_EXCLUDEDCMS_PAGES, $store));
+        $values = unserialize($this->_appConfigScopeConfigInterface->getValue(static ::XML_PATH_EXCLUDEDCMS_PAGES,\Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store));
         if (is_array($values)) {
             return $values;
         }
@@ -301,11 +301,42 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $cmsmap = unserialize($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_EXCLUDEDCMS_PAGES,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$store));
         return (is_array($cmsmap)) ? $cmsmap : array();
     }
-    
+	
+	/**
+     * set the Cms pages.
+     *
+     * @param int|\Magento\Framework\Model\Store $store
+     *
+     * @return this
+     */
     public function setCmsPageMap($map, $store = null) {
         unset($map["__empty"]);
         $this->_searchHelperConfig->setStoreConfig(static::XML_PATH_EXCLUDEDCMS_PAGES, serialize($map), $store);
         return $this;
     }
+	
+	/**
+     * Remove html tags and replace it with space.
+     *
+     * @param $string
+     *
+     * @return $string
+     */
+	function ripTags($string) { 
+    
+		// ----- remove HTML TAGs ----- 
+		$string = preg_replace ('/<[^>]*>/', ' ', $string); 
+		
+		// ----- remove control characters ----- 
+		$string = str_replace("\r", '', $string);    
+		$string = str_replace("\n", ' ', $string);   
+		$string = str_replace("\t", ' ', $string);   
+		
+		// ----- remove multiple spaces ----- 
+		$string = trim(preg_replace('/ {2,}/', ' ', $string));
+		
+		return $string; 
+
+	}
 
 }

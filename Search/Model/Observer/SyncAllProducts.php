@@ -75,11 +75,7 @@ class SyncAllProducts implements ObserverInterface{
         }
 
         $sync->markAllProductsForUpdate($store);
-
-        //if (!$this->getIsProductSyncScheduled()) {
-            $sync->schedule();
-            //$this->setIsProductSyncScheduled(true);
-        //}
+        $sync->schedule();
     }
     
 }

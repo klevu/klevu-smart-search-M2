@@ -38,13 +38,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
      * @var \Magento\Tax\Helper\Data
      */
     protected $_taxHelperData;
-	
-	/**
+    
+    /**
      * @var \Magento\Eav\Model\Entity\Type
      */
     protected $_modelEntityType;
-	
-	/**
+    
+    /**
      * @var \Magento\Eav\Model\Entity\Attribute
      */
     protected $_modelEntityAttribute;
@@ -57,7 +57,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         \Psr\Log\LoggerInterface $psrLogLoggerInterface, 
         \Magento\Catalog\Model\Product $catalogModelProduct, 
         \Magento\Catalog\Helper\Data $taxHelperData,
-		\Magento\Eav\Model\Entity\Type $modelEntityType, 
+        \Magento\Eav\Model\Entity\Type $modelEntityType, 
         \Magento\Eav\Model\Entity\Attribute $modelEntityAttribute)
     {
         $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
@@ -66,7 +66,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         $this->_psrLogLoggerInterface = $psrLogLoggerInterface;
         $this->_catalogModelProduct = $catalogModelProduct;
         $this->_taxHelperData = $taxHelperData;
-		$this->_modelEntityType = $modelEntityType;
+        $this->_modelEntityType = $modelEntityType;
         $this->_modelEntityAttribute = $modelEntityAttribute;
 
         parent::__construct($context);
@@ -105,8 +105,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
             return $this->getLanguageFromLocale($store->getConfig(\Magento\Directory\Helper\Data::XML_PATH_DEFAULT_LOCALE));
         }
     }
-	
-	/**
+    
+    /**
      * Return the timezone for the given store.
      *
      * @param int|\Magento\Framework\Model\Store $store
@@ -232,10 +232,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     public function log($level, $message) {
         $config = $this->_searchHelperConfig;
         if ($level <= $config->getLogLevel()) {
-			$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/'.Static::LOG_FILE);
-			$logger = new \Zend\Log\Logger();
-			$logger->addWriter($writer);
-			$logger->info($message);
+            $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/'.Static::LOG_FILE);
+            $logger = new \Zend\Log\Logger();
+            $logger->addWriter($writer);
+            $logger->info($message);
         }
     }
 
@@ -263,13 +263,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     }
 
     /**
-     * Return whether or not the current page is CatalogSearch.
-     * @return bool
-     */
-    public function isCatalogSearch() {
-        return in_array('catalogsearch_result_index', Mage::app()->getLayout()->getUpdate()->getHandles());
-    }
-    /**
      Generate a Klevu product sku with parent product.
      *
      * @param string      $product_sku Magento Sku of the product to generate a Klevu sku for.
@@ -285,8 +278,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         }
         return sprintf("%s%s", $parent_sku, $product_sku);
     }
-	
-	/**
+    
+    /**
      Get Original price for group product.
      *
      * @param object $product.
@@ -300,11 +293,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
             $groupPrices = array();
             foreach ($groupProductIds as $ids) {
                 foreach ($ids as $id) {
-                    $groupProduct = $this->_catalogModelProduct->load($id);
+                    $groupProduct = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($id);
                     if($config->isTaxEnabled($store->getId())) {
-					    $groupPrices[] = $this->_taxHelperData->getTaxPrice($groupProduct, $groupProduct->getPrice(), true, null, null, null, $store,false);
+                        $groupPrices[] = $this->_taxHelperData->getTaxPrice($groupProduct,$groupProduct->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(), true, null, null, null, $store,false);
                     } else {
-                        $groupPrices[] = $groupProduct->getPrice();
+                        $groupPrices[] = $groupProduct->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
                     }
                 }
             }
@@ -329,11 +322,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         $groupPrices = array();
             foreach ($groupProductIds as $ids) {
                 foreach ($ids as $id) {
-                    $groupProduct = $this->_catalogModelProduct->load($id);
+                    $groupProduct = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($id);
                     if($config->isTaxEnabled($store->getId())) {
-                        $groupPrices[] = $this->_taxHelperData->getTaxPrice($groupProduct, $groupProduct->getFinalPrice(), true, null, null, null, $store,false);
+                        $groupPrices[] = $this->_taxHelperData->getTaxPrice($groupProduct, $groupProduct->getPriceInfo()->getPrice('final_price')->getAmount()->getValue(), true, null, null, null, $store,false);
                     } else {
-                        $groupPrices[] = $groupProduct->getFinalPrice();
+                        $groupPrices[] = $groupProduct->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
                     }
                 }
             }
@@ -356,8 +349,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
                 return $item->getPriceModel()->getTotalPrices($item, null, null, false);
         }
     }
-	
-	/**
+    
+    /**
      * Get the is active attribute id
      *
      * @return string
@@ -370,23 +363,28 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         return $attribute->getAttributeId();
     }
     
+    /**
+     * Get the client ip
+     *
+     * @return string
+     */
     public function getIp() {
-		$ip = '';
-		if (!empty($_SERVER['HTTP_CLIENT_IP']))
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		else if(!empty($_SERVER['HTTP_X_FORWARDED']))
-			$ip = $_SERVER['HTTP_X_FORWARDED'];
-		else if(!empty($_SERVER['HTTP_FORWARDED_FOR']))
-			$ip = $_SERVER['HTTP_FORWARDED_FOR'];
-		else if(!empty($_SERVER['HTTP_FORWARDED']))
-			$ip = $_SERVER['HTTP_FORWARDED'];
-		else if(!empty($_SERVER['REMOTE_ADDR']))
-			$ip = $_SERVER['REMOTE_ADDR'];
-		else
-			$ip = 'UNKNOWN';
-	 
-		return $ip;
+        $ip = '';
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(!empty($_SERVER['HTTP_X_FORWARDED']))
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        else if(!empty($_SERVER['HTTP_FORWARDED_FOR']))
+            $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(!empty($_SERVER['HTTP_FORWARDED']))
+            $ip = $_SERVER['HTTP_FORWARDED'];
+        else if(!empty($_SERVER['REMOTE_ADDR']))
+            $ip = $_SERVER['REMOTE_ADDR'];
+        else
+            $ip = 'UNKNOWN';
+     
+        return $ip;
     }
 }

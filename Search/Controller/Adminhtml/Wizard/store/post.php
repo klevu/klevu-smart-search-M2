@@ -110,7 +110,6 @@ class post extends \Magento\Backend\App\Action
         $config->setTaxEnabledFlag($request->getPost("tax_enable"), $store);
         $config->setSecureUrlEnabledFlag($request->getPost("secureurl_setting"), $store);
         $this->_view->loadLayout();
-        //$this->_view->initLayoutMessages("klevu_search/session");
         $this->_view->getLayout()->initMessages();
         $this->_view->renderLayout();
 

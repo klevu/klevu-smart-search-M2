@@ -23,12 +23,12 @@
           <comment><![CDATA[By default, when a search query is fired, Klevu searches in the 
            product catalog. To enable search in the other content (e.g. CMS and Other non-product content), select Yes.]]></comment>
         </field>
-        <!--<field id="excludecms_pages" translate="label" sortOrder="102" showInStore="1">
+        <field id="excludecms_pages" translate="label" sortOrder="102" showInStore="1">
           <label>Exclude CMS Pages from Search</label>
 		  <frontend_model>Klevu\Content\Block\Adminhtml\Form\Cmspages</frontend_model>
-          <backend_model>Magento\Config\Model\Config\Backend\Serialized\Array</backend_model>
+          <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
           <comment><![CDATA[Please make sure to resynchronize data by choosing the "All data" option and clicking on the "Sync Data for This Store" button under the "Data Sync Settings".]]></comment>
-        </field>-->
+        </field>
       </group>
     </section>
   </system>

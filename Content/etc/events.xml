@@ -6,13 +6,7 @@
   <event name="adminhtml_cmspage_on_delete">
     <observer name="content_adminhtml_cmspage_on_delete" instance="Klevu\Content\Model\Observer\ScheduleOtherContent"/>
   </event>
-  <!--<event name="sync_all_external_data">
-    <observer name="sync_all_content_data" instance="Klevu\Content\Model\Observer" method="syncAllContent"/>
-  </event>-->
   <event name="content_data_to_sync">
     <observer name="add_content_data_to_sync" instance="Klevu\Content\Model\Observer\SyncOtherContent"/>
   </event>
-  <!--<event name="excluded_cms_pages">
-    <observer name="add_boosting_data_to_sync" instance="Klevu\Content\Model\Observer" method="saveExcludedCmsPages"/>
-  </event>-->
 </config>

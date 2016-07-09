@@ -120,6 +120,7 @@ class all extends \Magento\Backend\App\Action
             $this->_modelProductSync->run();
             /* Use event For other content sync */
             $this->_frameworkEventManagerInterface->dispatch('content_data_to_sync', array());
+			\Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Model\Session')->unsFirstSync();
             $this->messageManager->addSuccess(__("Data updates have been sent to Klevu"));
         } catch (\Magento\Framework\Model\Store\Exception $e) {
             $this->_psrLogLoggerInterface->error($e);

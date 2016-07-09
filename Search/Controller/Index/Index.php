@@ -27,8 +27,9 @@ class Index extends  \Magento\Framework\App\Action\Action
     }
 
     public function execute() {
-
+		$query = $this->getRequest()->getParam('q');		
         $this->_view->loadLayout();
+		$this->_view->getPage()->getConfig()->getTitle()->set(__(sprintf("Search results for: '%s'",$query)));
         $this->_view->renderLayout();
     }
 }

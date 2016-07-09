@@ -4,12 +4,6 @@
     <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
     <observer name="catalog_product_media_save_before_event" instance="Klevu\Search\Model\Observer\CreateThumb" />
   </event>
- <!-- <event name="admin_system_config_changed_section_klevu_search">
-    <observer name="klevu_search_removetest" instance="Klevu\Search\Model\KlevuObserver" method="removeTest"/>
-  </event>-->
- <!--  <event name="controller_action_predispatch_catalogsearch_result_index">
-    <observer name="klevu_search_landing_page" instance="Klevu\Search\Model\KlevuObserver" method="applyLandingPageModelRewrites"/>
-  </event>-->
   <event name="after_reindex_process_catalog_category_product">
     <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
   </event>

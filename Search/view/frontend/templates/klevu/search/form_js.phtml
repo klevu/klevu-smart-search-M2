@@ -41,8 +41,16 @@ require(["prototype"], function(){
     (function () { var ws = document.createElement('script'),kl_protocol =("https:"===document.location.protocol?"https://":"http://"); ws.type = 'text/javascript'; ws.async = true; ws.src = kl_protocol+'<?php echo $config->getJsUrl() ?>/klevu-js-v1/js/klevu-webstore.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ws, s); })();
 
 </script>
-
 <?php endif; ?>
 
+<script type="text/javascript">
+<?php 
+	// show group price based on logged in customer group
+	$customerSession = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Customer\Model\Session');
+    //Check if User is Logged In
+    if($customerSession->isLoggedIn()) { ?>
+		var klevu_loginCustomerGroup = "<?php echo $customerSession->getCustomer()->getCustomerGroupId(); ?>";
+<?php } ?>
+</script>
 
 

@@ -4,16 +4,12 @@
     <klevu_search>
       <general>
         <enabled>0</enabled>
-        <test_mode>0</test_mode>
         <hostname>box.klevu.com</hostname>
         <rest_hostname>rest.klevu.com</rest_hostname>
-        <test_hostname>box.klevu.com</test_hostname>
-        <test_cloud_search_url>eucs.klevu.com</test_cloud_search_url>
         <cloud_search_url>eucs.klevu.com</cloud_search_url>
         <analytics_url>stats.klevu.com</analytics_url>
-        <test_analytics_url>stats.klevu.com</test_analytics_url>
         <js_url>js.klevu.com</js_url>
-        <test_js_url>js.klevu.com</test_js_url>
+		<tiers_url>tiers.klevu.com</tiers_url>
       </general>
       <product_sync>
         <enabled>1</enabled>

@@ -44,7 +44,6 @@ class InstallData implements InstallDataInterface
 				$data['group'] = 'Product Details';
 				$attribute->setData($data);
 				$attribute->save();
-				//$resource = \Magento\Framework\App\ObjectManager::getInstance()->get('\Magento\Framework\App\ResourceConnection');
 				$resource = $setup;
 				$read = $setup->getConnection('core_read');
 				$write = $setup->getConnection('core_write');

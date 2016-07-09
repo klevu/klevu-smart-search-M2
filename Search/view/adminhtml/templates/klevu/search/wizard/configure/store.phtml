@@ -1,6 +1,3 @@
-<?php
-/** @var \Klevu\Search\Block\Adminhtml\Wizard\Configure\Store $this */ ?>
-<?php //$store = $this->getStore() ?>
 <?php echo $block->getLayout()->getMessagesBlock()->getGroupedHtml(); ?>
 <div class="kuWizardSteps">
 <ol class="wizard-progress clearfix">
@@ -22,19 +19,12 @@
 	</li>
 </ol>
 </div>
-
 <form id="klevu_search_wizard_configure_store_form" action="<?php echo $this->getFormActionUrl() ?>" method="POST">
-    
-	
 	<div class="klevu_conf_store">
 		<fieldset class="fieldset admin__fieldset">
-		
 			<input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
-			
-   
 			<div class="admin__field field">
 			<label for="store" class="label admin__field-label"><?php echo __("Select a Magento store you want to configure Klevu search for.") ?></label>
-			
 				<div class="admin__field-control control">
 					<select name="store" class="select admin__control-select">
                             <option value=""></option>
@@ -52,10 +42,7 @@
                             <?php endforeach; ?>
 					</select>
 				</div>
-                        
 			</div>
-
-			
 			<div class="admin__field field">
 					<label for="tax_enable" class="label admin__field-label"><?php echo __("How do you want to display product prices in search?") ?></label>
 					
@@ -66,9 +53,7 @@
                             <option value="1"><?php echo __("Add relevant tax in price as product prices need to be displayed with tax"); ?></option>
                         </select>
 					</div>
-              </div>     
-					
-			
+            </div>     
 			<div class="admin__field field">
 					<label for="secure_baseurl_enable" class="label admin__field-label"><?php echo __("Which 'base URL' would you like to use for products in search results?"); ?><br/>
 					<span class="note">(from System > Configuration > Web > Secure OR Unsecure > Base URL)") </span></label>
@@ -85,8 +70,6 @@
 					<button type="submit" class="action-default primary"><span><?php echo __("Continue") ?></span></button>
 				</div>
 			</div>
-			
 		</fieldset>
 		</div>
-			
 </form>

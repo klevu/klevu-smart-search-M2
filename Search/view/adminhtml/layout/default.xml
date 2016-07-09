@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
      <head>
-        <css src="Klevu_Search::klevu/search/notifications.css"/>
         <css src="Klevu_Search::klevu/search/klevumagestyle.css"/>
     </head>
 </config>

@@ -126,8 +126,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
      * Perform Content Sync on any configured stores, adding new content, updating modified and
      * deleting removed content since last sync.
      */
-    public function run()
-    {
+    public function run(){
   
         // Sync Data only for selected store from config wizard
         $session = $this->_searchModelSession;
@@ -173,7 +172,8 @@ class Content extends \Klevu\Search\Model\Product\Sync
                 return;
             }
 
-            /*$cPgaes = $this->_contentHelperData->getExcludedPages($store);
+            $cPgaes = $this->_contentHelperData->getExcludedPages($store);
+
             if(count($cPgaes) > 0) {
                 foreach($cPgaes as $key => $cvalue){
                     $pageids[]  = intval($cvalue['cmspages']);
@@ -186,10 +186,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
                 $eids = implode("','",$pageids);
             } else {
                  $eids = $pageids;
-            }*/
-			
-			$eids = "";
-			$pageids = "";
+            }
 			
             $this->log(\Zend\Log\Logger::INFO, sprintf("Starting Cms sync for %s (%s).", $store->getWebsite()->getName() , $store->getName()));
             $actions = array(
@@ -337,6 +334,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
             }
             $this->log(\Zend\Log\Logger::INFO, sprintf("Finished cms page sync for %s (%s).", $store->getWebsite()->getName() , $store->getName()));
     }
+	
     /**
      * Delete the given pages from Klevu Search. Returns true if the operation was
      * successful, or the error message if the operation failed.
@@ -347,8 +345,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
      *
      * @return bool|string
      */
-    protected function deletecms(array $data)
-    {
+    protected function deletecms(array $data){
         $total = count($data);
         $response = $this->_apiActionDeleterecords->setStore($this->getStore())->execute(array(
             'sessionId' => $this->getSessionId() ,
@@ -390,6 +387,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
             return sprintf("%d cms%s failed (%s)", $total, ($total > 1) ? "s" : "", $response->getMessage());
         }
     }
+	
     /**
      * Add the given pages to Klevu Search. Returns true if the operation was successful,
      * or the error message if it failed.
@@ -400,8 +398,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
      *
      * @return bool|string
      */
-    protected function addCms(array $data)
-    {
+    protected function addCms(array $data){
         $total = count($data);
         $data = $this->addCmsData($data);
         $response = $this->_apiActionAddrecords->setStore($this->getStore())->execute(array(
@@ -449,6 +446,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
             return sprintf("%d cms%s failed (%s)", $total, ($total > 1) ? "s" : "", $response->getMessage());
         }
     }
+	
     /**
      * Add the page Sync data to each page in the given list. Updates the given
      * list directly to save memory.
@@ -459,8 +457,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
      *
      * @return $this
      */
-    protected function addcmsData(&$pages)
-    {
+    protected function addcmsData(&$pages){
         $page_ids = array();
         foreach($pages as $key => $value) {
             $page_ids[] = $value["page_id"];
@@ -480,9 +477,9 @@ class Content extends \Klevu\Search\Model\Product\Sync
             $value["desc"] = $value["content"];
             $value["id"] = "pageid_" . $value["page_id"];
             $value["url"] = $base_url . $value["identifier"];
-            $value["desc"] = strip_tags($value["content"]);
+			$value["desc"] = preg_replace('#\{{.*?\}}#s','',strip_tags($this->_contentHelperData->ripTags($value["content"])));
             $value["metaDesc"] = $value["meta_description"] . $value["meta_keywords"];
-            $value["shortDesc"] = substr(strip_tags($value["content"]) , 0, 200);
+			$value["shortDesc"] = substr(preg_replace('#\{{.*?\}}#s','',strip_tags($this->_contentHelperData->ripTags($value["content"]))),0,200);
             $value["listCategory"] = "KLEVU_CMS";
             $value["category"] = "pages";
             $value["salePrice"] = 0;
@@ -492,6 +489,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
         }
         return $cms_data_new;
     }
+	
     /**
      * Update the given pages on Klevu Search. Returns true if the operation was successful,
      * or the error message if it failed.
@@ -502,8 +500,7 @@ class Content extends \Klevu\Search\Model\Product\Sync
      *
      * @return bool|string
      */
-    protected function updateCms(array $data)
-    {
+    protected function updateCms(array $data){
         $total = count($data);
         $data = $this->addCmsData($data);
         $response = $this->_apiActionUpdaterecords->setStore($this->getStore())->execute(array(

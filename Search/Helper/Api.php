@@ -304,7 +304,7 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
      * @return string
      */
     public function getVersion() {
-        return "2.0.0";
-        //return Mage::getConfig()->getModuleConfig('Klevu\Search')->version;
+		$moduleInfo =  \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\Module\ModuleList')->getOne('Klevu_Search');
+        return $moduleInfo['setup_version'];
     }
 }

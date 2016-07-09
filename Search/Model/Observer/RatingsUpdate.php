@@ -87,35 +87,35 @@ class RatingsUpdate implements ObserverInterface{
 
             $object = $observer->getEvent()->getObject();
             $statusId = $object->getStatusId();
-
 			$allStores = $this->_storeModelStoreManagerInterface->getStores();
-
             if($statusId == 1) {
-                $productId = $object->getEntityPkValue();
+				$productId = $object->getEntityPkValue();
                 $ratingObj = $this->_ratingModelRating->getEntitySummary($productId);
-                $ratings = $ratingObj->getSum()/$ratingObj->getCount();
-                $entity_type = $this->_modelEntityType->loadByCode("catalog_product");
-                $entity_typeid = $entity_type->getId();
-                $attributecollection = $this->_modelEntityAttribute->getCollection()->addFieldToFilter("entity_type_id", $entity_typeid)->addFieldToFilter("attribute_code", "rating");
+				if($ratingObj->getCount() != 0) {
+                    $ratings = $ratingObj->getSum()/$ratingObj->getCount();
+                    $entity_type = $this->_modelEntityType->loadByCode("catalog_product");
+                    $entity_typeid = $entity_type->getId();
+                    $attributecollection = $this->_modelEntityAttribute->getCollection()->addFieldToFilter("entity_type_id", $entity_typeid)->addFieldToFilter("attribute_code", "rating");
 
-				if(count($attributecollection) > 0) {
-                    if(count($object->getData('stores')) > 0) {
+				    if(count($attributecollection) > 0) {
+                        if(count($object->getData('stores')) > 0) {
 
-                        foreach($object->getData('stores') as $key => $value) {
+                            foreach($object->getData('stores') as $key => $value) {
 
-                            $this->_modelProductAction->updateAttributes(array($productId), array('rating'=>$ratings),$value);
+                                $this->_modelProductAction->updateAttributes(array($productId), array('rating'=>$ratings),$value);
 								
+                            }
                         }
-                    }
-                    /* update attribute */
-                    if(count($allStores) > 1) {
+                        /* update attribute */
+                        if(count($allStores) > 1) {
 						
-                        $this->_modelProductAction->updateAttributes(array($productId), array('rating'=>0),0);
-                    }
+                            $this->_modelProductAction->updateAttributes(array($productId), array('rating'=>0),0);
+                        }
 
-                    /* mark product for update to sync data with klevu */
-                    $this->_modelProductSync->updateSpecificProductIds(array($productId));
-                }
+                        /* mark product for update to sync data with klevu */
+                        $this->_modelProductSync->updateSpecificProductIds(array($productId));
+                    }
+				}
             }
         } catch (Exception $e) {
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));

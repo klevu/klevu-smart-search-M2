@@ -5,7 +5,7 @@
  */
 namespace Klevu\Search\Model\Order;
 class Sync extends \Klevu\Search\Model\Sync {
-	
+    
     /**
      * @var \Magento\Framework\App\ResourceConnection
      */
@@ -30,21 +30,20 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @var \Klevu\Search\Model\Api\Action\Producttracking
      */
     protected $_apiActionProducttracking;
-    /**
-     * @var \Klevu\Search\Model\Resource\Notification\Collection
-     */
-    //protected $_resourceNotificationCollection;
+
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
     protected $_frameworkModelDate;
+	
+	const NOTIFICATION_TYPE = "order_sync";
+	
     public function __construct(\Magento\Framework\App\ResourceConnection $frameworkModelResource, 
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface, 
         \Klevu\Search\Helper\Config $searchHelperConfig, 
         \Magento\Sales\Model\Order\Item $modelOrderItem, 
         \Klevu\Search\Helper\Data $searchHelperData, 
         \Klevu\Search\Model\Api\Action\Producttracking $apiActionProducttracking, 
-        //\Klevu\Search\Model\Resource\Notification\Collection $resourceNotificationCollection, 
         \Magento\Framework\Stdlib\DateTime\DateTime $frameworkModelDate)
     {
         $this->_frameworkModelResource = $frameworkModelResource;
@@ -53,20 +52,13 @@ class Sync extends \Klevu\Search\Model\Sync {
         $this->_modelOrderItem = $modelOrderItem;
         $this->_searchHelperData = $searchHelperData;
         $this->_apiActionProducttracking = $apiActionProducttracking;
-        //$this->_resourceNotificationCollection = $resourceNotificationCollection;
         $this->_frameworkModelDate = $frameworkModelDate;
-       // parent::__construct();
     }
-    const NOTIFICATION_TYPE = "order_sync";
-    public function _construct() {
-        parent::_construct();
-        $this->addData(array(
-            "connection" => $this->_frameworkModelResource->getConnection("core_write")
-        ));
-    }
+   
     public function getJobCode() {
         return "klevu_search_order_sync";
     }
+	
     /**
      * Add the items from the given order to the Order Sync queue. Does nothing if
      * Order Sync is disabled for the store that the order was placed in.
@@ -77,29 +69,29 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @return $this
      */
     public function addOrderToQueue(\Magento\Sales\Model\Order $order, $force = false) {
-		
+        
         $items = array();
-		$order_date = date_create("now")->format("Y-m-d");
-		$session_id = session_id();
-		$ip_address = $this->_searchHelperData->getIp();
-		foreach ($order->getAllVisibleItems() as $item) {
-			// For configurable products add children items only, for all other products add parents
-			if ($item->getProductType() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-				foreach ($item->getChildrenItems() as $child) {
-					if($child->getId()!=null) {
-						if($this->checkItemId($child->getId()) !== true) {
-							$items[] = array($child->getId(),$session_id,$ip_address,$order_date);
-						}
-					}
-				}
-			} else {
-				if($item->getId()!=null) {
-					if($this->checkItemId($item->getId()) !== true) {
-						$items[] = array($item->getId(),$session_id,$ip_address,$order_date);
-					}
-				}
-			}
-		}
+        $order_date = date_create("now")->format("Y-m-d");
+        $session_id = session_id();
+        $ip_address = $this->_searchHelperData->getIp();
+        foreach ($order->getAllVisibleItems() as $item) {
+            // For configurable products add children items only, for all other products add parents
+            if ($item->getProductType() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                foreach ($item->getChildrenItems() as $child) {
+                    if($child->getId()!=null) {
+                        if($this->checkItemId($child->getId()) !== true) {
+                            $items[] = array($child->getId(),$session_id,$ip_address,$order_date);
+                        }
+                    }
+                }
+            } else {
+                if($item->getId()!=null) {
+                    if($this->checkItemId($item->getId()) !== true) {
+                        $items[] = array($item->getId(),$session_id,$ip_address,$order_date);
+                    }
+                }
+            }
+        }
        
         // in case of multiple addresses used for shipping
         // its possible that items object here is empty
@@ -109,6 +101,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         return $this;
     }
+	
     /**
      * Clear the Order Sync queue for the given store. If no store is given, clears
      * the queue for all stores.
@@ -134,6 +127,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         $result = $this->_frameworkModelResource->query($select->deleteFromSelect("k"));
         return $result->rowCount();
     }
+	
     public function run() {
         try {
             if ($this->isRunning(2)) {
@@ -144,13 +138,12 @@ class Sync extends \Klevu\Search\Model\Sync {
             
             $stores = $this->_storeModelStoreManagerInterface->getStores();
             foreach ($stores as $store) {
-                //if($this->_searchHelperConfig->isOrderSyncEnabled($store->getId())) {
                     $this->log(\Zend\Log\Logger::INFO, "Starting sync.");
                     $items_synced = 0;
                     $errors = 0;
                     $item = $this->_modelOrderItem;
                     $stmt = $this->_frameworkModelResource->getConnection()->query($this->getSyncQueueSelect());
-					$itemsToSend = $stmt->fetchAll();
+                    $itemsToSend = $stmt->fetchAll();
                     foreach ($itemsToSend as $key => $value) {
                         if ($this->rescheduleIfOutOfMemory()) {
                             return;
@@ -178,21 +171,15 @@ class Sync extends \Klevu\Search\Model\Sync {
                         }
                     }
                     $this->log(\Zend\Log\Logger::INFO, sprintf("Sync finished. %d items synced.", $items_synced));
-                    //$this->_searchHelperConfig->setLastOrderSyncRun();
-                    if ($errors) {
-                        //$this->notify(__("Order Sync failed to sync some of the order items. Please consult the logs for more details."));
-                    } else {
-                        // If a sync finished without errors, existing notifications no longer apply
-                        //$this->deleteNotifications();
-                    }
+
                 }
-            //}
         } catch(Exception $e) {
             // Catch the exception that was thrown, log it, then throw a new exception to be caught the Magento cron.
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
             throw $e;
         }
     }
+	
     /**
      * Sync the given order item to Klevu. Returns true on successful sync and
      * the error message otherwise.
@@ -218,11 +205,11 @@ class Sync extends \Klevu\Search\Model\Sync {
             "klevu_unit"      => $item->getQtyOrdered() ? $item->getQtyOrdered() : ($parent ? $parent->getQtyOrdered() : null),
             "klevu_salePrice" => $item->getPriceInclTax() ? $item->getPriceInclTax() : ($parent ? $parent->getPriceInclTax() : null),
             "klevu_currency"  => $this->getStoreCurrency($item->getStoreId()),
-			"klevu_shopperIP" => $this->getOrderIP($item->getOrderId()),
-			"Klevu_sessionId" => $sess_id,
-			"klevu_orderDate" => $order_date,
-			"klevu_storeTimezone" => $this->_searchHelperData->getStoreTimeZone($item->getStoreId()),
-			"Klevu_clientIp" => $ip_address
+            "klevu_shopperIP" => $this->getOrderIP($item->getOrderId()),
+            "Klevu_sessionId" => $sess_id,
+            "klevu_orderDate" => $order_date,
+            "klevu_storeTimezone" => $this->_searchHelperData->getStoreTimeZone($item->getStoreId()),
+            "Klevu_clientIp" => $ip_address
         ));
         if ($response->isSuccess()) {
             return true;
@@ -230,6 +217,7 @@ class Sync extends \Klevu\Search\Model\Sync {
             return $response->getMessage();
         }
     }
+	
     /**
      * Check if Order Sync is enabled for the given store.
      *
@@ -248,6 +236,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         return $is_enabled[$store_id];
     }
+	
     /**
      * Return the JS API key for the given store.
      *
@@ -266,6 +255,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         return $api_keys[$store_id];
     }
+	
     /**
      * Get the currency code for the given store.
      *
@@ -284,6 +274,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         return $currencies[$store_id];
     }
+	
     /**
      * Return the customer IP for the given order.
      *
@@ -307,11 +298,11 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         return $order_ips[$order_id];
     }
-	
-	/**
+    
+    /**
      * Return Order ItemId Already exits or not.
      *
-     * @param $order_item_id
+     * @param $order_id
      *
      * @return boolean
      */
@@ -320,20 +311,20 @@ class Sync extends \Klevu\Search\Model\Sync {
             $orderid = $this->_frameworkModelResource->getConnection()->fetchAll(
                 $this->_frameworkModelResource->getConnection()
                     ->select()->from(array(
-					'order' => $this->_frameworkModelResource->getTableName("klevu_order_sync")
-					))->where("order.order_item_id = ?", $order_item_id)
+                    'order' => $this->_frameworkModelResource->getTableName("klevu_order_sync")
+                    ))->where("order.order_item_id = ?", $order_item_id)
             );
 
-			if(count($orderid) == 1){
-			    return true;
-			} else {
-				return false;
-			}
+            if(count($orderid) == 1){
+                return true;
+            } else {
+                return false;
+            }
             
         }
         
     }
-	
+    
     /**
      * Return a select statement for getting all items in the sync queue.
      *
@@ -344,6 +335,7 @@ class Sync extends \Klevu\Search\Model\Sync {
             ->select()
             ->from($this->_frameworkModelResource->getTableName("klevu_order_sync"));
     }
+	
     /**
      * Add the given order item IDs to the sync queue.
      *
@@ -359,7 +351,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         return $this->_frameworkModelResource->getConnection()->insertArray(
             $this->_frameworkModelResource->getTableName("klevu_order_sync"),
             array("order_item_id","klevu_session_id","ip_address","date"),
-			$order_item_ids
+            $order_item_ids
         );
     }
     /**
@@ -375,26 +367,7 @@ class Sync extends \Klevu\Search\Model\Sync {
             array("order_item_id" => $order_item_id)
         ) === 1;
     }
-    /**
-     * Create an Adminhtml notification for Order Sync, overwriting
-     * any existing ones.
-     *
-     * @param $message
-     *
-     * @return $this
-     */
-    protected function notify($message) {
-        /*$notification = $this->_resourceNotificationCollection
-            ->addFieldToFilter("type", array("eq" => static::NOTIFICATION_TYPE))
-            ->getFirstItem();
-        $notification->addData(array(
-            "type"    => static::NOTIFICATION_TYPE,
-            "date"    => $this->_frameworkModelDate->timestamp(),
-            "message" => $message
-        ));
-        $notification->save();*/
-        return $this;
-    }
+
     /**
      * Delete Adminhtml notifications for Order Sync.
      *

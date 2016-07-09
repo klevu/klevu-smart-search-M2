@@ -14,9 +14,7 @@ class Information extends \Magento\Config\Block\System\Config\Form\Fieldset {
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         $html = $this->_getHeaderHtml($element);
-		//$render = $this->getLayout()->createBlock('Magento\Framework\View\Element\Template');
 		$html .= $this->_toHtml();
-		//$html .= $render->setTemplate('klevu/search/form/information.phtml')->toHtml();
 		$proSync = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Model\Product\Sync');
 		$check_plan = $proSync->getFeatures();
 
@@ -24,7 +22,7 @@ class Information extends \Magento\Config\Block\System\Config\Form\Fieldset {
 		if(empty($check_plan["errors"]) && !empty($check_plan)) { 
 			$html .='<p>';
 			if(!empty($check_plan['user_plan_for_store'])) {
-					$html .= '<b>My Current Plan:</b>';         
+					$html .= '<b>My Current Plan: </b>';         
 					$html .= ucfirst($check_plan['user_plan_for_store']); 
 			}
 			if(!empty($check_plan['upgrade_label'])) { 
@@ -34,7 +32,7 @@ class Information extends \Magento\Config\Block\System\Config\Form\Fieldset {
 			$html .= '</p>';
 	    } 
 		$html .= '<p><b>Prerequisites:</b><br>
-		  1. Ensure cron is running (<a href="http://support.klevu.com/knowledgebase/setup-a-cron/" target="_blank">Click here</a> for more information on setting up a cron)<br>
+		  1. Ensure cron is running <br>
 		  2. Indices are uptodate (System &gt; Index Management)<br>
 		  3. Products should be enabled and have the visibility set to catalog and search</p>';
         $html .= $this->_getFooterHtml($element);
