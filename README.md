@@ -2,6 +2,13 @@
  Intelligent cloud hosted site search with self-learning search technology. Guaranteed to increase search-led conversions.<br /> 
 
 <hr />
+<h2>Change Log</h2>
+<h3>Version 2.0.5</h3>
+<li> Removed the dependency error during the compile command </li>
+<li> Bug fix for when Klevu_search module is installed prior to installing Magento_Catalog</li>
+<li> Used Attribute code instead of the Attribute Name while installing Rating attribute </li>
+
+<hr />
 <h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/" target="_blank"> Integration Steps</a></h3> 
 <b>Have questions? Need help?</b>  E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
