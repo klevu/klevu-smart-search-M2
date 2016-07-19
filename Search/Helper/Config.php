@@ -54,7 +54,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
      */
     protected $_modelConfigData;
 
-    public function __construct(\Magento\Framework\App\Helper\Context $context,
+    public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $appConfigScopeConfigInterface, 
         \Magento\Framework\UrlInterface $magentoFrameworkUrlInterface, 
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface,

@@ -45,13 +45,12 @@ class clearcron extends \Magento\Backend\App\Action
 
     public function __construct(\Magento\Backend\App\Action\Context $context,
         \Klevu\Search\Model\Product\Sync $modelProductSync, 
-        \Klevu\Search\Helper\Data $searchHelperData, 
-        \Magento\Framework\Event\ManagerInterface $frameworkEventManagerInterface)
+        \Klevu\Search\Helper\Data $searchHelperData)
     {
 
 
         $this->_modelProductSync = $modelProductSync;
-        $this->_frameworkEventManagerInterface = $frameworkEventManagerInterface;
+        $this->_frameworkEventManagerInterface = $context->getEventManager();
 
         parent::__construct($context);
     }

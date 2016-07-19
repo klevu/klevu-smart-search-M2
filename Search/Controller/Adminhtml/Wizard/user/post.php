@@ -15,11 +15,10 @@ class post extends \Magento\Backend\App\Action
     protected $_searchModelSession;
     
     public function __construct(\Magento\Backend\App\Action\Context $context,
-        \Klevu\Search\Helper\Api $searchHelperApi, 
-        \Magento\Backend\Model\Session $searchModelSession)
+        \Klevu\Search\Helper\Api $searchHelperApi)
     {
         $this->_searchHelperApi = $searchHelperApi;
-        $this->_searchModelSession = $searchModelSession;
+        $this->_searchModelSession = $context->getSession();
         parent::__construct($context);
     }
 

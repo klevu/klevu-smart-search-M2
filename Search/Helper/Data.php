@@ -50,7 +50,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     protected $_modelEntityAttribute;
 
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface, 
         \Magento\Backend\Model\Url $backendModelUrl, 
         \Klevu\Search\Helper\Config $searchHelperConfig, 
@@ -69,7 +68,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         $this->_modelEntityType = $modelEntityType;
         $this->_modelEntityAttribute = $modelEntityAttribute;
 
-        parent::__construct($context);
     }
 
 

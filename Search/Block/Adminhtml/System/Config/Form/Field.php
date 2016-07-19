@@ -187,17 +187,5 @@ class Field extends \Magento\Config\Block\System\Config\Form\Field {
         return $html;
     }
 
-    /**
-     * Decorate field row html
-     *
-     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
-     * @param string $html
-     * @return string
-     */
-    protected function _decorateRowHtml($element, $html)
-    {
-
-        return '<tr id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
-    }
     
 }

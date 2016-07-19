@@ -15,13 +15,13 @@ class Button extends \Magento\Config\Block\System\Config\Form\Field {
     
     protected $_template = 'klevu/search/wizard/config/button.phtml';
     
-    public function __construct(\Magento\Backend\Block\Template\Context $Context,
-    \Klevu\Search\Helper\Config $searchHelperConfig,\Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface)
+    public function __construct(\Magento\Backend\Block\Template\Context $context,
+    \Klevu\Search\Helper\Config $searchHelperConfig)
     {
         $this->_searchHelperConfig = $searchHelperConfig;
-        $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
+        $this->_storeModelStoreManagerInterface = $context->getStoreManager();
 
-        parent::__construct($Context);
+        parent::__construct($context);
     }
 
 

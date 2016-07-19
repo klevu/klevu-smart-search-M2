@@ -49,7 +49,6 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
     protected $_apiActionCheckuserdetail;
 
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
         \Magento\Backend\Model\Auth\Session $backendModelSession, 
         \Magento\Framework\App\Config\ScopeConfigInterface $appConfigScopeConfigInterface, 
         \Klevu\Search\Model\Api\Action\Adduser $apiActionAdduser, 
@@ -70,7 +69,6 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
         $this->_apiActionGettimezone = $apiActionGettimezone;
         $this->_searchHelperConfig = $searchHelperConfig;
         $this->_apiActionCheckuserdetail = $apiActionCheckuserdetail;
-        parent::__construct($context);
     }
 
 

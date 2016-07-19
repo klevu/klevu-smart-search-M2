@@ -2,7 +2,7 @@
 
 namespace Klevu\Search\Model\Config\Log;
 
-class Level extends \Magento\Framework\Model\Config\Data {
+class Level extends \Magento\Framework\Config\Data {
 
     /**
      * Return the log level value. Return \Zend\Log\Logger::WARN as default, if none set.

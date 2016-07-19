@@ -9,7 +9,6 @@ namespace Klevu\Search\Setup;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-
 /**
  * @codeCoverageIgnore
  */
@@ -30,6 +29,7 @@ class InstallData implements InstallDataInterface
 			$entity_typeid = $entity_type->getId();
 			$attributecollection = \Magento\Framework\App\ObjectManager::getInstance()->get('\Magento\Eav\Model\Entity\Attribute')->getCollection()->addFieldToFilter("entity_type_id", $entity_typeid)->addFieldToFilter("attribute_code", "rating");
 			if (!count($attributecollection)) {
+				
 				$attribute = $attributecollection->getFirstItem();
 				$data = array();
 				$data['id'] = null;
@@ -60,7 +60,7 @@ class InstallData implements InstallDataInterface
 					$attribute_id = $attribute['attribute_id'];
 					$select = $read->select()->from($resource->getTable("eav_attribute_group") , array(
 						'attribute_group_id'
-					))->where("attribute_set_id=?", $attribute_set_id)->where("attribute_group_name=?", 'Product Details');
+					))->where("attribute_set_id=?", $attribute_set_id)->where("attribute_group_code=?", 'product-details');
 					$attribute_group = $read->fetchRow($select);
 					$attribute_group_id = $attribute_group['attribute_group_id'];
 					$write->beginTransaction();
@@ -75,8 +75,6 @@ class InstallData implements InstallDataInterface
 				}
 			}
 			\Magento\Framework\App\ObjectManager::getInstance()->get('\Klevu\Search\Helper\Config')->saveRatingUpgradeFlag(0);
-			
-
-				
+	
     }
 }

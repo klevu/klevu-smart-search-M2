@@ -47,19 +47,17 @@ class all extends \Magento\Backend\App\Action
 
     public function __construct(\Magento\Backend\App\Action\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface, 
-        \Magento\Backend\Model\Session $backendModelSession, 
         \Klevu\Search\Helper\Config $searchHelperConfig, 
         \Klevu\Search\Model\Product\Sync $modelProductSync, 
-        \Klevu\Search\Helper\Data $searchHelperData, 
-        \Magento\Framework\Event\ManagerInterface $frameworkEventManagerInterface)
+        \Klevu\Search\Helper\Data $searchHelperData)
     {
 
         $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
-        $this->_backendModelSession = $backendModelSession;
+        $this->_backendModelSession = $context->getSession();
         $this->_searchHelperConfig = $searchHelperConfig;
         $this->_modelProductSync = $modelProductSync;
         $this->_searchHelperData = $searchHelperData;
-        $this->_frameworkEventManagerInterface = $frameworkEventManagerInterface;
+        $this->_frameworkEventManagerInterface = $context->getEventManager();
 
         parent::__construct($context);
     }

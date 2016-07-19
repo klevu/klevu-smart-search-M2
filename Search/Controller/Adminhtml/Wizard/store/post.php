@@ -38,14 +38,13 @@ class post extends \Magento\Backend\App\Action
         \Magento\Backend\App\Action\Context $context,
         \Klevu\Search\Helper\Config $searchHelperConfig, 
         \Klevu\Search\Helper\Api $searchHelperApi, 
-        \Magento\Backend\Model\Session $searchModelSession, 
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface, 
         \Klevu\Search\Model\Product\Sync $modelProductSync, 
         \Klevu\Search\Model\Order\Sync $modelOrderSync)
     {
         $this->_searchHelperConfig = $searchHelperConfig;
         $this->_searchHelperApi = $searchHelperApi;
-        $this->_searchModelSession = $searchModelSession;
+        $this->_searchModelSession = $context->getSession();
         $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
         $this->_modelProductSync = $modelProductSync;
         $this->_modelOrderSync = $modelOrderSync;
