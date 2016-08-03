@@ -974,7 +974,10 @@ class Sync extends \Klevu\Search\Model\Sync {
     protected function updateProducts(array $data) {
         $total = count($data);
        
-        $this->addProductSyncData($data);
+        $dataToSend = $this->addProductSyncData($data);
+		if(!empty($dataToSend) && is_numeric($dataToSend)){
+		    $data = array_slice($data, 0, $dataToSend);
+		}
 
         $response = $this->_apiActionUpdaterecords
             ->setStore($this->_storeModelStoreManagerInterface->getStore())
@@ -1051,7 +1054,11 @@ class Sync extends \Klevu\Search\Model\Sync {
     protected function addProducts(array $data) {
         $total = count($data);
 
-        $this->addProductSyncData($data);
+        $dataToSend = $this->addProductSyncData($data);
+		if(!empty($dataToSend) && is_numeric($dataToSend)){
+		    $data = array_slice($data, 0, $dataToSend);
+		}
+		
         $response = $this->_apiActionAddrecords
             ->setStore($this->_storeModelStoreManagerInterface->getStore())
             ->execute(array(
@@ -1153,8 +1160,15 @@ class Sync extends \Klevu\Search\Model\Sync {
         $currency = $this->_storeModelStoreManagerInterface->getStore()->getDefaultCurrencyCode();
         $media_url .= $this->_productMediaConfig->getBaseMediaUrlAddition();
          
-         
+        $rc = 0; 
         foreach ($products as $index => &$product) {
+			
+			if($rc % 5 == 0) {
+				if ($this->rescheduleIfOutOfMemory()) {
+                    return $rc;
+				}
+			}
+			
             $item = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($product['product_id']);
 
             $item->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);

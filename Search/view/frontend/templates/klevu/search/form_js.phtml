@@ -1,5 +1,6 @@
 <?php /** @var \Magento\Framework\View\Element\Template $this */ ?>
 <?php $config = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Helper\Config'); ?>
+<?php $helper = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Helper\Data'); ?>
 <?php $moduleInfo =  \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\Module\ModuleList')->getOne('Klevu_Search');?>
 <?php if ($config->isExtensionConfigured()): 
 $url = $block->getUrl('search', ['_secure' => $block->getRequest()->isSecure()]);?>
@@ -35,7 +36,7 @@ require(["prototype"], function(){
     // call store js
     var klevu_apiKey = '<?php echo $config->getJsApiKey() ?>',
         searchTextBoxName = 'search',
-        klevu_lang = 'en',
+        klevu_lang = '<?php echo $helper->getStoreLanguage() ?>',
         klevu_result_top_margin = '',
         klevu_result_left_margin = '';
     (function () { var ws = document.createElement('script'),kl_protocol =("https:"===document.location.protocol?"https://":"http://"); ws.type = 'text/javascript'; ws.async = true; ws.src = kl_protocol+'<?php echo $config->getJsUrl() ?>/klevu-js-v1/js/klevu-webstore.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ws, s); })();

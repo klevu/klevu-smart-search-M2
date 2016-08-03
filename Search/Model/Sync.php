@@ -15,7 +15,7 @@ abstract class Sync extends AbstractModel {
      * for Magento at the time of writing is 256MB, this seems
      * like a sensible default.
      */
-    const MEMORY_LIMIT = 0.8;
+    const MEMORY_LIMIT = 0.7;
 
     /**
      * Return the cron job code used for the sync model.
