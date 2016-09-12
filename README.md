@@ -2,7 +2,16 @@
  Intelligent cloud hosted site search with self-learning search technology. Guaranteed to increase search-led conversions.<br /> 
 
 <hr />
+<h2>Compatible with</h2>
+<li>CE 2.0.0 to 2.1.0</li>
+<li>EE 2.0.0 to 2.0.8</li>
+
+<hr />
 <h2>Change Log</h2>
+<h3>Version 2.0.6</h3>
+<li> Memory optimization for product sync </li>
+<li> A bug fix for obtaining language code for frontend translations </li>
+
 <h3>Version 2.0.5</h3>
 <li> Removed the dependency error during the compile command </li>
 <li> Bug fix for when Klevu_search module is installed prior to installing Magento_Catalog</li>
