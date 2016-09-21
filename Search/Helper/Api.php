@@ -57,7 +57,8 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
         \Klevu\Search\Model\Api\Action\Addwebstore $apiActionAddwebstore, 
         \Klevu\Search\Model\Api\Action\Gettimezone $apiActionGettimezone, 
         \Klevu\Search\Helper\Config $searchHelperConfig,
-        \Klevu\Search\Model\Api\Action\Checkuserdetail $apiActionCheckuserdetail
+        \Klevu\Search\Model\Api\Action\Checkuserdetail $apiActionCheckuserdetail,
+		\Magento\Framework\App\ProductMetadataInterface $productMetadataInterface
     )
     {
         $this->_backendModelSession = $backendModelSession;
@@ -69,6 +70,7 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
         $this->_apiActionGettimezone = $apiActionGettimezone;
         $this->_searchHelperConfig = $searchHelperConfig;
         $this->_apiActionCheckuserdetail = $apiActionCheckuserdetail;
+		$this->_ProductMetadataInterface = $productMetadataInterface;
     }
 
 
@@ -90,6 +92,7 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
         $user = $this->_backendModelSession;
         $userEmail = $user->getUser()->getEmail();
         $storePhone = $this->_appConfigScopeConfigInterface->getValue('general/store_information/phone');
+		$mage_version = $this->_ProductMetadataInterface->getEdition().$this->_ProductMetadataInterface->getVersion();
         $response = $this->_apiActionAdduser->execute(array(
             "email"    => $email,
             "password" => $password,
@@ -98,7 +101,7 @@ class Api extends \Magento\Framework\App\Helper\AbstractHelper {
             "url"      => $url,
             "merchantEmail" => $merchantEmail,
             "contactNo" => $contactNo,
-            "shopInfo" => $userEmail.";".$storePhone,
+            "shopInfo" => $userEmail.";".$storePhone.";".$mage_version,
             "bmVersion" => 1,
         ));
 

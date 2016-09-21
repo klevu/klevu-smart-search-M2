@@ -3,11 +3,15 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.0</li>
-<li>EE 2.0.0 to 2.0.8</li>
+<li>CE 2.0.0 to 2.1.1</li>
+<li>EE 2.0.0 to 2.1.1</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.0.7</h3>
+<li>common package for enterprise and community edition</li>
+
+
 <h3>Version 2.0.6</h3>
 <li> Memory optimization for product sync </li>
 <li> A bug fix for obtaining language code for frontend translations </li>

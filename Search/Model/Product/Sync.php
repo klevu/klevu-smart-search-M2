@@ -220,6 +220,7 @@ class Sync extends \Klevu\Search\Model\Sync {
     
     protected $_klevu_enabled_feature_response;
     
+	protected $_entity_value;
     /**
      * @var \Klevu\Search\Model\Api\Action\Features
      */
@@ -263,7 +264,8 @@ class Sync extends \Klevu\Search\Model\Sync {
         \Magento\Catalog\Model\Category $catalogModelCategory,
         \Magento\Framework\App\RequestInterface $frameworkAppRequestInterface,
         \Magento\Store\Model\Store $frameworkModelStore,
-        \Klevu\Search\Model\Api\Action\Features $apiActionFeatures
+        \Klevu\Search\Model\Api\Action\Features $apiActionFeatures,
+		\Magento\Framework\App\ProductMetadataInterface $productMetadataInterface
         )
     {
         $this->_apiActionFeatures = $apiActionFeatures;
@@ -305,7 +307,12 @@ class Sync extends \Klevu\Search\Model\Sync {
         $this->resourceRuleFactory = $resourceRuleFactory;
         $this->localeDate = $localeDate;
         $this->_catalogModelCategory = $catalogModelCategory;
-
+		$this->_ProductMetadataInterface = $productMetadataInterface;
+		if($this->_ProductMetadataInterface->getEdition() == "Enterprise" && version_compare($this->_ProductMetadataInterface->getVersion(), '2.0.8', '>')===true) {
+			$this->_entity_value = "row_id";
+		} else {
+			$this->_entity_value = "entity_id";
+		}
     }
 
 
@@ -318,14 +325,6 @@ class Sync extends \Klevu\Search\Model\Sync {
 
     const NOTIFICATION_GLOBAL_TYPE = "product_sync";
     const NOTIFICATION_STORE_TYPE_PREFIX = "product_sync_store_";
-
-    public function _construct() {
-        parent::_construct();
-
-        $this->addData(array(
-            'connection' => $this->_frameworkModelResource->getConnection("core_write")
-        ));
-    }
 
     public function getJobCode() {
         return "klevu_search_product_sync";
@@ -445,12 +444,12 @@ class Sync extends \Klevu\Search\Model\Sync {
                             )
                             ->joinLeft(
                                 array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                "ss.attribute_id = :status_attribute_id AND ss.entity_id = k.product_id AND ss.store_id = :store_id",
+                                "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
                                 ""
                             )
                             ->joinLeft(
                                 array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                "sd.attribute_id = :status_attribute_id AND sd.entity_id = k.product_id AND sd.store_id = :default_store_id",
+                                "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
                                 ""
                             )
                             ->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND ((p.entity_id IS NULL) OR (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END != :status_enabled) OR (CASE WHEN k.parent_id = 0 THEN k.product_id ELSE k.parent_id END NOT IN (?)) )",
@@ -560,12 +559,12 @@ class Sync extends \Klevu\Search\Model\Sync {
                                 )
                                 ->joinLeft(
                                     array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "ss.attribute_id = :status_attribute_id AND ss.entity_id = k.product_id AND ss.store_id = :store_id",
+                                    "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "sd.attribute_id = :status_attribute_id AND sd.entity_id = k.product_id AND sd.store_id = :default_store_id",
+                                    "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
                                     ""
                                 )
                                 ->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END = :status_enabled) AND ((p1.updated_at > k.last_synced_at) OR (p2.updated_at > k.last_synced_at))")
@@ -629,12 +628,12 @@ class Sync extends \Klevu\Search\Model\Sync {
                                 )
                                 ->joinLeft(
                                     array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "ss.attribute_id = :status_attribute_id AND ss.entity_id = s.product_id AND ss.store_id = :store_id",
+                                    "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = s.product_id AND ss.store_id = :store_id",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "sd.attribute_id = :status_attribute_id AND sd.entity_id = s.product_id AND sd.store_id = :default_store_id",
+                                    "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = s.product_id AND sd.store_id = :default_store_id",
                                     ""
                                 )
                                 ->joinLeft(
@@ -1516,12 +1515,12 @@ class Sync extends \Klevu\Search\Model\Sync {
                 )
                 ->joinLeft(
                     array('vs' => $this->getProductVisibilityAttribute()->getBackendTable()),
-                    "vs.attribute_id = :visibility_attribute_id AND vs.entity_id = p.entity_id AND vs.store_id = :store_id",
+                    "vs.attribute_id = :visibility_attribute_id AND vs.".$this->_entity_value." = p.entity_id AND vs.store_id = :store_id",
                     ""
                 )
                 ->joinLeft(
                     array('vd' => $this->getProductVisibilityAttribute()->getBackendTable()),
-                    "vd.attribute_id = :visibility_attribute_id AND vd.entity_id = p.entity_id AND vd.store_id = :default_store_id",
+                    "vd.attribute_id = :visibility_attribute_id AND vs.".$this->_entity_value." = p.entity_id AND vd.store_id = :default_store_id",
                     array(
                         "visibility" => "IF(vs.value IS NOT NULL, vs.value, vd.value)"
                     )
@@ -2140,7 +2139,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         $current_date = date_create("now")->format("Y-m-d");
         $resource = $this->_frameworkModelResource;
         $query = $resource->getConnection("core_write")->select()
-                    ->from($resource->getTableName("catalog_product_entity_datetime"), array('entity_id'))
+                    ->from($resource->getTableName("catalog_product_entity_datetime"), array($this->_entity_value))
                     ->where("attribute_id=:attribute_id AND DATE_ADD(value,INTERVAL 1 DAY)=:current_date")
                     ->bind(array(
                             'attribute_id' => $attribute_id,
@@ -2150,7 +2149,7 @@ class Sync extends \Klevu\Search\Model\Sync {
         $pro_ids = array();
         foreach($data as $key => $value)
         {
-            $pro_ids[] = $value['entity_id'];
+            $pro_ids[] = $value[$this->_entity_value];
         }
         return $pro_ids;
        
@@ -2334,7 +2333,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                         )
                         ->joinLeft(
                                     array('ci' => $this->getTableName("catalog_category_entity_int")),
-                                    "k.product_id = ci.entity_id AND ci.attribute_id = :is_active",
+                                    "k.product_id = ci.".$this->_entity_value." AND ci.attribute_id = :is_active",
                                     ""
                                 )
                         ->where("k.type = :type AND (ci.value = 0 OR k.product_id NOT IN ?)",
@@ -2342,7 +2341,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                                 ->select()
                                 ->from(
                                     array('i' => $this->getTableName("catalog_category_entity_int")),
-                                    array('category_id' => "i.entity_id")
+                                    array('category_id' => "i.".$this->_entity_value)
                                 )
                         )
                         ->group(array('k.product_id', 'k.parent_id'))
@@ -2385,12 +2384,12 @@ class Sync extends \Klevu\Search\Model\Sync {
                                 )
                                 ->join(
                                     array('ci' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
-                                    "c.entity_id = ci.entity_id AND ci.attribute_id = :is_active AND ci.value = 1",
+                                    "c.entity_id = ci.".$this->_entity_value." AND ci.attribute_id = :is_active AND ci.value = 1",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('k' => $this->_frameworkModelResource->getTableName("klevu_product_sync")),
-                                    "ci.entity_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+                                    "ci.".$this->_entity_value." = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
                                     ""
                                 )
                                 ->where("k.product_id IS NULL")
