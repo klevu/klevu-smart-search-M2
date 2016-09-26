@@ -8,7 +8,7 @@
 
 <hr />
 <h2>Change Log</h2>
-<h3>Version 2.0.7</h3>
+<h3>Version 2.0.8</h3>
 <li>common package for enterprise and community edition</li>
 
 
