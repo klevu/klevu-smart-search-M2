@@ -89,8 +89,8 @@ class Content extends \Klevu\Search\Model\Product\Sync
         \Klevu\Search\Helper\Data $searchHelperData,
 		\Klevu\Search\Helper\Config $searchHelperConfig,
 		\Klevu\Search\Model\Api\Action\Startsession $apiActionStartsession,
-		\Magento\Cron\Model\Schedule $cronModelSchedule
-
+		\Magento\Cron\Model\Schedule $cronModelSchedule,
+		\Magento\Framework\App\ProductMetadataInterface $productMetadataInterface
 		)
     {
         $this->_frameworkModelResource = $frameworkModelResource;
@@ -106,6 +106,12 @@ class Content extends \Klevu\Search\Model\Product\Sync
 		$this->_searchHelperConfig = $searchHelperConfig;
 		$this->_apiActionStartsession = $apiActionStartsession;
 		$this->_cronModelSchedule = $cronModelSchedule;
+		$this->_ProductMetadataInterface = $productMetadataInterface;
+		if($this->_ProductMetadataInterface->getEdition() == "Enterprise" && version_compare($this->_ProductMetadataInterface->getVersion(), '2.0.8', '>')===true) {
+			$this->_page_value = "row_id";
+		} else {
+			$this->_page_value = "page_id";
+		}
 
 
     }
@@ -203,22 +209,22 @@ class Content extends \Klevu\Search\Model\Product\Sync
                         )
                         ->joinLeft(
                             array('c' => $this->_frameworkModelResource->getTableName("cms_page")),
-                            "k.product_id = c.page_id",
+                            "k.product_id = c.".$this->_page_value,
                             ""
                         )
                         ->joinLeft(
                             array('v' => $this->_frameworkModelResource->getTableName("cms_page_store")),
-                            "v.page_id = c.page_id",
+                            "v.".$this->_page_value." = c.".$this->_page_value,
                             ""
                         )
-                        ->where("((k.store_id = :store_id AND v.store_id != 0) AND (k.type = :type) AND (k.product_id NOT IN ?)) OR ( (k.product_id IN ('".$eids."') OR (c.page_id IS NULL) OR (c.is_active = 0)) AND (k.type = :type) AND k.store_id = :store_id)",
+                        ->where("((k.store_id = :store_id AND v.store_id != 0) AND (k.type = :type) AND (k.product_id NOT IN ?)) OR ( (k.product_id IN ('".$eids."') OR (c.".$this->_page_value." IS NULL) OR (c.is_active = 0)) AND (k.type = :type) AND k.store_id = :store_id)",
                             $this->_frameworkModelResource->getConnection("core_write")
                                 ->select()
                                 ->from(
                                     array('i' => $this->_frameworkModelResource->getTableName("cms_page_store")),
-                                    array('page_id' => "i.page_id")
+                                    array('page_id' => "i.".$this->_page_value)
                                 )
-                                ->where('i.page_id NOT IN (?)', $pageids)
+                                ->where('i.'.$this->_page_value.' NOT IN (?)', $pageids)
                                // ->where("i.store_id = :store_id")
                         )
                         ->group(array('k.product_id'))
@@ -241,16 +247,16 @@ class Content extends \Klevu\Search\Model\Product\Sync
                                 )
                                 ->join(
                                     array('c' => $this->_frameworkModelResource->getTableName("cms_page")),
-                                    "c.page_id = k.product_id",
+                                    "c.".$this->_page_value." = k.product_id",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('v' => $this->_frameworkModelResource->getTableName("cms_page_store")),
-                                    "v.page_id = c.page_id AND v.store_id = :store_id",
+                                    "v.".$this->_page_value." = c.".$this->_page_value." AND v.store_id = :store_id",
                                     ""
                                 )
                                 ->where("(c.is_active = 1) AND (k.type = :type) AND (k.store_id = :store_id) AND (c.update_time > k.last_synced_at)")
-                                ->where('c.page_id NOT IN (?)', $pageids)
+                                ->where('c.'.$this->_page_value.' NOT IN (?)', $pageids)
                         ->bind(array(
                             'store_id' => $store->getId(),
                             'type'=> "pages",
@@ -267,17 +273,17 @@ class Content extends \Klevu\Search\Model\Product\Sync
                                  */
                                 ->from(
                                     array('p' => $this->_frameworkModelResource->getTableName("cms_page")),
-                                    array('page_id' => "p.page_id")
+                                    array('page_id' => "p.".$this->_page_value)
                                 )
-                                ->where('p.page_id NOT IN (?)', $pageids)
+                                ->where('p.'.$this->_page_value.' NOT IN (?)', $pageids)
                                 ->joinLeft(
                                     array('v' => $this->_frameworkModelResource->getTableName("cms_page_store")),
-                                    "p.page_id = v.page_id",
+                                    "p.".$this->_page_value." = v.".$this->_page_value,
                                     ""
                                 )
                                 ->joinLeft(
                                     array('k' => $this->_frameworkModelResource->getTableName("klevu_product_sync")),
-                                    "p.page_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+                                    "p.".$this->_page_value." = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
                                     ""
                                 )
                                 ->where("p.is_active = 1 AND k.product_id IS NULL AND v.store_id =0"),
@@ -289,17 +295,17 @@ class Content extends \Klevu\Search\Model\Product\Sync
                                  */
                                 ->from(
                                     array('p' => $this->_frameworkModelResource->getTableName("cms_page")),
-                                    array('page_id' => "p.page_id")
+                                    array('page_id' => "p.".$this->_page_value)
                                 )
-                                ->where('p.page_id NOT IN (?)', $pageids)
+                                ->where('p.'.$this->_page_value.' NOT IN (?)', $pageids)
                                 ->join(
                                     array('v' => $this->_frameworkModelResource->getTableName("cms_page_store")),
-                                    "p.page_id = v.page_id AND v.store_id = :store_id",
+                                    "p.".$this->_page_value." = v.".$this->_page_value." AND v.store_id = :store_id",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('k' => $this->_frameworkModelResource->getTableName("klevu_product_sync")),
-                                    "v.page_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+                                    "v.".$this->_page_value." = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
                                     ""
                                 )
                                 ->where("p.is_active = 1 AND k.product_id IS NULL")
