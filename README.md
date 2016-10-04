@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.0.9</h3>
+<li>change page_id to row_id for CMS sync</li>
+
 <h3>Version 2.0.8</h3>
 <li>common package for enterprise and community edition</li>
 
