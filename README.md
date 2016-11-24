@@ -4,7 +4,7 @@
 <hr />
 <h2>Compatible with</h2>
 <li>CE 2.0.0 to 2.1.1</li>
-<li>EE 2.0.0 to 2.1.1</li>
+<li>EE 2.0.0 to 2.0.9</li>
 
 <hr />
 <h2>Change Log</h2>
