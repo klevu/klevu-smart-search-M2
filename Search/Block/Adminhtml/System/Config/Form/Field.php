@@ -48,6 +48,8 @@ class Field extends \Magento\Config\Block\System\Config\Form\Field {
                     $style        = '';
                     $upgrade_text = '';
                 }
+				
+
 		
 		// Code added by klevu
         if (!empty($features)) {
@@ -91,9 +93,33 @@ class Field extends \Magento\Config\Block\System\Config\Form\Field {
             $html = '<td class="value">';
             $html .= $this->_getElementHtml($element);
         }
-        if ($element->getComment()) {
-            $html .= '<p class="note"><span>' . $element->getComment() . '</span></p>';
-        }
+		if($element->getHtmlId() == "klevu_search_searchlanding_landenabled"){
+			$klevu_html ='';
+				$check_preserve = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Model\Product\Sync')->getFeatures();
+				if(!empty($check_preserve)){
+					if(isset($check_preserve['disabled']) && !empty($check_preserve['disabled'])) {
+						if(strpos($check_preserve['disabled'],"preserves_layout") !== false) {
+							$klevu_html ="";
+							if(!empty($check_preserve['preserve_layout_message']) || !empty($check_preserve['upgrade_label'])) {
+								$klevu_html.=  "<div class='klevu-upgrade-block-simple'>";
+									if(!empty($check_preserve['preserve_layout_message'])){
+										$klevu_html.=$check_preserve['preserve_layout_message'];
+									}
+									
+								$klevu_html.="</div>";
+							}  
+						}
+					} else {
+					   $klevu_html = "Choose your Layout";
+					}
+				}
+			
+			$html .= '<p class="note"><span>' . $klevu_html . '</span></p>';
+		} else {
+			if ($element->getComment()) {
+				$html .= '<p class="note"><span>' . $element->getComment() . '</span></p>';
+			}
+		}
         $html .= '</td>';
 		
 

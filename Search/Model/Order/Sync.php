@@ -173,7 +173,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                     $this->log(\Zend\Log\Logger::INFO, sprintf("Sync finished. %d items synced.", $items_synced));
 
                 }
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             // Catch the exception that was thrown, log it, then throw a new exception to be caught the Magento cron.
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
             throw $e;

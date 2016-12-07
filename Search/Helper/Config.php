@@ -103,6 +103,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
     const XML_PATH_RATING = "klevu_search/general/rating_flag";
     const XML_PATH_UPGRADE_FEATURES = "klevu_search/general/upgrade_features";
     const XML_PATH_UPGRADE_TIRES_URL = "klevu_search/general/tiers_url";
+	const XML_PATH_COLLECTION_METHOD = "klevu_search/developer/collection_method";
 
     const DATETIME_FORMAT = "Y-m-d H:i:s T";
 
@@ -163,7 +164,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
      * @return bool
      */
     public function isLandingEnabled($store = null) {
-        return intval($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_LANDING_ENABLED,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$store));
+        return intval($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_LANDING_ENABLED,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$this->_storeModelStoreManagerInterface->getStore()));
     }
     
     /**
@@ -310,7 +311,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
      * @return string
      */
     public function getCloudSearchUrl($store = null) {
-        $url = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CLOUD_SEARCH_URL, $store);
+        $url = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CLOUD_SEARCH_URL,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$store);
         return ($url) ? $url : \Klevu\Search\Helper\Api::ENDPOINT_DEFAULT_HOSTNAME;
     }
 
@@ -383,9 +384,8 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
      *
      * @return int
      */
-    public function getProductSyncEnabledFlag($store_id = null) {
-    
-        return intval($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_PRODUCT_SYNC_ENABLED,\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+    public function getProductSyncEnabledFlag($store_id = 0) {
+        return intval($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_PRODUCT_SYNC_ENABLED,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$store_id));
     }
 
     /**
@@ -395,8 +395,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
      *
      * @return bool
      */
-    public function isProductSyncEnabled($store_id = null) {
-
+    public function isProductSyncEnabled($store_id = 0) {
         $flag = $this->getProductSyncEnabledFlag($store_id);
             return in_array($flag, array(
                 \Klevu\Search\Model\System\Config\Source\Yesnoforced::YES,
@@ -595,6 +594,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
                 "name",
                 "sku",
                 "image",
+				"status",
                 "description",
                 "short_description",
                 "price",
@@ -606,6 +606,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
                 "name",
                 "sku",
                 "image",
+				"status",
                 "desc",
                 "shortDesc",
                 "price",
@@ -786,8 +787,9 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
                 }
       
             }                
-        } catch(Exception $e) {
-                $this->_searchHelperData->log(\Zend\Logger::CRIT, sprintf("Error occured while getting features based on account %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+        } catch(\Exception $e) {
+            $dataHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('\Klevu\Search\Helper\Data');
+		    $dataHelper->log(\Zend\Log\Logger::CRIT, sprintf("Error occured while getting features based on account %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
         }
         return;
     }
@@ -804,7 +806,8 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
                 if(!empty($restApi)) {
                     $this->_klevu_enabled_feature_response = unserialize($this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_UPGRADE_FEATURES, $store));
                 }
-                $this->_searchHelperData->log(\Zend\Logger::INFO,sprintf("failed to fetch feature details (%s)",$features_request->getMessage()));
+                $dataHelper = \Magento\Framework\App\ObjectManager::getInstance()->get('\Klevu\Search\Helper\Data');
+				$dataHelper->log(\Zend\Log\Logger::INFO,sprintf("failed to fetch feature details (%s)",$features_request->getMessage()));
             }
         }  
         return $this->_klevu_enabled_feature_response;        
@@ -830,6 +833,15 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper {
         return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_UPGRADE_FEATURES,\Magento\Store\Model\ScopeInterface::SCOPE_STORE,$store);
     }
     
+	
+	/**
+     * Check if default Magento log settings should be overridden to force logging for this module.
+     *
+     * @return bool
+     */
+    public function isCollectionMethodEnabled() {
+        return $this->_appConfigScopeConfigInterface->isSetFlag(static::XML_PATH_COLLECTION_METHOD);
+    }
     
 
 }

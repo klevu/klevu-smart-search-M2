@@ -3,6 +3,7 @@
   <event name="catalog_product_save_commit_after">
     <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
     <observer name="catalog_product_media_save_before_event" instance="Klevu\Search\Model\Observer\CreateThumb" />
+	 <observer name="klevu_search_product_sync_updatelastsyncdate" instance="Klevu\Search\Model\Observer\UpdateLastSyncDate"/>
   </event>
   <event name="after_reindex_process_catalog_category_product">
     <observer name="klevu_search_product_sync" instance="Klevu\Search\Model\Observer\ScheduleProductSync"/>
@@ -44,5 +45,7 @@
    <event name="catalogrule_rule_delete_before">
       <observer name="RuleUpdate" instance="Klevu\Search\Model\Observer\RuleUpdate" />
   </event>
-  
+	<event name="catalog_category_save_commit_after">
+      <observer name="updateLastSyncCategory" instance="Klevu\Search\Model\Observer\UpdateLastSyncCategory" />
+    </event>
 </config>

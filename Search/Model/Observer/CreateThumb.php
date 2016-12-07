@@ -58,9 +58,16 @@ class CreateThumb implements ObserverInterface{
         $image = $observer->getEvent()->getProduct()->getImage();
         if(($image != "no_selection") && (!empty($image))) {
             try {
-            
-                $dir = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Filesystem\DirectoryList');  
+                
+				$check_root_magento = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Backend\Block\Page\RequireJs')->getViewFileUrl('requirejs/require.js');
+				$check_pub = explode('/',$check_root_magento);
+				
+				$dir = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Filesystem\DirectoryList');  
                 $mediadir = $dir->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+				if(!in_array('pub',$check_pub)){
+					$mediadir = str_replace('/pub/','/',$mediadir);
+				}
+                
                 $imageResized = $mediadir.DIRECTORY_SEPARATOR."klevu_images".$image;
                 $baseImageUrl = $mediadir.DIRECTORY_SEPARATOR."catalog".DIRECTORY_SEPARATOR."product".$image;
 
@@ -76,7 +83,7 @@ class CreateThumb implements ObserverInterface{
                             $this->_modelProductSync->thumbImageObj($baseImageUrl,$imageResized);
                     }
                 }
-            } catch(Exception $e) {
+            } catch(\Exception $e) {
                  $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Image Error:\n%s", $e->getMessage()));
             }
         }
