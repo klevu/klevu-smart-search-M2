@@ -103,7 +103,7 @@ require(["prototype"], function(){
     if($customerSession->isLoggedIn()) { ?>
 	<script type="text/javascript">
 		var klevu_loginCustomerGroup = "<?php echo $customerSession->getCustomer()->getCustomerGroupId(); ?>";
-		var klevu_loginCustomerEmail = "<?php echo $customerSession->getCustomer()->getEmail();?>
+		var klevu_loginCustomerEmail = "<?php echo $customerSession->getCustomer()->getEmail(); ?>";
 	</script>
 <?php } ?>
 
