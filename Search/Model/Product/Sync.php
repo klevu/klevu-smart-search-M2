@@ -336,7 +336,7 @@ class Sync extends \Klevu\Search\Model\Sync {
      */
     public function run() {
         try {
-           
+            
             /* mark for update special price product */
             $this->markProductForUpdate();
             
@@ -381,7 +381,7 @@ class Sync extends \Klevu\Search\Model\Sync {
             if($rating_upgrade_flag==0) {
                 $config->saveRatingUpgradeFlag(1);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Catch the exception that was thrown, log it, then throw a new exception to be caught the Magento cron.
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
             throw $e;
@@ -405,7 +405,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                         
                         $this->updateProductsRating($store);
                     }
-                } catch(Exception $e) {
+                } catch(\Exception $e) {
                     $this->_searchHelperData->log(\Zend\Log\Logger::WARN, sprintf("Unable to update rating attribute %s", $store->getName()));
                 }
                 
@@ -414,278 +414,535 @@ class Sync extends \Klevu\Search\Model\Sync {
                 
                 $this->log(\Zend\Log\Logger::INFO, sprintf("Starting sync for %s (%s).", $store->getWebsite()->getName(), $store->getName()));
                 $resource = $this->_frameworkModelResource;
+				if($this->_ProductMetadataInterface->getEdition() == "Enterprise" && version_compare($this->_ProductMetadataInterface->getVersion(), '2.0.8', '>')===true) {
+					
+					$actions = array(
+								'delete' => 
+								$resource->getConnection()
+									->select()
+									->union(array(
+										$resource->getConnection()
+										->select()
+										/*
+										 * Select synced products in the current store/mode that are no longer enabled
+										 * (don't exist in the products table, or have status disabled for the current
+										 * store, or have status disabled for the default store) or are not visible
+										 * (in the case of configurable products, check the parent visibility instead).
+										 */
+										->from(
+											array('k' => $resource->getTableName("klevu_product_sync")),
+											array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
+										)
+										->joinLeft(
+											array('v' => $resource->getTableName("catalog_category_product_index")),
+											"v.product_id = k.product_id AND v.store_id = :store_id",
+											""
+										)
+										->joinLeft(
+											array('p' => $resource->getTableName("catalog_product_entity")),
+											"p.entity_id = k.product_id",
+											""
+										)
+										->joinLeft(
+											array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+											"ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = p.".$this->_entity_value." AND ss.store_id = :store_id",
+											""
+										)
+										->joinLeft(
+											array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+											"sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = p.".$this->_entity_value." AND sd.store_id = :default_store_id",
+											""
+										)
+										->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND ((p.entity_id IS NULL) OR (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END != :status_enabled) OR (CASE WHEN k.parent_id = 0 THEN k.product_id ELSE k.parent_id END NOT IN (?)) )",
+											$resource->getConnection()
+												->select()
+												->from(
+													array('i' => $resource->getTableName("catalog_category_product_index")),
+													array('id' => "i.product_id")
+												)
+												->where("(i.store_id = :store_id) AND (i.visibility IN (:visible_both, :visible_search))")
+											
+										),
+										$resource->getConnection()
+											->select()
+											/*
+											 * Select products which are not associated with parent 
+											 * but still parent exits in klevu product sync table with parent id
+											 * 
+											 */
+											->from(
+												array('ks' => $resource->getTableName("klevu_product_sync")),
+												array('product_id' => "ks.product_id","parent_id" => 'ks.parent_id')
+											)
+											->where("(ks.parent_id !=0 AND ks.product_id NOT IN (?) AND ks.store_id = :store_id)",
+												$resource->getConnection()
+												->select()
+												/*
+												 * Select products from catalog super link table
+												 */
+												->from(
+													array('s' => $resource->getTableName("catalog_product_super_link")),
+													array('product_id' => "s.product_id")
+												)
+											)
+										)
+									)
+									->group(array('k.product_id', 'k.parent_id'))
+									->bind(array(
+										'type'          => "products",
+										'store_id'       => $store->getId(),
+										'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+										'test_mode'      => $this->isTestModeEnabled(),
+										'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+										'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
+										'visible_both'   => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+										'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH
+									)),
 
-                $actions = array(
-                    'delete' => 
-                    $resource->getConnection()
-                        ->select()
-                        ->union(array(
-                            $resource->getConnection()
-                            ->select()
-                            /*
-                             * Select synced products in the current store/mode that are no longer enabled
-                             * (don't exist in the products table, or have status disabled for the current
-                             * store, or have status disabled for the default store) or are not visible
-                             * (in the case of configurable products, check the parent visibility instead).
-                             */
-                            ->from(
-                                array('k' => $resource->getTableName("klevu_product_sync")),
-                                array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
-                            )
-                            ->joinLeft(
-                                array('v' => $resource->getTableName("catalog_category_product_index")),
-                                "v.product_id = k.product_id AND v.store_id = :store_id",
-                                ""
-                            )
-                            ->joinLeft(
-                                array('p' => $resource->getTableName("catalog_product_entity")),
-                                "p.entity_id = k.product_id",
-                                ""
-                            )
-                            ->joinLeft(
-                                array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
-                                ""
-                            )
-                            ->joinLeft(
-                                array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
-                                ""
-                            )
-                            ->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND ((p.entity_id IS NULL) OR (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END != :status_enabled) OR (CASE WHEN k.parent_id = 0 THEN k.product_id ELSE k.parent_id END NOT IN (?)) )",
-                                $resource->getConnection()
-                                    ->select()
-                                    ->from(
-                                        array('i' => $resource->getTableName("catalog_category_product_index")),
-                                        array('id' => "i.product_id")
-                                    )
-                                    ->where("(i.store_id = :store_id) AND (i.visibility IN (:visible_both, :visible_search))")
-                                
-                            ),
-                            $resource->getConnection()
-                                ->select()
-                                /*
-                                 * Select products which are not associated with parent 
-                                 * but still parent exits in klevu product sync table with parent id
-                                 * 
-                                 */
-                                ->from(
-                                    array('ks' => $resource->getTableName("klevu_product_sync")),
-                                    array('product_id' => "ks.product_id","parent_id" => 'ks.parent_id')
-                                )
-                                ->where("(ks.parent_id !=0 AND ks.product_id NOT IN (?) AND ks.store_id = :store_id)",
-                                    $resource->getConnection()
-                                    ->select()
-                                    /*
-                                     * Select products from catalog super link table
-                                     */
-                                    ->from(
-                                        array('s' => $resource->getTableName("catalog_product_super_link")),
-                                        array('product_id' => "s.product_id")
-                                    )
-                                )
-                            )
-                        )
-                        ->group(array('k.product_id', 'k.parent_id'))
-                        ->bind(array(
-                            'type'          => "products",
-                            'store_id'       => $store->getId(),
-                            'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
-                            'test_mode'      => $this->isTestModeEnabled(),
-                            'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
-                            'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
-                            'visible_both'   => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
-                            'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH
-                        )),
+								'update' => $this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									->union(array(
+										// Select products without parents that need to be updated
+										$this->_frameworkModelResource->getConnection("core_write")
+											->select()
+											/*
+											 * Select synced non-configurable products for the current store/mode
+											 * that are visible (using the category product index) and have been
+											 * updated since last sync.
+											 */
+											->from(
+												array('k' => $resource->getTableName("klevu_product_sync")),
+												array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
+											)
+											->join(
+												array('p' => $resource->getTableName("catalog_product_entity")),
+												"p.entity_id = k.product_id",
+												""
+											)
+											->join(
+												array('i' => $resource->getTableName("catalog_category_product_index")),
+												"i.product_id = k.product_id AND k.store_id = i.store_id AND i.visibility IN (:visible_both, :visible_search)",
+												""
+											)
+											->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (p.type_id != :configurable) AND (p.updated_at > k.last_synced_at)"),
+										// Select products with parents (configurable) that need to be updated
+							$this->_frameworkModelResource->getConnection("core_write")
+											->select()
+											/*
+											 * Select configurable product children that are enabled (for the current
+											 * store or for the default store), have visible parents (using the category
+											 * product index) and have not been synced yet for the current store with
+											 * the current parent.
+											 */
+											->from(
+												array('e1' => $resource->getTableName("catalog_product_entity")),
+												array('product_id' => "s1.product_id", 'parent_id' => "e1.entity_id")
+											)
+											->join(
+												array('s1' => $resource->getTableName("catalog_product_super_link")),
+												"e1.row_id= s1.parent_id",
+												""
+											)
+											->join(
+												array('i' => $resource->getTableName("catalog_category_product_index")),
+												"i.product_id= e1.entity_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
+												""
+											)
+											->join(
+												array('e2' => $resource->getTableName("catalog_product_entity")),
+												"e2.entity_id = s1.product_id",
+												""
+											)
+											->joinLeft(
+												array('k' => $resource->getTableName("klevu_product_sync")),
+												"e1.entity_id = k.parent_id AND s1.product_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+												""
+											)
+											->joinLeft(
+												array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+												"ss.attribute_id = :status_attribute_id AND e2.row_id = ss.row_id AND ss.store_id = :default_store_id",
+												""
+											)
+											->joinLeft(
+												array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+												"sd.attribute_id = :status_attribute_id AND sd.row_id = e2.row_id AND sd.store_id = :store_id",
+												""
+											)
+											->where("(CASE WHEN sd.value_id > 1 THEN sd.value ELSE ss.value END = :status_enabled) AND ((e1.updated_at > k.last_synced_at) OR (e2.updated_at > k.last_synced_at))")
+									))
+									->group(array('k.product_id', 'k.parent_id'))
+									->bind(array(
+										'type'          => "products",
+										'store_id' => $store->getId(),
+										'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+										'test_mode' => $this->isTestModeEnabled(),
+										'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
+										'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+										'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
+										'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+										'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
+									)),
 
-                    'update' => $this->_frameworkModelResource->getConnection("core_write")
-                        ->select()
-                        ->union(array(
-                            // Select products without parents that need to be updated
-                            $this->_frameworkModelResource->getConnection("core_write")
-                                ->select()
-                                /*
-                                 * Select synced non-configurable products for the current store/mode
-                                 * that are visible (using the category product index) and have been
-                                 * updated since last sync.
-                                 */
-                                ->from(
-                                    array('k' => $resource->getTableName("klevu_product_sync")),
-                                    array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
-                                )
-                                ->join(
-                                    array('p' => $resource->getTableName("catalog_product_entity")),
-                                    "p.entity_id = k.product_id",
-                                    ""
-                                )
-                                ->join(
-                                    array('i' => $resource->getTableName("catalog_category_product_index")),
-                                    "i.product_id = k.product_id AND k.store_id = i.store_id AND i.visibility IN (:visible_both, :visible_search)",
-                                    ""
-                                )
-                                ->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (p.type_id != :configurable) AND (p.updated_at > k.last_synced_at)"),
-                            // Select products with parents (configurable) that need to be updated
-                            $this->_frameworkModelResource->getConnection("core_write")
-                                ->select()
-                                /*
-                                 * Select synced products for the current store/mode that are configurable
-                                 * children (have entries in the super link table), are enabled for the current
-                                 * store (or the default store), have visible parents (using the category product
-                                 * index) and, either the product or the parent, have been updated since last sync.
-                                 */
-                                ->from(
-                                    array('k' => $resource->getTableName("klevu_product_sync")),
-                                    array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
-                                )
-                                ->join(
-                                    array('s' => $resource->getTableName("catalog_product_super_link")),
-                                    "k.parent_id = s.parent_id AND k.product_id = s.product_id",
-                                    ""
-                                )
-                                ->join(
-                                    array('i' => $resource->getTableName("catalog_category_product_index")),
-                                    "k.parent_id = i.product_id AND k.store_id = i.store_id AND i.visibility IN (:visible_both, :visible_search)",
-                                    ""
-                                )
-                                ->join(
-                                    array('p1' => $resource->getTableName("catalog_product_entity")),
-                                    "k.product_id = p1.entity_id",
-                                    ""
-                                )
-                                ->join(
-                                    array('p2' => $resource->getTableName("catalog_product_entity")),
-                                    "k.parent_id = p2.entity_id",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
-                                    ""
-                                )
-                                ->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END = :status_enabled) AND ((p1.updated_at > k.last_synced_at) OR (p2.updated_at > k.last_synced_at))")
-                        ))
-                        ->group(array('k.product_id', 'k.parent_id'))
-                        ->bind(array(
-                            'type'          => "products",
-                            'store_id' => $store->getId(),
-                            'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
-                            'test_mode' => $this->isTestModeEnabled(),
-                            'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
-                            'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
-                            'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
-                            'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
-                            'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
-                        )),
+								'add' => $this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									->union(array(
+										// Select non-configurable products that need to be added
+										$this->_frameworkModelResource->getConnection("core_write")
+											->select()
+											/*
+											 * Select non-configurable products that are visible in the current
+											 * store (using the category product index), but have not been synced
+											 * for this store yet.
+											 */
+											->from(
+												array('p' => $resource->getTableName("catalog_product_entity")),
+												array('product_id' => "p.entity_id", 'parent_id' => "k.parent_id")
+											)
+											->join(
+												array('i' => $resource->getTableName("catalog_category_product_index")),
+												"p.entity_id = i.product_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
+												""
+											)
+											->joinLeft(
+												array('k' => $resource->getTableName("klevu_product_sync")),
+												"p.entity_id = k.product_id AND k.parent_id = 0 AND i.store_id = k.store_id AND k.test_mode = :test_mode AND k.type = :type",
+												""
+											)
+											->where("(p.type_id != :configurable) AND (k.product_id IS NULL)"),
+										// Select configurable parent & product pairs that need to be added
+										$this->_frameworkModelResource->getConnection("core_write")
+											->select()
+											/*
+											 * Select configurable product children that are enabled (for the current
+											 * store or for the default store), have visible parents (using the category
+											 * product index) and have not been synced yet for the current store with
+											 * the current parent.
+											 */
+											->from(
+												array('e1' => $resource->getTableName("catalog_product_entity")),
+												array('product_id' => "s1.product_id", 'parent_id' => "e1.entity_id")
+											)
+											->join(
+												array('s1' => $resource->getTableName("catalog_product_super_link")),
+												"e1.row_id= s1.parent_id",
+												""
+											)
+											->join(
+												array('i' => $resource->getTableName("catalog_category_product_index")),
+												"i.product_id= e1.entity_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
+												""
+											)
+											->join(
+												array('e2' => $resource->getTableName("catalog_product_entity")),
+												"e2.entity_id = s1.product_id",
+												""
+											)
+											->joinLeft(
+												array('k' => $resource->getTableName("klevu_product_sync")),
+												"e1.entity_id = k.parent_id AND s1.product_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+												""
+											)
+											->joinLeft(
+												array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+												"ss.attribute_id = :status_attribute_id AND e2.row_id = ss.row_id AND ss.store_id = :default_store_id",
+												""
+											)
+											->joinLeft(
+												array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+												"sd.attribute_id = :status_attribute_id AND sd.row_id = e2.row_id AND sd.store_id = :store_id",
+												""
+											)
+											->where("(CASE WHEN sd.value_id > 1 THEN sd.value ELSE ss.value END = :status_enabled) AND (k.product_id IS NULL)")
+									))
+									->group(array('product_id', 'parent_id'))
+									->bind(array(
+										'type' => "products",
+										'store_id' => $store->getId(),
+										'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+										'test_mode' => $this->isTestModeEnabled(),
+										'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
+										'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+										'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
+										'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+										'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+									))
+							);
 
-                    'add' => $this->_frameworkModelResource->getConnection("core_write")
-                        ->select()
-                        ->union(array(
-                            // Select non-configurable products that need to be added
-                            $this->_frameworkModelResource->getConnection("core_write")
-                                ->select()
-                                /*
-                                 * Select non-configurable products that are visible in the current
-                                 * store (using the category product index), but have not been synced
-                                 * for this store yet.
-                                 */
-                                ->from(
-                                    array('p' => $resource->getTableName("catalog_product_entity")),
-                                    array('product_id' => "p.entity_id", 'parent_id' => "k.parent_id")
-                                )
-                                ->join(
-                                    array('i' => $resource->getTableName("catalog_category_product_index")),
-                                    "p.entity_id = i.product_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('k' => $resource->getTableName("klevu_product_sync")),
-                                    "p.entity_id = k.product_id AND k.parent_id = 0 AND i.store_id = k.store_id AND k.test_mode = :test_mode AND k.type = :type",
-                                    ""
-                                )
-                                ->where("(p.type_id != :configurable) AND (k.product_id IS NULL)"),
-                            // Select configurable parent & product pairs that need to be added
-                            $this->_frameworkModelResource->getConnection("core_write")
-                                ->select()
-                                /*
-                                 * Select configurable product children that are enabled (for the current
-                                 * store or for the default store), have visible parents (using the category
-                                 * product index) and have not been synced yet for the current store with
-                                 * the current parent.
-                                 */
-                                ->from(
-                                    array('s' => $resource->getTableName("catalog_product_super_link")),
-                                    array('product_id' => "s.product_id", 'parent_id' => "s.parent_id")
-                                )
-                                ->join(
-                                    array('i' => $resource->getTableName("catalog_category_product_index")),
-                                    "s.parent_id = i.product_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = s.product_id AND ss.store_id = :store_id",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
-                                    "sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = s.product_id AND sd.store_id = :default_store_id",
-                                    ""
-                                )
-                                ->joinLeft(
-                                    array('k' => $resource->getTableName("klevu_product_sync")),
-                                    "s.parent_id = k.parent_id AND s.product_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
-                                    ""
-                                )
-                                ->where("(CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END = :status_enabled) AND (k.product_id IS NULL)")
-                        ))
-                        ->group(array('k.product_id', 'k.parent_id'))
-                        ->bind(array(
-                            'type' => "products",
-                            'store_id' => $store->getId(),
-                            'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
-                            'test_mode' => $this->isTestModeEnabled(),
-                            'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
-                            'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
-                            'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
-                            'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
-                            'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
-                        ))
-                );
+
+				} else {
+					$actions = array(
+						'delete' => 
+						$resource->getConnection()
+							->select()
+							->union(array(
+								$resource->getConnection()
+								->select()
+								/*
+								 * Select synced products in the current store/mode that are no longer enabled
+								 * (don't exist in the products table, or have status disabled for the current
+								 * store, or have status disabled for the default store) or are not visible
+								 * (in the case of configurable products, check the parent visibility instead).
+								 */
+								->from(
+									array('k' => $resource->getTableName("klevu_product_sync")),
+									array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
+								)
+								->joinLeft(
+									array('v' => $resource->getTableName("catalog_category_product_index")),
+									"v.product_id = k.product_id AND v.store_id = :store_id",
+									""
+								)
+								->joinLeft(
+									array('p' => $resource->getTableName("catalog_product_entity")),
+									"p.entity_id = k.product_id",
+									""
+								)
+								->joinLeft(
+									array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+									"ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
+									""
+								)
+								->joinLeft(
+									array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+									"sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
+									""
+								)
+								->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND ((p.entity_id IS NULL) OR (CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END != :status_enabled) OR (CASE WHEN k.parent_id = 0 THEN k.product_id ELSE k.parent_id END NOT IN (?)) )",
+									$resource->getConnection()
+										->select()
+										->from(
+											array('i' => $resource->getTableName("catalog_category_product_index")),
+											array('id' => "i.product_id")
+										)
+										->where("(i.store_id = :store_id) AND (i.visibility IN (:visible_both, :visible_search))")
+									
+								),
+								$resource->getConnection()
+									->select()
+									/*
+									 * Select products which are not associated with parent 
+									 * but still parent exits in klevu product sync table with parent id
+									 * 
+									 */
+									->from(
+										array('ks' => $resource->getTableName("klevu_product_sync")),
+										array('product_id' => "ks.product_id","parent_id" => 'ks.parent_id')
+									)
+									->where("(ks.parent_id !=0 AND ks.product_id NOT IN (?) AND ks.store_id = :store_id)",
+										$resource->getConnection()
+										->select()
+										/*
+										 * Select products from catalog super link table
+										 */
+										->from(
+											array('s' => $resource->getTableName("catalog_product_super_link")),
+											array('product_id' => "s.product_id")
+										)
+									)
+								)
+							)
+							->group(array('k.product_id', 'k.parent_id'))
+							->bind(array(
+								'type'          => "products",
+								'store_id'       => $store->getId(),
+								'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+								'test_mode'      => $this->isTestModeEnabled(),
+								'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+								'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
+								'visible_both'   => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+								'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH
+							)),
+
+						'update' => $this->_frameworkModelResource->getConnection("core_write")
+							->select()
+							->union(array(
+								// Select products without parents that need to be updated
+								$this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									/*
+									 * Select synced non-configurable products for the current store/mode
+									 * that are visible (using the category product index) and have been
+									 * updated since last sync.
+									 */
+									->from(
+										array('k' => $resource->getTableName("klevu_product_sync")),
+										array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
+									)
+									->join(
+										array('p' => $resource->getTableName("catalog_product_entity")),
+										"p.entity_id = k.product_id",
+										""
+									)
+									->join(
+										array('i' => $resource->getTableName("catalog_category_product_index")),
+										"i.product_id = k.product_id AND k.store_id = i.store_id AND i.visibility IN (:visible_both, :visible_search)",
+										""
+									)
+									->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (p.type_id != :configurable) AND (p.updated_at > k.last_synced_at)"),
+								// Select products with parents (configurable) that need to be updated
+								$this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									/*
+									 * Select synced products for the current store/mode that are configurable
+									 * children (have entries in the super link table), are enabled for the current
+									 * store (or the default store), have visible parents (using the category product
+									 * index) and, either the product or the parent, have been updated since last sync.
+									 */
+									->from(
+										array('k' => $resource->getTableName("klevu_product_sync")),
+										array('product_id' => "k.product_id", 'parent_id' => "k.parent_id")
+									)
+									->join(
+										array('s' => $resource->getTableName("catalog_product_super_link")),
+										"k.parent_id = s.parent_id AND k.product_id = s.product_id",
+										""
+									)
+									->join(
+										array('i' => $resource->getTableName("catalog_category_product_index")),
+										"k.parent_id = i.product_id AND k.store_id = i.store_id AND i.visibility IN (:visible_both, :visible_search)",
+										""
+									)
+									->join(
+										array('p1' => $resource->getTableName("catalog_product_entity")),
+										"k.product_id = p1.entity_id",
+										""
+									)
+									->join(
+										array('p2' => $resource->getTableName("catalog_product_entity")),
+										"k.parent_id = p2.entity_id",
+										""
+									)
+									->joinLeft(
+										array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+										"ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = k.product_id AND ss.store_id = :store_id",
+										""
+									)
+									->joinLeft(
+										array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+										"sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = k.product_id AND sd.store_id = :default_store_id",
+										""
+									)
+									->where("(k.store_id = :store_id) AND (k.type = :type) AND (k.test_mode = :test_mode) AND (CASE WHEN ss.value_id > 0 OR ss.value = NULL THEN ss.value ELSE sd.value END = :status_enabled) AND ((p1.updated_at > k.last_synced_at) OR (p2.updated_at > k.last_synced_at))")
+							))
+							->group(array('k.product_id', 'k.parent_id'))
+							->bind(array(
+								'type'          => "products",
+								'store_id' => $store->getId(),
+								'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+								'test_mode' => $this->isTestModeEnabled(),
+								'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
+								'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+								'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
+								'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+								'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED,
+							)),
+
+						'add' => $this->_frameworkModelResource->getConnection("core_write")
+							->select()
+							->union(array(
+								// Select non-configurable products that need to be added
+								$this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									/*
+									 * Select non-configurable products that are visible in the current
+									 * store (using the category product index), but have not been synced
+									 * for this store yet.
+									 */
+									->from(
+										array('p' => $resource->getTableName("catalog_product_entity")),
+										array('product_id' => "p.entity_id", 'parent_id' => "k.parent_id")
+									)
+									->join(
+										array('i' => $resource->getTableName("catalog_category_product_index")),
+										"p.entity_id = i.product_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
+										""
+									)
+									->joinLeft(
+										array('k' => $resource->getTableName("klevu_product_sync")),
+										"p.entity_id = k.product_id AND k.parent_id = 0 AND i.store_id = k.store_id AND k.test_mode = :test_mode AND k.type = :type",
+										""
+									)
+									->where("(p.type_id != :configurable) AND (k.product_id IS NULL)"),
+								// Select configurable parent & product pairs that need to be added
+								$this->_frameworkModelResource->getConnection("core_write")
+									->select()
+									/*
+									 * Select configurable product children that are enabled (for the current
+									 * store or for the default store), have visible parents (using the category
+									 * product index) and have not been synced yet for the current store with
+									 * the current parent.
+									 */
+									->from(
+										array('s' => $resource->getTableName("catalog_product_super_link")),
+										array('product_id' => "s.product_id", 'parent_id' => "s.parent_id")
+									)
+									->join(
+										array('i' => $resource->getTableName("catalog_category_product_index")),
+										"s.parent_id = i.product_id AND i.store_id = :store_id AND i.visibility IN (:visible_both, :visible_search)",
+										""
+									)
+									->joinLeft(
+										array('ss' => $this->getProductStatusAttribute()->getBackendTable()),
+										"ss.attribute_id = :status_attribute_id AND ss.".$this->_entity_value." = s.product_id AND ss.store_id = :store_id",
+										""
+									)
+									->joinLeft(
+										array('sd' => $this->getProductStatusAttribute()->getBackendTable()),
+										"sd.attribute_id = :status_attribute_id AND sd.".$this->_entity_value." = s.product_id AND sd.store_id = :default_store_id",
+										""
+									)
+									->joinLeft(
+										array('k' => $resource->getTableName("klevu_product_sync")),
+										"s.parent_id = k.parent_id AND s.product_id = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+										""
+									)
+									->where("(CASE WHEN ss.value_id > 0 THEN ss.value ELSE sd.value END = :status_enabled) AND (k.product_id IS NULL)")
+							))
+							->group(array('k.product_id', 'k.parent_id'))
+							->bind(array(
+								'type' => "products",
+								'store_id' => $store->getId(),
+								'default_store_id' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+								'test_mode' => $this->isTestModeEnabled(),
+								'configurable' => \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE,
+								'visible_both' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH,
+								'visible_search' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_SEARCH,
+								'status_attribute_id' => $this->getProductStatusAttribute()->getId(),
+								'status_enabled' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+							))
+					);
+				}
 
                 $errors = 0;
 
                 foreach ($actions as $action => $statement) {
-                    if ($this->rescheduleIfOutOfMemory()) {
-                        return;
-                    }
-                    $method = $action . "Products";
-                    $products = $this->_frameworkModelResource->getConnection()->fetchAll($statement, $statement->getBind());
-                    $total = count($products);
-                    $this->log(\Zend\Log\Logger::INFO, sprintf("Found %d products to %s.", $total, $action));
-                    $pages = ceil($total / static::RECORDS_PER_PAGE);
-                    for ($page = 1; $page <= $pages; $page++) {
-                        if ($this->rescheduleIfOutOfMemory()) {
-                            return;
-                        }
+						if ($this->rescheduleIfOutOfMemory()) {
+							return;
+						}
+						
+						$method = $action . "Products";
+						$products = $this->_frameworkModelResource->getConnection()->fetchAll($statement, $statement->getBind());
+						$total = count($products);
+						$this->log(\Zend\Log\Logger::INFO, sprintf("Found %d products to %s.", $total, $action));
+						$pages = ceil($total / static::RECORDS_PER_PAGE);
+						for ($page = 1; $page <= $pages; $page++) {
+							if ($this->rescheduleIfOutOfMemory()) {
+								return;
+							}
 
-                        $offset = ($page - 1) * static::RECORDS_PER_PAGE;
-                        $result = $this->$method(array_slice($products, $offset, static::RECORDS_PER_PAGE));
+							$offset = ($page - 1) * static::RECORDS_PER_PAGE;
+							$result = $this->$method(array_slice($products, $offset, static::RECORDS_PER_PAGE));
 
-                        if ($result !== true) {
-                            $errors++;
-                            $this->log(\Zend\Log\Logger::ERR, sprintf("Errors occurred while attempting to %s products %d - %d: %s",
-                                $action,
-                                $offset + 1,
-                                ($offset + static::RECORDS_PER_PAGE <= $total) ? $offset + static::RECORDS_PER_PAGE : $total,
-                                $result
-                            ));
-                        }
-                    }
+							if ($result !== true) {
+								$errors++;
+								$this->log(\Zend\Log\Logger::ERR, sprintf("Errors occurred while attempting to %s products %d - %d: %s",
+									$action,
+									$offset + 1,
+									($offset + static::RECORDS_PER_PAGE <= $total) ? $offset + static::RECORDS_PER_PAGE : $total,
+									$result
+								));
+							}
+						}
                 }
 
                 $this->log(\Zend\Log\Logger::INFO, sprintf("Finished sync for %s (%s).", $store->getWebsite()->getName(), $store->getName()));
@@ -730,7 +987,7 @@ class Sync extends \Klevu\Search\Model\Sync {
 
             $this->run();
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->_psrLogLoggerInterface->error($e);
 
             $schedule
@@ -843,6 +1100,10 @@ class Sync extends \Klevu\Search\Model\Sync {
      */
     protected function setupSession(\Magento\Store\Model\Store\Interceptor $store) {
         $config = $this->_searchHelperConfig;
+		if (!$config->isProductSyncEnabled($store->getId())) {
+            $this->log(\Zend\Log\Logger::INFO, sprintf("Disabled for %s (%s).", $store->getWebsite()->getName(), $store->getName()));
+            return null;
+        }
 
         $api_key = $config->getRestApiKey($store->getId());
         if (!$api_key) {
@@ -971,12 +1232,14 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @return bool|string
      */
     protected function updateProducts(array $data) {
+		
         $total = count($data);
        
         $dataToSend = $this->addProductSyncData($data);
 		if(!empty($dataToSend) && is_numeric($dataToSend)){
 		    $data = array_slice($data, 0, $dataToSend);
 		}
+		
 
         $response = $this->_apiActionUpdaterecords
             ->setStore($this->_storeModelStoreManagerInterface->getStore())
@@ -999,27 +1262,32 @@ class Sync extends \Klevu\Search\Model\Sync {
                 if (isset($skipped_record_ids[$i])) {
                     continue;
                 }
-
-                $ids = $helper->getMagentoProductId($data[$i]['id']);
-
-                $where[] = sprintf("(%s AND %s AND %s)",
-                    $connection->quoteInto("product_id = ?", $ids['product_id']),
-                    $connection->quoteInto("parent_id = ?", $ids['parent_id']),
-                    $connection->quoteInto("type = ?", "products")
-                );
+                
+				if(isset($data[$i]['id'])) {
+					$ids = $helper->getMagentoProductId($data[$i]['id']);
+					if(!empty($ids)) {
+						$where[] = sprintf("(%s AND %s AND %s)",
+							$connection->quoteInto("product_id = ?", $ids['product_id']),
+							$connection->quoteInto("parent_id = ?", $ids['parent_id']),
+							$connection->quoteInto("type = ?", "products")
+						);
+				    }
+				}
             }
+            
+			if(!empty($where)) {
+				$where = sprintf("(%s) AND (%s) AND (%s)",
+					$connection->quoteInto("store_id = ?", $this->_storeModelStoreManagerInterface->getStore()->getId()),
+					$connection->quoteInto("test_mode = ?", $this->isTestModeEnabled()),
+					implode(" OR ", $where)
+				);
 
-            $where = sprintf("(%s) AND (%s) AND (%s)",
-                $connection->quoteInto("store_id = ?", $this->_storeModelStoreManagerInterface->getStore()->getId()),
-                $connection->quoteInto("test_mode = ?", $this->isTestModeEnabled()),
-                implode(" OR ", $where)
-            );
-
-            $this->_frameworkModelResource->getConnection("core_write")->update(
-                $this->_frameworkModelResource->getTableName('klevu_product_sync'),
-                array('last_synced_at' => $this->_searchHelperCompat->now()),
-                $where
-            );
+				$this->_frameworkModelResource->getConnection("core_write")->update(
+					$this->_frameworkModelResource->getTableName('klevu_product_sync'),
+					array('last_synced_at' => $this->_searchHelperCompat->now()),
+					$where
+				);
+			}
 
             $skipped_count = count($skipped_record_ids);
             if ($skipped_count > 0) {
@@ -1057,7 +1325,6 @@ class Sync extends \Klevu\Search\Model\Sync {
 		if(!empty($dataToSend) && is_numeric($dataToSend)){
 		    $data = array_slice($data, 0, $dataToSend);
 		}
-		
         $response = $this->_apiActionAddrecords
             ->setStore($this->_storeModelStoreManagerInterface->getStore())
             ->execute(array(
@@ -1091,12 +1358,26 @@ class Sync extends \Klevu\Search\Model\Sync {
                     "products"
                 );
             }
+            
+			if(!empty($data)) {
+				foreach($data as $key => $value){
+					$write =  $this->_frameworkModelResource->getConnection("core_write");
+					$query = "replace into ".$this->_frameworkModelResource->getTableName('klevu_product_sync')
+						   . "(product_id, parent_id, store_id, test_mode, last_synced_at, type) values "
+						   . "(:product_id, :parent_id, :store_id, :test_mode, :last_synced_at, :type)";
 
-            $this->_frameworkModelResource->getConnection("core_write")->insertArray(
-                $this->_frameworkModelResource->getTableName('klevu_product_sync'),
-                array("product_id", "parent_id", "store_id", "test_mode", "last_synced_at","type"),
-                $data
-            );
+					$binds = array(
+						'product_id' => $value[0],
+						'parent_id' => $value[1],
+						'store_id' => $value[2],
+						'test_mode' => $value[3],
+						'last_synced_at'  => $value[4],
+						'type' => $value[5]
+					);
+					$write->query($query, $binds);
+					
+				}
+			}
 
             $skipped_count = count($skipped_record_ids);
             if ($skipped_count > 0) {
@@ -1128,7 +1409,7 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @return $this
      */
     protected function addProductSyncData(&$products) {
-
+        
         $product_ids = array();
         $parent_ids = array();
         foreach ($products as $product) {
@@ -1140,14 +1421,35 @@ class Sync extends \Klevu\Search\Model\Sync {
         }
         $product_ids = array_unique($product_ids);
         $parent_ids = array_unique($parent_ids);
+		$config = $this->_searchHelperConfig;
+		
+		if($config->isCollectionMethodEnabled()) {
+			$data = $this->_catalogModelProduct->getCollection()
+				->addIdFilter($product_ids)
+				->setStore($this->_storeModelStoreManagerInterface->getStore())
+				->addStoreFilter()
+				->addAttributeToSelect($this->getUsedMagentoAttributes());
+		 
+			$data->load()
+				->addCategoryIds();
+		}
+		
+		$check_root_magento = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Backend\Block\Page\RequireJs')->getViewFileUrl('requirejs/require.js');
+		$check_pub = explode('/',$check_root_magento);
+		
+		
+		$dir = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Filesystem\DirectoryList');  
+		$mediadir = $dir->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+		
+		if(!in_array('pub',$check_pub)){
+			$mediadir = str_replace('/pub/','/',$mediadir);
+		}
 		
 		// Get the stock,url,visibity of product from database
         $url_rewrite_data = $this->getUrlRewriteData($product_ids);
-        $visibility_data = $this->getVisibilityData($product_ids);
+        //$visibility_data = $this->getVisibilityData($product_ids);
         $stock_data = $this->getStockData($product_ids);
-
         $attribute_map = $this->getAttributeMap();
-        $config = $this->_searchHelperConfig;
         if($config->isSecureUrlEnabled($this->_storeModelStoreManagerInterface->getStore()->getId())) {
             $base_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK,true);
             $media_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA,true);
@@ -1157,317 +1459,339 @@ class Sync extends \Klevu\Search\Model\Sync {
             $media_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
         }
         $currency = $this->_storeModelStoreManagerInterface->getStore()->getDefaultCurrencyCode();
-        $media_url .= $this->_productMediaConfig->getBaseMediaUrlAddition();
-         
+        //$media_url .= $this->_productMediaConfig->getBaseMediaUrlAddition();
+        
+		if(!in_array('pub',$check_pub)){
+			$media_url = str_replace('/pub','/',$media_url);
+		}
+		
         $rc = 0; 
         foreach ($products as $index => &$product) {
-			
-			if($rc % 5 == 0) {
-				if ($this->rescheduleIfOutOfMemory()) {
-                    return $rc;
+			try {
+				if($rc % 5 == 0) {
+					if ($this->rescheduleIfOutOfMemory()) {
+						return $rc;
+					}
 				}
-			}
-			
-            $item = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($product['product_id']);
+				
+				if($config->isCollectionMethodEnabled()) {
+					$item = $data->getItemById($product['product_id']);
+					$parent = ($product['parent_id'] != 0) ?  $data->getItemById($product['parent_id']) : null;
+					
+					$this->log(\Zend\Log\Logger::DEBUG, sprintf("Load by collection method for product ID %d", $product['product_id']));
+				} else {
+					$item = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($product['product_id']);
+					$item->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+					
+					$parent = ($product['parent_id'] != 0) ?  \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($product['parent_id'])->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID): null;
+				}
+				
+				if (!$item) {
+					// Product data query did not return any data for this product
+					// Remove it from the list to skip syncing it
+					$this->log(\Zend\Log\Logger::WARN, sprintf("Failed to retrieve data for product ID %d", $product['product_id']));
+					unset($products[$index]);
+					continue;
+				}
+				
+				/* Use event to add any external module data to product */
+				$this->_frameworkEventManagerInterface->dispatch('add_external_data_to_sync', array(
+					'parent' => $parent,
+					'product'=> &$product,
+					'store' => $this->_storeModelStoreManagerInterface->getStore()
+				));
 
-            $item->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
-            $parent = ($product['parent_id'] != 0) ?  \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Catalog\Model\Product')->load($product['parent_id'])->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID): null;
+				// Add data from mapped attributes
 
-            if (!$item) {
-                // Product data query did not return any data for this product
-                // Remove it from the list to skip syncing it
-                $this->log(\Zend\Log\Logger::WARN, sprintf("Failed to retrieve data for product ID %d", $product['product_id']));
-                unset($products[$index]);
-                continue;
-            }
-            
-            /* Use event to add any external module data to product */
-            $this->_frameworkEventManagerInterface->dispatch('add_external_data_to_sync', array(
-                'parent' => $parent,
-                'product'=> &$product,
-                'store' => $this->_storeModelStoreManagerInterface->getStore()
-            ));
+				foreach ($attribute_map as $key => $attributes) {
+					$product[$key] = null;
 
-            // Add data from mapped attributes
+					switch ($key) {
+						case "boostingAttribute":
+							foreach ($attributes as $attribute) {
+								if ($parent && $parent->getData($attribute)) {
+									$product[$key] = $parent->getData($attribute);
+									break;
+								} else {
+									$product[$key] = $item->getData($attribute);
+									break;
+								}
+							}
+							break;
+						case "rating":
+							foreach ($attributes as $attribute) {
+								if ($parent && $parent->getData($attribute)) {
+									$product[$key] = $this->convertToRatingStar($parent->getData($attribute));
+									break;
+								} else {
+									$product[$key] = $this->convertToRatingStar($item->getData($attribute));
+									break;
+								}
+							}
+							break;                        
+						case "otherAttributeToIndex":
+						case "other":
+							$product[$key] = array();
+							foreach ($attributes as $attribute) {
+								if ($item) {
+									$product[$key][$attribute] = $this->getAttributeData($attribute, $item->getData($attribute));
+								} else if ($parent) {
+									$product[$key][$attribute] = $this->getAttributeData($attribute, $parent->getData($attribute));
+								}
+							}
+							break;
+						 case "sku":
+							foreach ($attributes as $attribute) {
+								if ($parent && $parent->getData($attribute)) {
+									$product[$key] = $this->_searchHelperData->getKlevuProductSku($item->getData($attribute), $parent->getData($attribute));
+									break;
+								} else {
+									$product[$key] = $item->getData($attribute);
+									break;
+								}
+							}
+							break;
+						case "name":
+							foreach ($attributes as $attribute) {
+								if ($parent && $parent->getData($attribute)) {
+									$product[$key] = $parent->getData($attribute);
+									break;
+								}else if ($item->getData($attribute)) {
+									$product[$key] = $item->getData($attribute);
+									break;
+								}
+							}
+							break;
+						case "image":
+							foreach ($attributes as $attribute) {
+								if ($item->getData($attribute) && $item->getData($attribute) != "no_selection") {
+									$product[$key] = $item->getData($attribute);
+									break;
+								} else if ($parent && $parent->getData($attribute) && $parent->getData($attribute) != "no_selection") {
+									$product[$key] = $parent->getData($attribute);
+									break;
+								}
+							}
+							if ($product[$key] != "" && strpos($product[$key], "http") !== 0) {
+								// Prepend media base url for relative image locations
+								//generate thumbnail image for each products
+								$this->thumbImage($product[$key],$mediadir);
+								$imageResized = $mediadir.DIRECTORY_SEPARATOR."klevu_images".$product[$key];
+									if (file_exists($imageResized)) {
+										$product[$key] =  $media_url."klevu_images".$product[$key];
+										
+									}else{
+										$product[$key] = $media_url . $product[$key];
+									}
+							}
+							break;
+						case "salePrice":
 
-            foreach ($attribute_map as $key => $attributes) {
-                $product[$key] = null;
+							// Default to 0 if price can't be determined
+							$product['salePrice'] = 0;
 
-                switch ($key) {
-                    case "boostingAttribute":
-                        foreach ($attributes as $attribute) {
-                            if ($parent && $parent->getData($attribute)) {
-                                $product[$key] = $parent->getData($attribute);
-                                break;
-                            } else {
-                                $product[$key] = $item->getData($attribute);
-                                break;
-                            }
-                        }
-                        break;
-                    case "rating":
-                        foreach ($attributes as $attribute) {
-                            if ($parent && $parent->getData($attribute)) {
-                                $product[$key] = $this->convertToRatingStar($parent->getData($attribute));
-                                break;
-                            } else {
-                                $product[$key] = $this->convertToRatingStar($item->getData($attribute));
-                                break;
-                            }
-                        }
-                        break;                        
-                    case "otherAttributeToIndex":
-                    case "other":
-                        $product[$key] = array();
-                        foreach ($attributes as $attribute) {
-                            if ($item) {
-                                $product[$key][$attribute] = $this->getAttributeData($attribute, $item->getData($attribute));
-                            } else if ($parent) {
-                                $product[$key][$attribute] = $this->getAttributeData($attribute, $parent->getData($attribute));
-                            }
-                        }
-                        break;
-                     case "sku":
-                        foreach ($attributes as $attribute) {
-                            if ($parent && $parent->getData($attribute)) {
-                                $product[$key] = $this->_searchHelperData->getKlevuProductSku($item->getData($attribute), $parent->getData($attribute));
-                                break;
-                            } else {
-                                $product[$key] = $item->getData($attribute);
-                                break;
-                            }
-                        }
-                        break;
-                    case "name":
-                        foreach ($attributes as $attribute) {
-                            if ($parent && $parent->getData($attribute)) {
-                                $product[$key] = $parent->getData($attribute);
-                                break;
-                            }else if ($item->getData($attribute)) {
-                                $product[$key] = $item->getData($attribute);
-                                break;
-                            }
-                        }
-                        break;
-                    case "image":
-                        foreach ($attributes as $attribute) {
-                            if ($item->getData($attribute) && $item->getData($attribute) != "no_selection") {
-                                $product[$key] = $item->getData($attribute);
-                                break;
-                            } else if ($parent && $parent->getData($attribute) && $parent->getData($attribute) != "no_selection") {
-                                $product[$key] = $parent->getData($attribute);
-                                break;
-                            }
-                        }
-                        if ($product[$key] != "" && strpos($product[$key], "http") !== 0) {
-                            // Prepend media base url for relative image locations
-                            //generate thumbnail image for each products
-                            $this->thumbImage($product[$key]);
-                            $dir = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Filesystem\DirectoryList');  
-                            $mediadir = $dir->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
-                            $imageResized = $mediadir.DIRECTORY_SEPARATOR."klevu_images".$product[$key];                     
-							    if (file_exists($imageResized)) {
-                                    $config = $this->_searchHelperConfig;
-                                    if($config->isSecureUrlEnabled($this->_storeModelStoreManagerInterface->getStore()->getId())) {
-                                        $product[$key] =  $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA,true)."klevu_images".$product[$key];
-                                    } else {
-                                        $product[$key] =  $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."klevu_images".$product[$key];
-                                    }
-                                }else{
-                                    $product[$key] = $media_url . $product[$key];
-                                }
-                        }
-                        break;
-                    case "salePrice":
+							if ($parent && $parent->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+								// Calculate configurable product price based on option values
+								$ruleprice = $this->calculateFinalPriceFront($parent,\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID,$parent->getId(),$this->_storeModelStoreManagerInterface->getStore());
+								if(!empty($ruleprice)){
+									$fprice = min($ruleprice,$parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue());    
+								} else {
+									$fprice = $parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+								}
 
-                        // Default to 0 if price can't be determined
-                        $product['salePrice'] = 0;
+								$price = (isset($fprice)) ? $fprice: $parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
 
-                        if ($parent && $parent->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-                            // Calculate configurable product price based on option values
-                            $ruleprice = $this->calculateFinalPriceFront($parent,\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID,$parent->getId(),$this->_storeModelStoreManagerInterface->getStore());
-                            if(!empty($ruleprice)){
-                                $fprice = min($ruleprice,$parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue());    
-                            } else {
-                                $fprice = $parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-                            }
-
-                            $price = (isset($fprice)) ? $fprice: $parent->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-
-                            // show low price for config products
-                            $product['startPrice'] = $this->processPrice($price , $parent);
-                            
-                            // also send sale price for sorting and filters for klevu 
-                            $product['salePrice'] = $this->processPrice($price , $parent);
-                        } else {
-                            // Use price index prices to set the product price and start/end prices if available
-                            // Falling back to product price attribute if not
-                            if ($item) {
-                                $ruleprice = $this->calculateFinalPriceFront($item,\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID,$item->getId(),$this->_storeModelStoreManagerInterface->getStore());
-                                if ($item->getData('type_id') == "grouped") {
-                                    $this->_searchHelperData->getGroupProductMinPrice($item,$this->_storeModelStoreManagerInterface->getStore());
-                                    if(!empty($ruleprice)){
-                                        $sPrice = min($ruleprice,$item->getFinalPrice());    
-                                    }else{
-                                        $sPrice = $item->getFinalPrice();    
-                                    }
-                                    $product['startPrice'] = $this->processPrice($sPrice,$item);
-                                    $product["salePrice"] = $this->processPrice($sPrice,$item);
-                                }else if ($item->getData('type_id') == \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE) {
-                                    list($minimalPrice, $maximalPrice) = $this->_searchHelperData->getBundleProductPrices($item,$this->_storeModelStoreManagerInterface->getStore());
-									
-									$minPrice = $this->processPrice($this->convertPrice($minimalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
-									
-									$maxPrice = $this->processPrice($this->convertPrice($maximalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
-									
-                                    $product["salePrice"] = $minPrice;
-                                    $product['startPrice'] = $minPrice;
-                                    $product['toPrice'] = $maxPrice;
-                                }else{
-                                    // Always use minimum price as the sale price as it's the most accurate
-                                    if(!empty($ruleprice)){
-                                        $sPrice = min($ruleprice,$item->getPriceInfo()->getPrice('final_price')->getAmount()->getValue());    
-                                    } else{
-                                        $sPrice = $item->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-                                    }
-                                    $product['salePrice'] = $this->processPrice($sPrice , $item);
-                                }
-                                
-                            } else {
-                                if ($item->getData("price") !== null) {
-                                    $product["salePrice"] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(), $item);
-                                }
-                            }
-                        }
-                        break;
-                    case "price":
-                            // Default to 0 if price can't be determined
-                            $product['price'] = 0;
-                            if ($parent && $parent->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-								 
-                                // Calculate configurable product price based on option values
-                                $orgPrice = $parent->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
-                                $price = (isset($orgPrice)) ? $orgPrice: $this->convertPrice($parent->getData("price"),$this->_storeModelStoreManagerInterface->getStore());
-
-                                // also send sale price for sorting and filters for klevu 
-                                $product['price'] = $this->processPrice($price , $parent);
+								// show low price for config products
+								$product['startPrice'] = $this->processPrice($price , $parent);
 								
-                            } else {
-                              // Use price index prices to set the product price and start/end prices if available
-                              // Falling back to product price attribute if not
-                                if ($item) {
-                                    if ($item->getData('type_id') == "grouped") {
-                                        // Get the group product original price 
-                                        $this->_searchHelperData->getGroupProductOriginalPrice($item,$this->getStore());
-                                        $sPrice = $item->getPrice();
-                                        $product["price"] = $this->processPrice($sPrice,$item);
-                                    }else if ($item->getData('type_id') == \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE) {
-                                        // product detail page always shows final price as price so we also taken final price as original price only for bundle product 
-                                        list($minimalPrice, $maximalPrice) = $this->_searchHelperData->getBundleProductPrices($item,$this->getStore());
+								// also send sale price for sorting and filters for klevu 
+								$product['salePrice'] = $this->processPrice($price , $parent);
+							} else {
+								// Use price index prices to set the product price and start/end prices if available
+								// Falling back to product price attribute if not
+								if ($item) {
+									$ruleprice = $this->calculateFinalPriceFront($item,\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID,$item->getId(),$this->_storeModelStoreManagerInterface->getStore());
+									if ($item->getData('type_id') == "grouped") {
+										$this->_searchHelperData->getGroupProductMinPrice($item,$this->_storeModelStoreManagerInterface->getStore());
+										if(!empty($ruleprice)){
+											$sPrice = min($ruleprice,$item->getFinalPrice());    
+										}else{
+											$sPrice = $item->getFinalPrice();    
+										}
+										$product['startPrice'] = $this->processPrice($sPrice,$item);
+										$product["salePrice"] = $this->processPrice($sPrice,$item);
+									}else if ($item->getData('type_id') == \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE) {
+										list($minimalPrice, $maximalPrice) = $this->_searchHelperData->getBundleProductPrices($item,$this->_storeModelStoreManagerInterface->getStore());
 										
-                                        $product["price"] = $this->processPrice($this->convertPrice($minimalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
+										$minPrice = $this->processPrice($this->convertPrice($minimalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
 										
-                                    }else {
-            						    // Always use minimum price as the sale price as it's the most accurate
-                                        $product['price'] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(), $item);
-                                    }
-                                  
-                                } else {
-                                    if ($item->getData("price") !== null) {
-                                        $product["price"] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(),$item);
-                                    } 
-                                }
-                            }
-                        break;
-                    default:
-                    
-                        foreach ($attributes as $attribute) {
-                            if ($item->getData($attribute)) {
-                                $product[$key] = $this->getAttributeData($attribute, $item->getData($attribute));
-                                break;
-                            } else if ($parent && $parent->getData($attribute)) {
-                                $product[$key] = $this->getAttributeData($attribute, $parent->getData($attribute));
-                                break;
-                            }
-                        }
-                }
-            }
+										$maxPrice = $this->processPrice($this->convertPrice($maximalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
+										
+										$product["salePrice"] = $minPrice;
+										$product['startPrice'] = $minPrice;
+										$product['toPrice'] = $maxPrice;
+									}else{
+										// Always use minimum price as the sale price as it's the most accurate
+										if(!empty($ruleprice)){
+											$sPrice = min($ruleprice,$item->getPriceInfo()->getPrice('final_price')->getAmount()->getValue());    
+										} else{
+											$sPrice = $item->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+										}
+										$product['salePrice'] = $this->processPrice($sPrice , $item);
+									}
+									
+								} else {
+									if ($item->getData("price") !== null) {
+										$product["salePrice"] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(), $item);
+									}
+								}
+							}
+							break;
+						case "price":
+								// Default to 0 if price can't be determined
+								$product['price'] = 0;
+								if ($parent && $parent->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+									 
+									// Calculate configurable product price based on option values
+									$orgPrice = $parent->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
+									$price = (isset($orgPrice)) ? $orgPrice: $this->convertPrice($parent->getData("price"),$this->_storeModelStoreManagerInterface->getStore());
 
-            // Add non-attribute data
-            $product['currency'] = $currency;
+									// also send sale price for sorting and filters for klevu 
+									$product['price'] = $this->processPrice($price , $parent);
+									
+								} else {
+								  // Use price index prices to set the product price and start/end prices if available
+								  // Falling back to product price attribute if not
+									if ($item) {
+										if ($item->getData('type_id') == "grouped") {
+											// Get the group product original price 
+											$this->_searchHelperData->getGroupProductOriginalPrice($item,$this->getStore());
+											$sPrice = $item->getPrice();
+											$product["price"] = $this->processPrice($sPrice,$item);
+										}else if ($item->getData('type_id') == \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE) {
+											// product detail page always shows final price as price so we also taken final price as original price only for bundle product 
+											list($minimalPrice, $maximalPrice) = $this->_searchHelperData->getBundleProductPrices($item,$this->getStore());
+											
+											$product["price"] = $this->processPrice($this->convertPrice($minimalPrice,$this->_storeModelStoreManagerInterface->getStore()), $item);
+											
+										}else {
+											// Always use minimum price as the sale price as it's the most accurate
+											$product['price'] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(), $item);
+										}
+									  
+									} else {
+										if ($item->getData("price") !== null) {
+											$product["price"] = $this->processPrice($item->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue(),$item);
+										} 
+									}
+								}
+							break;
+						default:
+						
+							foreach ($attributes as $attribute) {
+								if ($item->getData($attribute)) {
+									$product[$key] = $this->getAttributeData($attribute, $item->getData($attribute));
+									break;
+								} else if ($parent && $parent->getData($attribute)) {
+									$product[$key] = $this->getAttributeData($attribute, $parent->getData($attribute));
+									break;
+								}
+							}
+					}
+				}
 
-            if ($item->getCategoryIds()) {
-                                 
-                $product['category'] = $this->getLongestPathCategoryName($item->getCategoryIds());
-                $product['listCategory'] = $this->getCategoryNames($item->getCategoryIds());
-            } else if ($parent) {
-                $product['category'] = $this->getLongestPathCategoryName($parent->getCategoryIds());
-                $product['listCategory'] = $this->getCategoryNames($parent->getCategoryIds());
-            } else {
-                $product['category'] = "";
-                $product['listCategory'] = "KLEVU_PRODUCT";
-            }
-            
-            
-            if ($parent) {
-                //Get the price based on customer group
-                $product['groupPrices'] = $this->getGroupPrices($parent);
-            } else if($item) {
-                $product['groupPrices'] = $this->getGroupPrices($item);
-            } else {
-                $product['groupPrices'] = "";
-            }
-            
-            
+				// Add non-attribute data
+				$product['currency'] = $currency;
 
-            // Use the parent URL if the product is invisible (and has a parent) and
-            // use a URL rewrite if one exists, falling back to catalog/product/view
-            if (isset($visibility_data[$product['product_id']]) && !$visibility_data[$product['product_id']] && $parent) {
-                $product['url'] = $base_url . (
-                    (isset($url_rewrite_data[$product['parent_id']])) ?
-                        $url_rewrite_data[$product['parent_id']] :
-                        "catalog/product/view/id/" . $product['parent_id']
-                    );
-            } else {
-                if($parent) {
-                  $product['url'] = $base_url . (
-                      (isset($url_rewrite_data[$product['parent_id']])) ?
-                          $url_rewrite_data[$product['parent_id']] :
-                          "catalog/product/view/id/" . $product['parent_id']
-                      );                
-                } else {
-                  $product['url'] = $base_url . (
-                    (isset($url_rewrite_data[$product['product_id']])) ?
-                        $url_rewrite_data[$product['product_id']] :
-                        "catalog/product/view/id/" . $product['product_id']
-                    );
-                }
-            }
+				if ($parent) {
+					$product['category'] = $this->getLongestPathCategoryName($parent->getCategoryIds());
+					$product['listCategory'] = $this->getCategoryNames($parent->getCategoryIds());
+				} else if ($item->getCategoryIds()) {
+					$product['category'] = $this->getLongestPathCategoryName($item->getCategoryIds());
+					$product['listCategory'] = $this->getCategoryNames($item->getCategoryIds());
+				} else {
+					$product['category'] = "";
+					$product['listCategory'] = "KLEVU_PRODUCT";
+				}
+				
+				
+				if ($parent) {
+					//Get the price based on customer group
+					$product['groupPrices'] = $this->getGroupPrices($parent);
+				} else if($item) {
+					$product['groupPrices'] = $this->getGroupPrices($item);
+				} else {
+					$product['groupPrices'] = "";
+				}
+				
+				
 
-            // Add stock data
-               if(isset($stock_data[$product['product_id']])) {
-                $product['inStock'] = ($stock_data[$product['product_id']]) ? "yes" : "no";
-            }
+				// Use the parent URL if the product is invisible (and has a parent) and
+				// use a URL rewrite if one exists, falling back to catalog/product/view
+				
+				if($parent) {
+					 $product['url'] = $base_url . (
+						  (isset($url_rewrite_data[$product['parent_id']])) ?
+							  $url_rewrite_data[$product['parent_id']] :
+							  "catalog/product/view/id/" . $product['parent_id']
+						  );                
+				} else {
+					 $product['url'] = $base_url . (
+						(isset($url_rewrite_data[$product['product_id']])) ?
+							$url_rewrite_data[$product['product_id']] :
+							"catalog/product/view/id/" . $product['product_id']
+					);
+				}
+				
 
-            // Configurable product relation
-            if ($product['parent_id'] != 0) {
-                $product['itemGroupId'] = $product['parent_id'];
-            }
+				// Add stock data
+				   if(isset($stock_data[$product['product_id']])) {
+					$product['inStock'] = ($stock_data[$product['product_id']]) ? "yes" : "no";
+				}
 
-            // Set ID data
-            $product['id'] = $this->_searchHelperData->getKlevuProductId($product['product_id'], $product['parent_id']);
-            unset($product['product_id']);
-            unset($product['parent_id']);
-            
-            if($item) {
-                $item->clearInstance();
-                $item = null;
-            }
-            if($parent) {
-                $parent->clearInstance();
-                $parent = null;
-            }
-            gc_collect_cycles();
+				// Configurable product relation
+				if ($product['parent_id'] != 0) {
+					$product['itemGroupId'] = $product['parent_id'];
+				}
+
+				// Set ID data
+				$product['id'] = $this->_searchHelperData->getKlevuProductId($product['product_id'], $product['parent_id']);
+				unset($product['product_id']);
+				unset($product['parent_id']);
+				
+				if($item) {
+					$item->clearInstance();
+					$item = null;
+				}
+				if($parent) {
+					if(!$config->isCollectionMethodEnabled()) {
+						$parent->clearInstance();
+					}
+					$parent = null;
+				}
+				gc_collect_cycles();
+				
+			} catch(\Exception $e) {
+				$this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+				$markAsSync = array();
+				$markAsSync[] = array($product['product_id'],$product['parent_id'],$this->getStore()->getId(),0,$this->_searchHelperCompat->now(),"products");
+				$write =  $this->_frameworkModelResource->getConnection("core_write");
+				$query = "replace into ".$this->_frameworkModelResource->getTableName('klevu_product_sync')
+					   . "(product_id, parent_id, store_id, test_mode, last_synced_at, type,error_flag) values "
+					   . "(:product_id, :parent_id, :store_id, :test_mode, :last_synced_at, :type,:error_flag)";
+				$binds = array(
+					'product_id' => $markAsSync[0][0],
+					'parent_id' => $markAsSync[0][1],
+					'store_id' => $markAsSync[0][2],
+					'test_mode' => $markAsSync[0][3],
+					'last_synced_at'  => $markAsSync[0][4],
+					'type' => $markAsSync[0][5],
+					'error_flag' => 1
+				);
+				$write->query($query, $binds);
+				//unset($products[$index]);
+				continue;
+			}
         }
    
         return $this;
@@ -1555,16 +1879,14 @@ class Sync extends \Klevu\Search\Model\Sync {
             $this->_frameworkModelResource->getConnection("core_write")
                 ->select()
                 ->from(
-                    array('s' => $this->_frameworkModelResource->getTableName("cataloginventory_stock_item")),
+                    array('s' => $this->_frameworkModelResource->getTableName("cataloginventory_stock_status")),
                     array(
                         'product_id'   => "s.product_id",
-                        'in_stock'     => "s.is_in_stock",
-                        'manage_stock' => "s.manage_stock",
-                        'use_config'   => "s.use_config_manage_stock"
+                        'in_stock'     => "s.stock_status"
                     )
                 )
                 ->where("s.product_id IN (?)", $product_ids)
-                ->where("s.stock_id = ?",1)
+                ->where("s.website_id = ?",$this->_storeModelStoreManagerInterface->getStore()->getWebsiteId())
         );
 
         $data = array();
@@ -1803,14 +2125,13 @@ class Sync extends \Klevu\Search\Model\Sync {
         $name = "";
         foreach ($categories as $id) {
             if (isset($category_paths[$id])) {
-                if (count($category_paths[$id]) > $length) {
-                    $length = count($category_paths[$id]);
-                    $name = end($category_paths[$id]);
-                }
+                //if (count($category_paths[$id]) > $length) {
+                    //$length = count($category_paths[$id]);
+                    $name .= end($category_paths[$id]).";";
+                //}
             }
         }
-
-        return $name;
+        return substr($name,0,strrpos($name,";")+1-1);
     }
     
     /**
@@ -2018,12 +2339,9 @@ class Sync extends \Klevu\Search\Model\Sync {
      * @return $this
      */ 	 
         
-    public function thumbImage($image) {
+    public function thumbImage($image,$mediadir) {
             try {
-                $dir = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Filesystem\DirectoryList');  
-                $mediadir = $dir->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
                 $baseImageUrl = $mediadir.DIRECTORY_SEPARATOR."catalog".DIRECTORY_SEPARATOR."product".$image;
-
                 if(file_exists($baseImageUrl)) {
                     list($width, $height, $type, $attr)=getimagesize($baseImageUrl); 
                     if($width > 200 && $height > 200) {
@@ -2033,7 +2351,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                         }
                     }
                 }
-            }catch(Exception $e) {
+            }catch(\Exception $e) {
                  $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Image Error:\n%s", $e->getMessage()));
             }
     }
@@ -2168,7 +2486,7 @@ class Sync extends \Klevu\Search\Model\Sync {
                 $this->updateSpecificProductIds($special_pro_ids);
             }
             
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
                 $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in markforupdate %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
         }
     }
@@ -2319,7 +2637,9 @@ class Sync extends \Klevu\Search\Model\Sync {
             $this->log(\Zend\Log\Logger::INFO, sprintf("Starting sync for category %s (%s).", $store->getWebsite()->getName() , $store->getName()));
             $rootId = $this->getStore()->getRootCategoryId();
             $rootStoreCategory = "1/$rootId/";
-            $actions = array(
+			
+			if($this->_ProductMetadataInterface->getEdition() == "Enterprise" && version_compare($this->_ProductMetadataInterface->getVersion(), '2.0.8', '>')===true) {
+				$actions = array(
                     'delete' => $this->_frameworkModelResource->getConnection()
                         ->select()
                         /*
@@ -2327,27 +2647,38 @@ class Sync extends \Klevu\Search\Model\Sync {
                          * are no longer enabled
                          */
                         ->from(
-                                    array('k' => $this->getTableName("klevu_product_sync")),
-                                    array('category_id' => "k.product_id")
+                                    array('ce' => $this->getTableName("catalog_category_entity")),
+                                    array('category_id' => "ce.entity_id")
                                    
                         )
-                        ->joinLeft(
-                                    array('ci' => $this->getTableName("catalog_category_entity_int")),
-                                    "k.product_id = ci.".$this->_entity_value." AND ci.attribute_id = :is_active",
+						->join(
+                                    array('k' => $this->getTableName("klevu_product_sync")),
+                                    "k.product_id = ce.entity_id AND k.type = :type AND store_id=:store_id AND k.parent_id=0",
                                     ""
                                 )
-                        ->where("k.type = :type AND (ci.value = 0 OR k.product_id NOT IN ?)",
+                        ->joinLeft(
+                                    array('ci' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "ci.row_id = ce.row_id AND ci.attribute_id = :is_active AND ci.store_id = 0",
+                                    ""
+                                )
+						->joinLeft(
+                                    array('cs' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "cs.row_id = ci.row_id AND cs.attribute_id = :is_active AND cs.store_id = :store_id",
+                                    ""
+                                )
+                        ->where("(CASE WHEN cs.value_id > 0 THEN cs.value ELSE ci.value END = 0 OR k.product_id NOT IN ?)",
                                 $this->_frameworkModelResource->getConnection()
                                 ->select()
                                 ->from(
-                                    array('i' => $this->getTableName("catalog_category_entity_int")),
-                                    array('category_id' => "i.".$this->_entity_value)
+                                    array('i' => $this->getTableName("catalog_category_entity")),
+                                    array('category_id' => "i.entity_id")
                                 )
                         )
                         ->group(array('k.product_id', 'k.parent_id'))
                         ->bind(array(
                             'type'=>"categories",
-                            'is_active' => $isActiveAttributeId
+                            'is_active' => $isActiveAttributeId,
+							'store_id' => $store->getId()
                         )),
                     'update' => 
                             $this->_frameworkModelResource->getConnection()
@@ -2382,16 +2713,22 @@ class Sync extends \Klevu\Search\Model\Sync {
                                     array('c' => $this->_frameworkModelResource->getTableName("catalog_category_entity")),
                                     array('category_id' => "c.entity_id")
                                 )
-                                ->join(
+								->joinLeft(
                                     array('ci' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
-                                    "c.entity_id = ci.".$this->_entity_value." AND ci.attribute_id = :is_active AND ci.value = 1",
+                                    "ci.row_id = c.row_id AND ci.attribute_id = :is_active AND ci.store_id = 0",
+                                    ""
+                                )
+								->joinLeft(
+                                    array('cs' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "cs.row_id = c.row_id AND cs.attribute_id = :is_active AND cs.store_id = :store_id",
                                     ""
                                 )
                                 ->joinLeft(
                                     array('k' => $this->_frameworkModelResource->getTableName("klevu_product_sync")),
-                                    "ci.".$this->_entity_value." = k.product_id AND k.store_id = :store_id AND k.test_mode = :test_mode AND k.type = :type",
+                                    "k.product_id = c.entity_id AND k.test_mode = :test_mode AND k.type = :type AND k.store_id = :store_id AND k.parent_id=0",
                                     ""
                                 )
+								->where("CASE WHEN cs.value_id > 0 THEN cs.value ELSE ci.value END = 1")
                                 ->where("k.product_id IS NULL")
                                 ->where("c.path LIKE ?","{$rootStoreCategory}%")
                         ->bind(array(
@@ -2401,8 +2738,111 @@ class Sync extends \Klevu\Search\Model\Sync {
                             'test_mode' => $this->isTestModeEnabled(),
                         )),
                 );
+			} else {
+			
+				$actions = array(
+                    'delete' => $this->_frameworkModelResource->getConnection()
+                        ->select()
+                        /*
+                         * Select synced categories in the current store/mode that 
+                         * are no longer enabled
+                         */
+                        ->from(
+                                    array('ce' => $this->getTableName("catalog_category_entity")),
+                                    array('category_id' => "ce.entity_id")
+                                   
+                        )
+						->join(
+                                    array('k' => $this->getTableName("klevu_product_sync")),
+                                    "k.product_id = ce.entity_id AND k.type = :type AND store_id=:store_id AND k.parent_id=0",
+                                    ""
+                                )
+                        ->joinLeft(
+                                    array('ci' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "ci.entity_id = ce.entity_id AND ci.attribute_id = :is_active AND ci.store_id = 0",
+                                    ""
+                                )
+						->joinLeft(
+                                    array('cs' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "cs.entity_id = ci.entity_id AND cs.attribute_id = :is_active AND cs.store_id = :store_id",
+                                    ""
+                                )
+                        ->where("(CASE WHEN cs.value_id > 0 THEN cs.value ELSE ci.value END = 0 OR k.product_id NOT IN ?)",
+                                $this->_frameworkModelResource->getConnection()
+                                ->select()
+                                ->from(
+                                    array('i' => $this->getTableName("catalog_category_entity")),
+                                    array('category_id' => "i.entity_id")
+                                )
+                        )
+                        ->group(array('k.product_id', 'k.parent_id'))
+                        ->bind(array(
+                            'type'=>"categories",
+                            'is_active' => $isActiveAttributeId,
+							'store_id' => $store->getId()
+                        )),
+                    'update' => 
+                            $this->_frameworkModelResource->getConnection()
+                                ->select()
+                                /*
+                                 * Select categories for the current store/mode
+                                 * have been updated since last sync.
+                                 */
+                                 ->from(
+                                    array('k' => $this->getTableName("klevu_product_sync")),
+                                    array('category_id' => "k.product_id")
+                                   
+                                )
+                                ->join(
+                                    array('ce' => $this->getTableName("catalog_category_entity")),
+                                    "k.product_id = ce.entity_id",
+                                    ""
+                                )
+                                ->where("(k.type = :type) AND k.test_mode = :test_mode AND (k.store_id = :store_id) AND (ce.updated_at > k.last_synced_at)")
+                                ->bind(array(
+                                    'store_id' => $store->getId(),
+                                    'type'=> "categories",
+                                    'test_mode' => $this->isTestModeEnabled(),
+                                )),
+                     'add' =>  $this->_frameworkModelResource->getConnection()
+                                ->select()
+                                /*
+                                 * Select categories for the current store/mode
+                                 * have been updated since last sync.
+                                 */
+                                ->from(
+                                    array('c' => $this->_frameworkModelResource->getTableName("catalog_category_entity")),
+                                    array('category_id' => "c.entity_id")
+                                )
+								->joinLeft(
+                                    array('ci' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "ci.entity_id = c.entity_id AND ci.attribute_id = :is_active AND ci.store_id = 0",
+                                    ""
+                                )
+								->joinLeft(
+                                    array('cs' => $this->_frameworkModelResource->getTableName("catalog_category_entity_int")),
+                                    "cs.entity_id = c.entity_id AND cs.attribute_id = :is_active AND cs.store_id = :store_id",
+                                    ""
+                                )
+                                ->joinLeft(
+                                    array('k' => $this->_frameworkModelResource->getTableName("klevu_product_sync")),
+                                    "k.product_id = c.entity_id AND k.test_mode = :test_mode AND k.type = :type AND k.store_id = :store_id AND k.parent_id=0",
+                                    ""
+                                )
+								->where("CASE WHEN cs.value_id > 0 THEN cs.value ELSE ci.value END = 1")
+                                ->where("k.product_id IS NULL")
+                                ->where("c.path LIKE ?","{$rootStoreCategory}%")
+                        ->bind(array(
+                            'type' => "categories",
+                            'store_id' => $store->getId(),
+                            'is_active' => $isActiveAttributeId,
+                            'test_mode' => $this->isTestModeEnabled(),
+                        )),
+                );
+			}
             $errors = 0;
             foreach($actions as $action => $statement) {
+				
                 if ($this->rescheduleIfOutOfMemory()) {
                     return;
                 }
@@ -2464,14 +2904,26 @@ class Sync extends \Klevu\Search\Model\Sync {
                     "categories"
                 );
             }
-            $this->_frameworkModelResource->getConnection()->insertArray($this->_frameworkModelResource->getTableName('klevu_product_sync') , array(
-                "product_id",
-                "parent_id",
-                "store_id",
-                "test_mode",
-                "last_synced_at",
-                "type"
-            ) , $data);
+
+			if(!empty($data)) {
+				foreach($data as $key => $value){
+					$write =  $this->_frameworkModelResource->getConnection("core_write");
+					$query = "replace into ".$this->_frameworkModelResource->getTableName('klevu_product_sync')
+						   . "(product_id, parent_id, store_id, test_mode, last_synced_at, type) values "
+						   . "(:product_id, :parent_id, :store_id, :test_mode, :last_synced_at, :type)";
+
+					$binds = array(
+						'product_id' => $value[0],
+						'parent_id' => $value[1],
+						'store_id' => $value[2],
+						'test_mode' => $value[3],
+						'last_synced_at'  => $value[4],
+						'type' => $value[5]
+					);
+					$write->query($query, $binds);
+				}
+			}
+			
             $skipped_count = count($skipped_record_ids);
             if ($skipped_count > 0) {
                 return sprintf("%d category%s failed (%s)", $skipped_count, ($skipped_count > 1) ? "s" : "", implode(", ", $skipped_records["messages"]));
@@ -2500,14 +2952,34 @@ class Sync extends \Klevu\Search\Model\Sync {
         foreach($pages as $key => $value) {
             $category_ids[] = $value["category_id"];
         }
-        $category_data = $this->_catalogModelCategory->getCollection()->addAttributeToSelect("*")->addFieldToFilter('entity_id', array(
+        $category_data = $this->_catalogModelCategory->getCollection()
+		->setStore($this->_storeModelStoreManagerInterface->getStore())
+		->addAttributeToSelect("*")->addFieldToFilter('entity_id', array(
             'in' => $category_ids
         ));
+		$config = $this->_searchHelperConfig;
+		$category_url_rewrite_data = $this->getCategoryUrlRewriteData($category_ids);
+		if($config->isSecureUrlEnabled($this->_storeModelStoreManagerInterface->getStore()->getId())) {
+            $base_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK,true);
+            $media_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA,true);
+          
+       }else {
+            $base_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
+            $media_url = $this->_storeModelStoreManagerInterface->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        }
+		
+		
+		$category_data_new = array();
         foreach($category_data as $category) {
+			$category['url'] = $base_url . (
+						(isset($category_url_rewrite_data[$category->getId()])) ?
+							$category_url_rewrite_data[$category->getId()] :
+							"catalog/category/view/id/" . $category->getId()
+					);
             $value["id"] = "categoryid_" . $category->getId();
             $value["name"] = $category->getName();
             $value["desc"] = strip_tags($category->getDescription());
-            $value["url"] = $category->getURL();
+            $value["url"] = $category['url'];
             $value["metaDesc"] = $category->getMetaDescription() . $category->getMetaKeywords();
             $value["shortDesc"] = substr(strip_tags($category->getDescription()) , 0, 200);
             $value["listCategory"] = "KLEVU_CATEGORY";
@@ -2714,6 +3186,29 @@ class Sync extends \Klevu\Search\Model\Sync {
         $condition[] = $this->_frameworkModelResource->getConnection()->quoteInto('status = ?', \Magento\Cron\Model\Schedule::STATUS_RUNNING);   
         $condition[] = $this->_frameworkModelResource->getConnection()->quoteInto('job_code = ?',$this->getJobCode());
         $this->_frameworkModelResource->getConnection()->delete($this->_frameworkModelResource->getTableName("cron_schedule"),$condition);   
+    }
+	
+	/**
+     * Return the URL rewrite data for the given products for the current store.
+     *
+     * @param array $product_ids A list of product IDs.
+     *
+     * @return array A list with product IDs as keys and request paths as values.
+     */
+    protected function getCategoryUrlRewriteData($category_ids) {
+        $stmt = $this->_frameworkModelResource->getConnection("core_write")->query(
+            $this->_searchHelperCompat->getCategoryUrlRewriteSelect($category_ids,$this->_storeModelStoreManagerInterface->getStore()->getId())
+        );
+
+        $data = array();
+        
+        while ($row = $stmt->fetch()) {
+            if (!isset($data[$row['entity_id']])) {
+                $data[$row['entity_id']] = $row['request_path'];
+            }
+        }
+
+        return $data;
     }
     
 

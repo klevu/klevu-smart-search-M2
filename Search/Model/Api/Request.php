@@ -143,7 +143,7 @@ class Request extends \Magento\Framework\DataObject {
     public function send() {
         if (!$this->getEndpoint()) {
             // Can't make a request without a URL
-            throw new Exception("Unable to send a Klevu Search API request: No URL specified.");
+            throw new \Exception("Unable to send a Klevu Search API request: No URL specified.");
         }
 
         $raw_request = $this->build();

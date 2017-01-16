@@ -3,12 +3,24 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.1</li>
-<li>EE 2.0.0 to 2.1.1</li>
+<li>CE 2.0.0 to 2.1.2</li>
+<li>EE 2.0.0 to 2.1.2</li>
 
 <hr />
 <h2>Change Log</h2>
-<h3>Version 2.0.7</h3>
+
+<h3>Version 2.0.10</h3>
+<li>Skip the product if config product does not have sub product;
+    We're not catching the exception thrown by Magento in such cases.</li>
+<li>Correct category names/urls are collected now.</li>
+<li>Image path improvements to avoid invalid image URLs.</li>
+<li>Preserve layout option for the Premium customers.</li>
+<li>Collection method as an option now available.</li>
+
+<h3>Version 2.0.9</h3>
+<li>change page_id to row_id for CMS sync</li>
+
+<h3>Version 2.0.8</h3>
 <li>common package for enterprise and community edition</li>
 
 

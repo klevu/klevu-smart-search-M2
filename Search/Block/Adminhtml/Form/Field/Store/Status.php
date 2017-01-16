@@ -8,7 +8,7 @@ namespace Klevu\Search\Block\Adminhtml\Form\Field\Store;
             if(!empty($status)) {
                 $html = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Model\Product\Sync')->getKlevuCronStatus();
             }else {
-                $html = __("Never Run");
+                $html = __("-");
             }
             return $html;
     }

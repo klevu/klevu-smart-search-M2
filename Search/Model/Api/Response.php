@@ -79,7 +79,7 @@ class Response extends \Magento\Framework\DataObject {
             if (strlen($content) > 0) {
                 try {
                     $xml = simplexml_load_string($response->getBody());
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     // Failed to parse XML
                     $this->successful = false;
                     $this->setMessage("Failed to parse a response from Klevu.");

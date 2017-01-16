@@ -73,13 +73,14 @@ class all extends \Magento\Backend\App\Action
                 $this->_redirect($this->_redirect->getRefererUrl());
             }
         }
+		
         if ($this->_searchHelperConfig->isProductSyncEnabled()) {
             if($this->_searchHelperConfig->getSyncOptionsFlag() == "2") {
-                $this->_modelProductSync
+                if ($store) {
+					$this->_modelProductSync
                     ->markAllProductsForUpdate($store)
                     ->schedule();
-
-                if ($store) {
+					
                     $this->_searchHelperData->log(\Zend\Log\Logger::INFO, sprintf("Product Sync scheduled to re-sync ALL products in %s (%s).",
                         $store->getWebsite()->getName(),
                         $store->getName()
@@ -90,8 +91,8 @@ class all extends \Magento\Backend\App\Action
                         $store->getName()
                     ));
                 } else {
+					$this->_modelProductSync->markAllProductsForUpdate();
                     $this->_searchHelperData->log(\Zend\Log\Logger::INFO, "Product Sync scheduled to re-sync ALL products.");
-
                     $this->messageManager->addSuccess(__("Klevu Search Sync scheduled to be run on the next cron run for ALL products."));
                 }
             } else {

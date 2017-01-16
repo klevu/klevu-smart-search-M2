@@ -39,6 +39,13 @@ class UpgradeSchema implements UpgradeSchemaInterface
 			$installer->run("ALTER TABLE `{$order_sync_table}` ADD `klevu_session_id` VARCHAR(255) NOT NULL , ADD `ip_address` VARCHAR(255) NOT NULL , ADD `date` DATETIME NOT NULL");
         }
 		
+		
+		if (version_compare($context->getVersion(), '2.0.10') < 0) {
+            //code to upgrade to 2.0.2
+			$klevu_sync_table = $installer->getTable('klevu_product_sync');
+			$installer->run("ALTER TABLE `{$klevu_sync_table}` ADD `error_flag` INT(11) NOT NULL DEFAULT '0' AFTER `type`");
+        }
+		
 		$installer->endSetup();
 
 	

@@ -48,6 +48,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
      * @var \Magento\Eav\Model\Entity\Attribute
      */
     protected $_modelEntityAttribute;
+	
+	/**
+     * @var \Magento\Framework\Locale\CurrencyInterface
+     */
+    protected $_localeCurrency;
+	
+	/**
+     * @var Magento\Directory\Model\CurrencyFactory
+     */
+	protected $_currencyFactory;
 
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface, 
@@ -57,7 +67,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         \Magento\Catalog\Model\Product $catalogModelProduct, 
         \Magento\Catalog\Helper\Data $taxHelperData,
         \Magento\Eav\Model\Entity\Type $modelEntityType, 
-        \Magento\Eav\Model\Entity\Attribute $modelEntityAttribute)
+        \Magento\Eav\Model\Entity\Attribute $modelEntityAttribute,
+		\Magento\Directory\Model\CurrencyFactory $currencyFactory,
+		\Magento\Framework\Locale\CurrencyInterface $localeCurrency)
     {
         $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
         $this->_backendModelUrl = $backendModelUrl;
@@ -67,6 +79,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         $this->_taxHelperData = $taxHelperData;
         $this->_modelEntityType = $modelEntityType;
         $this->_modelEntityAttribute = $modelEntityAttribute;
+		$this->_localeCurrency = $localeCurrency;
+		$this->_currencyFactory = $currencyFactory;
 
     }
 
@@ -301,8 +315,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
             }
             asort($groupPrices);
             $product->setPrice(array_shift($groupPrices));
-        } catch(Exception $e) {
-            $this->_searchHelperData->log(\Zend\Logger::WARN, sprintf("Unable to get original group price for product id %s",$product->getId()));
+        } catch(\Exception $e) {
+            $this->_searchHelperData->log(\Zend\Log\Logger::WARN, sprintf("Unable to get original group price for product id %s",$product->getId()));
         }            
     }
     
@@ -385,4 +399,30 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
      
         return $ip;
     }
+	
+	
+	/**
+     * Get the currecy switcher data
+     *
+     * @return string
+     */
+	public function getCurrencyData($store) {
+	    $baseCurrencyCode = $store->getBaseCurrency()->getCode();
+		$currentCurrencyCode = $store->getCurrentCurrencyCode();
+		if($baseCurrencyCode != $currentCurrencyCode){
+	        $availableCurrencies = $store->getAvailableCurrencyCodes();
+			$currencyResource = $this->_currencyFactory
+            ->create()
+            ->getResource();
+            $currencyRates = $currencyResource->getCurrencyRates($baseCurrencyCode, array_values($availableCurrencies));
+	        if(count($availableCurrencies) > 1) { 
+                foreach($currencyRates as $key => &$value){
+					$Symbol = $this->_localeCurrency->getCurrency($key)->getSymbol() ? $this->_localeCurrency->getCurrency($key)->getSymbol() : $this->_localeCurrency->getCurrency($key)->getShortName();
+			        $value = sprintf("'%s':'%s:%s'", $key,$value,$Symbol);
+		        }
+		        $currency = implode(",",$currencyRates);
+			    return $currency;
+		    }
+	    }
+	}
 }

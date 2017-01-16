@@ -60,6 +60,7 @@
                 <label>Search Result Page Settings</label>
                 <field id="landenabled" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
                   <label>Search Result Page</label>
+				  <comment><![CDATA[Select Search Result Page.]]></comment>
                   <source_model>Klevu\Search\Model\System\Config\Source\Landingoptions</source_model>
                 </field>
             </group>
@@ -134,6 +135,11 @@
       </group>
       <group id="developer" translate="label comment" sortOrder="900" showInDefault="1">
         <label>Developer Settings</label>
+		<field id="collection_method" translate="label comment" sortOrder="300" type="select" showInDefault="1">
+          <label>Use Collection Method</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment><![CDATA[Use Collection Method]]></comment>
+        </field>
         <field id="force_log" translate="label comment" sortOrder="300" type="select" showInDefault="1">
           <label>Force Logging</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
