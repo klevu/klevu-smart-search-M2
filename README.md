@@ -15,9 +15,9 @@
 <li>Please make sure to remove any older version (i.e. < 2.1.0) 
     before installing the current version. If you used composer method
     to install the plugin, use the following command to uninstall it. </li>
-<li>composer remove klevu/module-search</li>
+<li><b>composer remove klevu/module-search</b></li>
 <li>Use the following command to install the plugin</li>
-<li>composer require klevu/module-search</li>
+<li><b>composer require klevu/module-search</b></li>
 
 
 <h3>Version 2.0.10</h3>
