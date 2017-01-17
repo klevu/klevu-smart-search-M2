@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-  <body>
-    <referenceBlock name="before.body.end">
-      <block class="Magento\Framework\View\Element\Template" template="Klevu_Addtocart::klevu/addtocart/index.phtml" name="klevu.addtocart.index"/>
-    </referenceBlock>
-  </body>
-</config>

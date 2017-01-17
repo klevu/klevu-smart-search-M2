@@ -9,6 +9,17 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.0</h3>
+<li>Restructured the repository as per the M2 guidelines for uploading
+    the package on the marketplace. </li>
+<li>Please make sure to remove any older version (i.e. < 2.1.0) 
+    before installing the current version. If you used composer method
+    to install the plugin, use the following command to uninstall it. </li>
+<li>composer remove klevu/module-search</li>
+<li>Use the following command to install the plugin</li>
+<li>composer require klevu/module-search</li>
+
+
 <h3>Version 2.0.10</h3>
 <li>Skip the product if config product does not have sub product;
     We're not catching the exception thrown by Magento in such cases.</li>

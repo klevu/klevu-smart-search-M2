@@ -1,16 +1,13 @@
 {
   "name": "klevu/module-search",
   "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
+  "type": "metapackage",
+  "version": "2.1.0",
   "require": {
-    "php": "~5.5.0|~5.6.0|~7.0.0",
-    "magento/module-store": "*",
-    "magento/module-catalog": "*",
-    "magento/module-backend": "*",
-    "magento/module-eav": "*",
-    "magento/framework": "*"
+    "klevu/module-productsearch": "2.1.0",
+    "klevu/module-content": "2.1.0",
+    "klevu/module-addtocart": "2.1.0"
   },
-  "type": "magento2-module",
-  "version": "2.0.10",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
@@ -21,17 +18,5 @@
       "email": "niraj.aswani@klevu.com",
       "homepage": "https://www.klevu.com/"
     }
-  ],
-  "autoload": {
-    "files": [
-      "Search/registration.php",
-      "Addtocart/registration.php",
-      "Content/registration.php"
-    ],
-    "psr-4": {
-
-      "Klevu\\": ""
-
-    }
-  }
+  ]
 }

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Cron/etc/crontab.xsd">
-  <group id="default">
-    <job name="klevu_search_content_sync" instance="Klevu\Content\Model\Content" method="run">
-        <schedule>0 */3 * * *</schedule>    
-    </job>
-  </group>
-</config>
