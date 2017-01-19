@@ -3,11 +3,18 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.2</li>
-<li>EE 2.0.0 to 2.1.2</li>
+<li>CE 2.0.0 to 2.1.3</li>
+<li>EE 2.0.0 to 2.1.3</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.1</h3>
+<li>Hide certain category pages from search. </li>
+<li>Send log to klevu server. </li>
+<li>Image improvemets</li>
+<li>Bug fix while inserting specific product in klevu_product_sync table</li>
+<li>Bug fix for xml char issue while syncing data to klevu server</li>
 
 <h3>Version 2.1.0</h3>
 <li>Restructured the repository as per the M2 guidelines for uploading
