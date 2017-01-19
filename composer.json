@@ -18,10 +18,5 @@
       "email": "niraj.aswani@klevu.com",
       "homepage": "https://www.klevu.com/"
     }
-  ],
-  "autoload": {
-    "files": [
-      "README.md"
-    ]
-  }
+  ]
 }
