@@ -4,7 +4,7 @@
   "type": "metapackage",
   "version": "2.1.2",
   "require": {
-    "klevu/module-productsearch": "2.1.1",
+    "klevu/module-productsearch": "2.1.2",
     "klevu/module-content": "2.1.1",
     "klevu/module-addtocart": "2.1.1"
   },
