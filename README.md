@@ -3,11 +3,19 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.3</li>
+<li>CE 2.0.0 to 2.1.5</li>
 <li>EE 2.0.0 to 2.1.3</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.6</h3>
+<li>Removed the website condition when obtaining stock status</li>
+<li>Bug fixes for the preserve layout option</li>
+<li>Security patches and javascript improvements</li>
+<li>Removed default magento ajax search</li>
+<li>Price bug fix when using the collection methos</li>
+<li>M2's version specific changes for obtaining media gallery images' paths</li>
 
 <h3>Version 2.1.1</h3>
 <li>Hide certain category pages from search. </li>
