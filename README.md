@@ -61,6 +61,16 @@
 
 <hr />
 <h3><a href="http://support.klevu.com/knowledgebase/integration-steps-for-magento-2/" target="_blank"> Integration Steps</a></h3> 
+
+<b>Note:</b>
+Please make sure to remove any older version (i.e. < 2.1.0) before installing the current version. If you used composer method to install the plugin, use the following command to uninstall it.
+
+composer remove klevu/module-search
+
+Use the following command to install the plugin
+
+composer require klevu/module-search
+
 <b>Have questions? Need help?</b>  E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
 <h2>Search that Learns, Generates Sales </h2>
