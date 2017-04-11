@@ -9,6 +9,11 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.7</h3>
+<li>Bug fix when upgrading from older version</li>
+<li>Identifying if the pub folder is in use as a document root or not</li>
+<li>Displaying the no result found message on the landing page with the preserve layout option</li>
+
 <h3>Version 2.1.6</h3>
 <li>Removed the website condition when obtaining stock status</li>
 <li>Bug fixes for the preserve layout option</li>
