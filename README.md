@@ -3,11 +3,18 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.5</li>
-<li>EE 2.0.0 to 2.1.3</li>
+<li>CE 2.0.0 to 2.1.6</li>
+<li>EE 2.0.0 to 2.1.6</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.8</h3>
+<li>Bug fix for collecting price when using the collection method (now collecting the associated products' prices)</li>
+<li>Using parent products' stock status for configurable products</li>
+<li>Using parent products' images when the merchant has asked for the same in the Klevu configuration settings</li>
+<li>Bug fix for notice error in order sync</li>
+<li>Made it compatible with CE and EE 2.1.6</li>
 
 <h3>Version 2.1.7</h3>
 <li>Bug fix when upgrading from older version</li>
