@@ -2,11 +2,11 @@
   "name": "klevu/module-search",
   "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
   "type": "metapackage",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "require": {
-    "klevu/module-productsearch": "2.1.8",
-    "klevu/module-content": "2.1.8",
-    "klevu/module-addtocart": "2.1.8"
+    "klevu/module-productsearch": "2.1.9",
+    "klevu/module-content": "2.1.9",
+    "klevu/module-addtocart": "2.1.9"
   },
   "license": [
     "OSL-3.0",

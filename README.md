@@ -9,6 +9,13 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.9</h3>
+<li>Preserve layout improvements: Enabled search tracking, content section, conflict resolution.</li>
+<li>Fixed category translation issue across multiple-sites.</li>
+<li>Improved the SQL query for obtaining stock status.</li>
+<li>Allowed multi-quantity with the add-to-cart option.</li>
+<li>Added the order sync as part of the overall sync functionality when running via the command script.</li>
+
 <h3>Version 2.1.8</h3>
 <li>Bug fix for collecting price when using the collection method (now collecting the associated products' prices)</li>
 <li>Using parent products' stock status for configurable products</li>
