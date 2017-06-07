@@ -3,11 +3,22 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.6</li>
-<li>EE 2.0.0 to 2.1.6</li>
+<li>CE 2.0.0 to 2.1.7</li>
+<li>EE 2.0.0 to 2.1.7</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.10</h3>
+<li>Tested with Magento EQP and solved possible warnings and errors</li>
+<li>Created indexing on klevu_product_sync table to optimize queries</li>
+<li>Solved Cache invalidation message in debug.log of Magento which was caused by updating last sync date with every sync cycle</li>
+<li>Removed the test mode from all code, queries and klevu_product_sync table</li>
+<li>Collected Email Id when order is placed</li>
+<li>Fixed a bug querying tables with prefix in DB</li>
+<li>Encrypting email and session ids</li>
+<li>Bug fix: Klevu template translation change</li>
+<li>Removed a reference to garbage collection after every sync cycle</li>
 
 <h3>Version 2.1.9</h3>
 <li>Preserve layout improvements: Enabled search tracking, content section, conflict resolution.</li>
