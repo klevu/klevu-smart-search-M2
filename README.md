@@ -9,6 +9,9 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.11</h3>
+<li>Enabled filters on mobile by default</li>
+
 <h3>Version 2.1.10</h3>
 <li>Tested with Magento EQP and solved possible warnings and errors</li>
 <li>Created indexing on klevu_product_sync table to optimize queries</li>
