@@ -9,6 +9,9 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.12</h3>
+<li>bug fix: corrected the namespace error</li>
+
 <h3>Version 2.1.11</h3>
 <li>Enabled filters on mobile by default</li>
 
