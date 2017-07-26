@@ -8,10 +8,20 @@
 
 <hr />
 <h2>Change Log</h2>
+
+
+<h3>Version 2.1.15</h3>
+
+<li>Options to enter image size from klevu search configuration</li>
+<li>Notification if same api key used by two different stores</li>
+<li>product sync bug fix for 2.0 EE and b2B </li>
+<li>Trigger improvements</li>
+
 <h3>Version 2.1.14</h3>
+
 <li>Trigger based product updates</li>
 <li>New Plans for klevu sign up</li>
-<li>Bug fix for translation</li>
+<li>Bug fix for translatio</li>
 
 <h3>Version 2.1.13</h3>
 <li>bug fix: for css and category products stock conditions</li>
