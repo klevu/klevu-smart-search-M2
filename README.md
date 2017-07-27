@@ -11,7 +11,7 @@
 
 <h3>Version 2.1.16</h3>
 
-<li>Bug Fix for dependency on Magento versions 2.0.*</li>
+<li>We have made changes in the dependency parameters to meet requirements of your Magento version  2.0.*</li>
 
 <h3>Version 2.1.15</h3>
 
