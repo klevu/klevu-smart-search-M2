@@ -3,11 +3,21 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.7</li>
-<li>EE 2.0.0 to 2.1.7</li>
+<li>CE 2.0.0 to 2.1.8</li>
+<li>EE 2.0.0 to 2.1.8</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.17</h3>
+<li>Disable default magento ajax search call</li>
+<li>Method change to collect stock information </li>
+<li>Remove script tag from the content</li>
+<li>Fix filter issue for iOS devices</li>
+<li>Code improvements</li>
+<li>Tax calculation improvments</li>
+<li>Disable klevu cron from configuration</li
+
 
 <h3>Version 2.1.16</h3>
 
