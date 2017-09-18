@@ -13,7 +13,7 @@
 <li>Tax calculation improvments</li>
 <li>Code Improvements</li>
 <li>Fix for cms pages in klevu search configuration</li>
-<li>Sync products and Category per store views using the command line</li>
+<li>Sync products and Category per store views using the command line, check help center <a href="https://support.klevu.com/knowledgebase/sync-data-for-specific-store-view-using-command-line/">documentation</a> for usage. </li>
 
 <h3>Version 2.1.18</h3>
 <li>Commented stock function query</li>
