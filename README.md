@@ -9,6 +9,12 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.19</h3>
+<li>Tax calculation improvments</li>
+<li>Code Improvements</li>
+<li>Fix for cms pages in klevu search configuration</li>
+<li>Sync products and Category per store views using the command line</li>
+
 <h3>Version 2.1.18</h3>
 <li>Commented stock function query</li>
 
