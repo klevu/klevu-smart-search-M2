@@ -3,11 +3,17 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.8</li>
-<li>EE 2.0.0 to 2.1.8</li>
+<li>CE 2.0.0 to 2.1.9</li>
+<li>EE 2.0.0 to 2.1.9</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.1.20</h3>
+<li>Sign up form improvments</li>
+<li>list category and sku change</li>
+<li>Set Updated date to "0000-00-00" in klevu sync table when tax,image,secure url value changed in klevu configuration</li>
+<li>Some css and landing page improvements</li>
 
 <h3>Version 2.1.19</h3>
 <li>Tax calculation improvments</li>
