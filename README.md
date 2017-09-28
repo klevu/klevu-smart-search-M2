@@ -9,6 +9,9 @@
 <hr />
 <h2>Change Log</h2>
 
+<h3>Version 2.1.21</h3>
+<li>Improvements on product stock data selection</li>
+
 <h3>Version 2.1.20</h3>
 <li>Sign up form improvments</li>
 <li>list category and sku change</li>
