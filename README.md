@@ -3,11 +3,13 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.1.9</li>
-<li>EE 2.0.0 to 2.1.9</li>
+<li>CE 2.0.0 to 2.2.0</li>
+<li>EE 2.0.0 to 2.2.0</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.22</h3>
+<li>Adding support for Magento 2.2</li>
 
 <h3>Version 2.1.21</h3>
 <li>Improvements on product stock data selection</li>
