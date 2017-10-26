@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.23</h3>
+<li>Improvements on logging and configuration</li>
+<li>Changes relating to warning messages for out of stock</li>
+<li>Security improvements</li>
+<li>Improvements on delete API requests</li>
+ 
 <h3>Version 2.1.22</h3>
 <li>Adding support for Magento 2.2</li>
 
