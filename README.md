@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.24</h3>
+<li>Multiple fixes</li>
+
 <h3>Version 2.1.23</h3>
 <li>Improvements on logging and configuration</li>
 <li>Changes relating to warning messages for out of stock</li>
