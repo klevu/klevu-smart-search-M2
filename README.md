@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.25</h3>
+<li>Added support for version 2.2+</li>
+<li>Added support for ElasticSearch and SOLR backend when using preserve layout.</li>
+<li>Fixed issue relating to query string, Js customization, log download</li>
+
 <h3>Version 2.1.24</h3>
 <li>Multiple fixes</li>
 
@@ -38,7 +43,7 @@
 <h3>Version 2.1.18</h3>
 <li>Commented stock function query</li>
 
-<h3>Version 2.1.18</h3>
+<h3>Version 2.1.17</h3>
 <li>Disable default magento ajax search call</li>
 <li>Method change to collect stock information </li>
 <li>Remove script tag from the content</li>
