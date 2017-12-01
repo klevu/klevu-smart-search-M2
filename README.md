@@ -8,6 +8,10 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.26</h3>
+<li>Fixed issue relating to website availability differences on simple/configurable products</li>
+<li>Fixed issue relating to delete query in EE</li>
+
 <h3>Version 2.1.25</h3>
 <li>Added support for version 2.2+</li>
 <li>Added support for ElasticSearch and SOLR backend when using preserve layout.</li>
