@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.27</h3>
+<li>Improvements in cron schedule and category</li>
+<li>Fix issues relating to cached data in sincronisation</li>
+<li>Add interface to preserve layout calls for easier customisation</li>
+
 <h3>Version 2.1.26</h3>
 <li>Fixed issue relating to website availability differences on simple/configurable products</li>
 <li>Fixed issue relating to delete query in EE</li>
