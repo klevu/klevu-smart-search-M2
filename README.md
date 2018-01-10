@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.28</h3>
+<li>Partial update of product's price and stock</li>
+<li>Added sincronisation method for price and stock with the use of frontend js tags</li>
+<li>Fix issues relating to prices when using multiple websites in same process and fixed configurable product id send on the order sync</li>
+
 <h3>Version 2.1.27</h3>
 <li>Improvements in cron schedule and category</li>
 <li>Fix issues relating to cached data in sincronisation</li>
