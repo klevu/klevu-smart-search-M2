@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.29</h3>
+<li>Fix website related data leek issues</li>
+<li>Category bug fix when flat catalog enabled</li>
+<li>Sync Data in batches</li>
+
 <h3>Version 2.1.28</h3>
 <li>Partial update of product's price and stock</li>
 <li>Added sincronisation method for price and stock with the use of frontend js tags</li>
