@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.30</h3>
+<li>Fix issues relating to magento cron</li>
+<li>Fix issues relating to pub folder use</li>
+<li>Reformat code relating to price calculations</li>
+
 <h3>Version 2.1.29</h3>
 <li>Fix website related data leek issues</li>
 <li>Category bug fix when flat catalog enabled</li>
