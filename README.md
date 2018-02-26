@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.31</h3>
+<li>Fix for mysql scorebuilder</li>
+<li>Fix registery variable inside sync model</li>
+<li>Fetch Out of stock data when magneto out of stock setting is no</li>
+
 <h3>Version 2.1.30</h3>
 <li>Fix issues relating to magento cron</li>
 <li>Fix issues relating to pub folder use</li>
