@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.32</h3>
+<li>Removing overide for tax calculations when not needed for Price/Special Price to be in line with Magento core calculations</li>
+<li>Refactoring admin sync process at end of wizzard that caused price issues in some multi website situations</li>
+<li>Fixes relating to handling the objects that fail to load during the sync process</li>
+
 <h3>Version 2.1.31</h3>
 <li>Fix for mysql scorebuilder</li>
 <li>Fix registery variable inside sync model</li>
