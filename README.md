@@ -3,11 +3,16 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.2.0</li>
-<li>EE 2.0.0 to 2.2.0</li>
+<li>CE 2.0.0 to 2.2.3</li>
+<li>EE 2.0.0 to 2.2.3</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.33</h3>
+<li>Improvements relating to other attributes to index</li>
+<li>Improved management of lock files</li>
+<li>Minor performance improvements</li>
+
 <h3>Version 2.1.32</h3>
 <li>Removing overide for tax calculations when not needed for Price/Special Price to be in line with Magento core calculations</li>
 <li>Refactoring admin sync process at end of wizzard that caused price issues in some multi website situations</li>
