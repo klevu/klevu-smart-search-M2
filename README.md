@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.34</h3>
+<li>Improvements relating to category exclusion from search</li>
+
 <h3>Version 2.1.33</h3>
 <li>Improvements relating to other attributes to index</li>
 <li>Improved management of lock files</li>
