@@ -3,8 +3,8 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.2.3</li>
-<li>EE 2.0.0 to 2.2.3</li>
+<li>CE 2.0.0 to 2.2.6</li>
+<li>EE 2.0.0 to 2.2.6</li>
 
 <hr />
 <h2>Change Log</h2>
