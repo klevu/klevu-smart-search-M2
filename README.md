@@ -8,6 +8,17 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.0</h3>
+<li>Note: Any customizations done in the Klevu's Magento plugin code may not work with this version. If that is the case, we advice to contact support@klevu.com before upgrading to this version</li>
+<li>Product selection refactoring</li>
+<li>Subprocess execution fixes for PHP executable version</li>
+<li>Improvements on category merchandising </li>
+<li>Enhanced auto suggestions support for preserve layout</li>
+<li>Preserve layout improvements in API calls to Klevu BE and processing fixes</li>
+<li>Single Store view improvements and fixes</li>
+<li>Improve interfacing of product data load and override for cleaner overrides on custom changes</li>
+<li>Minor fixes relating to configurations</li>
+
 <h3>Version 2.1.34</h3>
 <li>Improvements relating to category exclusion from search</li>
 
