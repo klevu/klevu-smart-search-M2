@@ -9,6 +9,9 @@
 <hr />
 <h2>Change Log</h2>
 <h3>Version 2.2.0</h3>
+<li>Removing unused files</li>
+
+<h3>Version 2.2.0</h3>
 <li>Note: Any customizations done in the Klevu's Magento plugin code may not work with this version. If that is the case, we advice to contact support@klevu.com before upgrading to this version</li>
 <li>Product selection refactoring</li>
 <li>Subprocess execution fixes for PHP executable version</li>
