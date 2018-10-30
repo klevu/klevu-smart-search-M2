@@ -8,7 +8,7 @@
 
 <hr />
 <h2>Change Log</h2>
-<h3>Version 2.2.0</h3>
+<h3>Version 2.2.1</h3>
 <li>Removing unused files</li>
 
 <h3>Version 2.2.0</h3>
