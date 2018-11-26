@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.2</h3>
+<li>Improve sales reporting</li>
+<li>Refactor parent-child responsible code</li>
+<li>Fix reporting relating to category process</li>
+<li>Command bug fix for image and rating</li>
+
 <h3>Version 2.2.1</h3>
 <li>Removing unused files</li>
 

@@ -4,9 +4,9 @@
   "type": "metapackage",
   "version": "2.2.1",
   "require": {
-    "klevu/module-productsearch": "2.2.1",
-    "klevu/module-content": "2.2.1",
-    "klevu/module-addtocart": "2.2.1"
+    "klevu/module-productsearch": "2.2.2",
+    "klevu/module-content": "2.2.2",
+    "klevu/module-addtocart": "2.2.2"
   },
   "license": [
     "OSL-3.0",
