@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.3</h3>
+<li>Support for ElasticSearch 5 backend</li>
+
 <h3>Version 2.2.2</h3>
 <li>Improve sales reporting</li>
 <li>Refactor parent-child responsible code</li>
