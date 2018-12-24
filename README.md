@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.2.4</h3>
+<li>Fixed DI cimplication errors for Magento 2.2.5+</li>
+<li>Added new ordering settings "Relevance" that will be used for Klevu search ordering, configurable from magento admin klevu search settings</li>
+<li>Removed overide of deafult magento relevance ordering to minimise conflicts with other modules</li>
+
 <h3>Version 2.2.3</h3>
 <li>Support for ElasticSearch 5 backend</li>
 
