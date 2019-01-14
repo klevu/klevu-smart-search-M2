@@ -3,11 +3,17 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.2.6</li>
-<li>EE 2.0.0 to 2.2.6</li>
+<li>CE 2.0.0 to 2.3.0</li>
+<li>EE 2.0.0 to 2.3.0</li>
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.2.5</h3>
+<li>Magento version 2.3.0 support</li>
+<li>Schema improvements for Klevu_product_sync table</li>
+<li>Consider catalog search visibility for child product and consider child product with two parents</li>
+<li>A few minor bug fix for issues related to "item id exits" error while loading collection</li>
 
 <h3>Version 2.2.4</h3>
 <li>Fixed DI cimplication errors for Magento 2.2.5+</li>
