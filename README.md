@@ -8,6 +8,8 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.6</h3>
+<li>Take in consideration category exclusion from search option</li>
 
 <h3>Version 2.2.5</h3>
 <li>Magento version 2.3.0 support</li>
