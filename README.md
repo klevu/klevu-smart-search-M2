@@ -8,6 +8,10 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.8</h3>
+<li>Fix IP reporting for analytics</li>
+
+
 <h3>Version 2.2.7</h3>
 <li>Add support for Magento 2.3+ pagebuilder extension</li>
 
