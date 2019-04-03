@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.9</h3>
+<li>Fix incompatibility when using database trigger with EE 2.3+</li>
+<li>Fixes relating to messaging , analytics reporting and JS minification</li>
+
+
 <h3>Version 2.2.8</h3>
 <li>Fix IP reporting for analytics</li>
 
