@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.10</h3>
+<li>Updates relating to resource keyword use for compatibility with PHP7.x and Magento Marketplace</li>
+
 <h3>Version 2.2.9</h3>
 <li>Fix incompatibility when using database trigger with EE 2.3+</li>
 <li>Fixes relating to messaging , analytics reporting and JS minification</li>
