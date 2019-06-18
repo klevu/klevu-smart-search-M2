@@ -3,11 +3,16 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.3.0</li>
-<li>EE 2.0.0 to 2.3.0</li>
+<li>CE 2.0.0 to 2.3.1</li>
+<li>EE 2.0.0 to 2.3.1</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.11</h3>
+<li>Group product price fix for 2.2 and 2.3</li>
+<li>Content search landing page css fix</li>
+<li>If Klevu > search configuration > Data Sync Settings > Sync Product with Catalog Visibility set to "Yes" then Consider products with visibility catalog in data sync </li>
+
 <h3>Version 2.2.10</h3>
 <li>Updates relating to resource keyword use for compatibility with PHP7.x and Magento Marketplace</li>
 
