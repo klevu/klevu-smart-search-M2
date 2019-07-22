@@ -8,6 +8,10 @@
 
 <hr />
 <h2>Change Log</h2>
+
+<h3>Version 2.2.12</h3>
+<li>Improvements to order tracking</li>
+
 <h3>Version 2.2.11</h3>
 <li>Group product price fix for 2.2 and 2.3</li>
 <li>Content search landing page css fix</li>
