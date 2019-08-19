@@ -8,6 +8,13 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.14</h3>
+<li>Customer group price issue fix after login</li>
+<li>Sign up page improvements</li>
+<li>Deletion of Category fixes</li>
+<li>Log improvements</li>
+<li>Small code improvements for layout block name</li>
+
 <h3>Version 2.2.13</h3>
 <li>Add support for ElasticSearch on Magento version 2.3.2</li>
 <li>Data sync button UI changes </li>
