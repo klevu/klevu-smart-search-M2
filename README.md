@@ -8,6 +8,10 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.15</h3>
+<li>HotFix to search landing page undifiend variable when using Klevu template</li>
+
+
 <h3>Version 2.2.14</h3>
 <li>Customer group price issue fix after login</li>
 <li>Sign up page improvements</li>
