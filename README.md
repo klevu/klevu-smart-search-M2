@@ -8,6 +8,11 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.16</h3>
+<li>Improvements to Klevu Admin configuration section</li>
+<li>Improvements to Klevu CMS page sync,Klevu template code, Single storeview support</li>
+
+
 <h3>Version 2.2.15</h3>
 <li>HotFix to search landing page undifiend variable when using Klevu template</li>
 
