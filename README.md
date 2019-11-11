@@ -8,10 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.17</h3>
+<li>Added Support for php 7.3</li>
+
 <h3>Version 2.2.16</h3>
 <li>Improvements to Klevu Admin configuration section</li>
 <li>Improvements to Klevu CMS page sync,Klevu template code, Single storeview support</li>
-<li>MD5 encryption for order email</li>
 
 
 <h3>Version 2.2.15</h3>
