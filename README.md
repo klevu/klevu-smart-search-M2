@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.18</h3>
+<li>Removed Send Log button from the System Configuration</li>
+
 <h3>Version 2.2.17</h3>
 <li>Added Support for php 7.3</li>
 
