@@ -8,6 +8,10 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.19</h3>
+<li>Fix intermittent issues with extra attributes to index when using multiple languages as part of same website</li>
+<li>Clear magento registry before resetting values</li>
+
 <h3>Version 2.2.18</h3>
 <li>Removed Send Log button from the System Configuration</li>
 
