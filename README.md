@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.20</h3>
+<li>Improved information and process for collection method during sign up processes</li>
+<li>Added admin option to control order sinc</li>
+<li>Improvements to image regeneration command</li>
+<li>Improvements to sign up process to allow secondary rest domain</li>
+
 <h3>Version 2.2.19</h3>
 <li>Fix intermittent issues with extra attributes to index when using multiple languages as part of same website</li>
 <li>Clear magento registry before resetting values</li>
