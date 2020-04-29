@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.22</h3>
+<li>Improvement for Sort Label from Magento admin</li>
+<li>Improvement on sync process for fix Category Fields data issue</li>
+<li>Fix warning of array multi-sort</li>
+<li>Minor layout improvements</li>
+
 <h3>Version 2.2.21</h3>
 <li>Fix issue relating to store configuration load during sync process of category and content data</li>
 
