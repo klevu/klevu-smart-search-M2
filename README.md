@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.0</h3>
+<li>Refactoring code for full removal of object manager uses</li>
+
 <h3>Version 2.2.22</h3>
 <li>Improvement for Sort Label from Magento admin</li>
 <li>Improvement on sync process for fix Category Fields data issue</li>
