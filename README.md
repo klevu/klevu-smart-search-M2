@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.1</h3>
+<li>Fix issue relating to order item sync for configurable product</li>
+
 <h3>Version 2.3.0</h3>
 <li>Refactoring code for full removal of object manager uses</li>
 
