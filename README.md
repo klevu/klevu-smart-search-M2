@@ -8,6 +8,14 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.2</h3>
+<li>Refactored the CMS sync related code</li>
+<li>Added admin configuration option to exclude category sync</li>
+<li>Added admin configuration to automaticly delete lock files after a set time</li>
+<li>Refactored Preserve Layout code to use plugins</li>
+<li>Improved security for Sync</li>
+<li>Added trigger to update products when their stock is edited via API </li>
+
 <h3>Version 2.3.1</h3>
 <li>Fix issue relating to order item sync for configurable product</li>
 
