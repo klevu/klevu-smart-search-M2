@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.3</h3>
+<li>Added sync fix for delete requests in the case of failed loading when not Displaying Out of stock products</li>
+
 <h3>Version 2.3.2</h3>
 <li>Refactored the CMS sync related code</li>
 <li>Added admin configuration option to exclude category sync</li>
