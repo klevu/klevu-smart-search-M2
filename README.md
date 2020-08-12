@@ -3,11 +3,17 @@
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.3.3</li>
-<li>EE 2.0.0 to 2.3.3</li>
+<li>CE 2.0.0 to 2.4.0</li>
+<li>EE 2.0.0 to 2.4.0</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.4</h3>
+<li>Added Magento 2.4.0 support</li>
+<li>Improved description of console commands</li>
+<li>Improved sync related db queries</li>
+
+
 <h3>Version 2.3.3</h3>
 <li>Added sync fix for delete requests in the case of failed loading when not Displaying Out of stock products</li>
 
