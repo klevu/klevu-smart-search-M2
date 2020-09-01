@@ -8,6 +8,12 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.5</h3>
+<li>Added support for visual merchandiser exclude products</li>
+<li>Performance improvements of Sync process</li>
+<li>Added update flag on product bulk save</li>
+<li>Minor frontend fixes relating to version and special structures</li>
+
 <h3>Version 2.3.4</h3>
 <li>Added Magento 2.4.0 support</li>
 <li>Improved description of console commands</li>
