@@ -8,6 +8,9 @@
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.3.6</h3>
+<li>Fixed compilation issue with PHP 7.0 introduced by version 2.3.5</li>
+
 <h3>Version 2.3.5</h3>
 <li>Added support for visual merchandiser exclude products</li>
 <li>Performance improvements of Sync process</li>
