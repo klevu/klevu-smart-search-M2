@@ -13,13 +13,15 @@ Intelligent cloud hosted site search with self-learning search technology to inc
 
 <hr />
 <h2>Installation Steps</h2> 
-<p>We recommend installation via Composer. Please review the <a href="https://support.klevu.com/knowledgebase/integration-steps-for-magento-2" target="_blank">integration steps</a> on our support website for the most up to date information.</p>
+<p>We recommend installation via Composer. Please review the <a href="https://help.klevu.com/support/solutions/articles/5000871252-integration-steps-for-magento-2" target="_blank">integration steps</a> 
+on our support website for the most up to date information.</p>
 
 <b>Have questions or need help?</b> Please E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a><br />
 <hr />
 <h2>Search that Learns, Generates Sales</h2>
-Klevu’s Ajax-based search for Magento 2 goes beyond fast response and auto-complete, to provide the most advanced search available today. Klevu helps deliver an awesome shopping experience for your customers directly from the search box. <br /><br />
-<img src="https://www.klevu.com/img/img-slider/magento/magento-2-search.jpg" />
+Klevu’s Ajax-based search for Magento 2 goes beyond fast response and auto-complete to provide the most advanced search available today. 
+Klevu helps deliver an awesome shopping experience for your customers directly from the search box. <br /><br />
+<img src="https://www.klevu.com/img/img-slider/magento/magento-2-search.jpg" alt="" />
 
 <h3>Klevu Search Features</h3>
 
@@ -40,11 +42,11 @@ Klevu’s Ajax-based search for Magento 2 goes beyond fast response and auto-com
 <br />
 
 <b>Rich autocomplete</b><br />
-Klevu automatically completes the search query by providing rich, insightful and intuitive suggestions. Autocomplete starts from 1st character!
+Klevu automatically completes the search query by providing rich, insightful and intuitive suggestions. Autocomplete starts from the 1st character!
 <br />
 
 <b>Grid view layout</b><br />
-Klevu provides ready made alternative to autocomplete layout. It is possible to show instant results with navigation panel in quick search.
+Klevu provides a ready-made alternative to the autocomplete layout. It is possible to show instant results with navigation panel in quick search.
 <br />
 
 <b>Self-learning search</b><br />
@@ -52,7 +54,7 @@ Klevu continuously learns how shoppers interact by using search on the store. It
 <br />
 
 <b>Fully customisable</b><br />
-Klevu provides full control and flexibility on the look and feel of search results. Based on the open CSS principle, search results can be customized to any extent desired.
+Klevu provides full control and flexibility over the look and feel of search results. Based on the open CSS principle, search results can be customized to any extent desired.
 <br />
 
 <b>Error tolerance</b><br />
@@ -68,7 +70,7 @@ Understands what your shoppers mean even if they use verbs and adjectives in dif
 <br />
 
 <b>Dynamic filters</b><br />
-Automatically creates all relevant filters in the search results. Filters allows shoppers to explore results in great detail.
+Automatically creates all relevant filters in the search results. Filters allow shoppers to explore results in great detail.
 <br />
 
 <b>Trending searches</b><br />
@@ -92,11 +94,12 @@ Manual boosting of product ranking ensures that the products you want to promote
 <br />
 
 <b>Analytics</b><br />
-Klevu analytics help create razor sharp SEO and promotional campaigns. Concrete data to helps increase conversion rates. You’ll have complete visibility of the path from search to purchase.
+Klevu analytics help create razor sharp SEO and promotional campaigns. Concrete data helps increase conversion rates. You’ll have complete visibility of the path from search to purchase.
 <br />
 
 <hr />
 
 <h3>Have questions, need help or have feedback for us?</h3>
-Check the <a href="https://support.klevu.com/faq/faqs/">FAQs</a> section of oue website or E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a>.<br />For more information please visit <a href="https://www.klevu.com">http://www.klevu.com</a>.
+Check the <a href="https://help.klevu.com/support/solutions/folders/5000308572">FAQs</a> section of our website or E-mail us at: <a href="mailto:support@klevu.com">support@klevu.com</a>.
+<br />For more information please visit <a href="https://www.klevu.com">http://www.klevu.com</a>.
 <br />Follow us on twitter <a href="https://twitter.com/klevusearch">@klevusearch</a>.
