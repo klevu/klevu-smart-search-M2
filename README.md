@@ -1,6 +1,6 @@
 # Klevu Smart Search for Magento 2
 
-Intelligent cloud hosted site search with self-learning search technology to increase search-led conversions.<br /> 
+Intelligent cloud hosted site search with self-learning search technology to increase search-led conversions.<br />
 
 <hr />
 <h3>Compatible with:</h3>
