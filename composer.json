@@ -4,11 +4,11 @@
   "type": "metapackage",
   "version": "2.6.1",
   "require": {
-    "klevu/module-productsearch": "2.6.1",
+    "klevu/module-productsearch": "2.6.2-beta",
     "klevu/module-content": "2.6.0",
     "klevu/module-addtocart": "2.6.0",
     "klevu/module-mysqlcompat": "1.1.0",
-	"klevu/module-troubleshoot": "1.1.0"
+    "klevu/module-troubleshoot": "1.1.1-beta"
   },
   "license": [
     "OSL-3.0",
