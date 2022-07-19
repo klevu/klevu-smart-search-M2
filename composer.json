@@ -5,8 +5,8 @@
   "version": "2.7.1",
   "require": {
     "klevu/module-productsearch": "2.7.1",
-    "klevu/module-content": "2.7.0",
-    "klevu/module-addtocart": "2.7.0",
+    "klevu/module-content": "2.7.1",
+    "klevu/module-addtocart": "2.7.1",
     "klevu/module-mysqlcompat": "1.1.0",
 	"klevu/module-troubleshoot": "1.1.2"
   },
