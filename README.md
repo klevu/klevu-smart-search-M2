@@ -5,10 +5,12 @@ Intelligent cloud hosted site search with self-learning search technology to inc
 <hr />
 <h3>Compatible with:</h3>
 <ul>
-<li>Magento Open Source (CE) 2.1.18, 2.2.11, 2.3.7-p4, 2.4.5.</li>
-<li>Magento Commerce (EE) 2.1.18, 2.2.11, 2.3.7-p4, 2.4.5.</li>
+<li>Magento Open Source (CE) 2.3.7-p4, 2.4.5.</li>
+<li>Magento Commerce (EE) 2.3.7-p4, 2.4.5.</li>
 </ul>
 <em>Note, while this module will run on a number of earlier versions, official compatibility is only provided for the latest patch version (as above).</em>
+<br>
+<em>Magento 2.1 and 2.2 are supported in branch `2.x`</em>
 <ul>
 <li>Hyvä Theme 1.1</li>
 </ul>
