@@ -2,9 +2,9 @@
     "name": "klevu/module-search",
     "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
     "type": "metapackage",
-    "version": "3.1.2",
+    "version": "3.1.3",
     "require": {
-        "klevu/module-productsearch": "3.1.2",
+        "klevu/module-productsearch": "3.1.3",
         "klevu/module-content": "3.0.1",
         "klevu/module-addtocart": "3.0.1",
         "klevu/module-troubleshoot": "1.1.5"
