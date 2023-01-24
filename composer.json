@@ -2,12 +2,12 @@
     "name": "klevu/module-search",
     "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
     "type": "metapackage",
-    "version": "3.1.4",
+    "version": "3.2.0",
     "require": {
-        "klevu/module-productsearch": "3.1.4",
+        "klevu/module-productsearch": "3.2.0",
         "klevu/module-content": "3.0.1",
         "klevu/module-addtocart": "3.0.1",
-        "klevu/module-troubleshoot": "1.1.5"
+        "klevu/module-troubleshoot": "1.1.6"
     },
     "suggest": {
         "klevu/module-msi": "Add support for MSI during product sync",
