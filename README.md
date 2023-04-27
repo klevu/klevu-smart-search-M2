@@ -5,8 +5,8 @@ Intelligent cloud hosted site search with self-learning search technology to inc
 <hr />
 <h3>Compatible with:</h3>
 <ul>
-<li>Magento Open Source (CE) 2.3.7-p4, 2.4.5-p1.</li>
-<li>Magento Commerce (EE) 2.3.7-p4, 2.4.5-p1.</li>
+<li>Magento Open Source (CE) 2.3.7-p4, 2.4.6.</li>
+<li>Magento Commerce (EE) 2.3.7-p4, 2.4.6.</li>
 </ul>
 <em>Note, while this module will run on a number of earlier versions, official compatibility is only provided for the latest patch version (as above).</em>
 <br>
